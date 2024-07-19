@@ -1,0 +1,68 @@
+\documentclass[tikz,border=5]{standalone}
+\usepackage[prefix=]{xcolor-material}
+\pgfmathdeclarerandomlist{material}{%
+{Red}{Blue}{Green}}
+\tikzset{%
+  half clip/.code={
+    \clip (0, -256) rectangle (256, 256);
+  },
+  color/.code=\colorlet{fill color}{#1},
+  color alias/.code args={#1 as #2}{\colorlet{#1}{#2}},
+  colors alias/.style={color alias/.list/.expanded={#1}},
+  execute/.code={#1},
+  on left/.style={.. on left/.style={#1}},
+  on right/.style={.. on right/.style={#1}},
+  split/.style args={#1 and #2}{
+    on left ={color alias=fill color as #1},
+    on right={color alias=fill color as #2, half clip}
+  }
+}
+\newcommand\reflect[2][]{%
+\begin{scope}[#1]\foreach \side in {-1, 1}{\begin{scope}
+\ifnum\side=-1 \tikzset{.. on left/.try}\else\tikzset{.. on right/.try}\fi
+\begin{scope}[xscale=\side]#2\end{scope}
+\end{scope}}\end{scope}}
+
+\tikzset{%
+squid/.pic={
+\begin{scope}[x=3cm/480,y=3cm/480]
+\useasboundingbox (-256, -256) (256, 256);
+\reflect[split={DeepOrange500 and DeepOrange700}]{
+  \fill [fill color] (0,96) ellipse [x radius=96, y radius=128];
+  \fill [fill color]
+    (72,-16)
+    .. controls ++(270:72) and ++(270:40) .. ++(108,  -16)
+    .. controls ++( 90:64) and ++(270:64) .. ++(-40,128)
+    .. controls ++( 90:32) and ++(270:32) .. ++( 40, 96)
+    arc (180:0:4)
+    .. controls ++(270: 32) and ++( 90: 32) .. ++(-24, -96)
+    .. controls ++(270: 64) and ++( 90: 64) .. ++( 56,-128)
+    .. controls ++(270:128) and ++(270:160) ..   (  0, -16);
+  \fill [fill color]  (64, 16) circle [radius=48];
+  \fill [Grey50]      (64, 16) circle [radius=32];
+  \fill [BlueGrey900] (64, 16) circle [radius=12];
+  \fill [fill color]  (-4, -20)
+    .. controls ++(270:256) and ++(225: 64) .. (128,-192)
+    arc (315:495:4)
+    .. controls ++(210: 64) and ++(270:192) .. (48, -40);
+}
+\fill [DeepOrange900]
+  (-40,-40) arc (180:360:40 and 16) arc (360:180:40 and 40);
+\fill [DeepOrange300]
+  (-32,108) circle [radius=16] (-40,160) circle [radius=12]
+  (-20,196) circle [radius= 8]  ( 40,160) circle [radius=16]
+  ( 64,120) circle [radius= 8]  ( 40,100) circle [radius=12];
+\end{scope}
+}}
+\begin{document}
+\begin{tikzpicture}
+\foreach \animal [count=\i from 0, evaluate={\x=mod(\i,3)*5; \y=-floor(\i/3)*5;}]
+  in {squid}{
+\pgfmathrandomitem\materialColor{material}
+\scoped[shift={(\x,\y)}]{
+\fill [fill=\materialColor50] circle [radius=2];
+\pic {\animal};
+\node [below]at (0, -2) {\ttfamily\animal};
+}}
+\end{tikzpicture}
+\end{document}

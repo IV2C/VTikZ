@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pytest = "*"
+setuptools = "*"
+build = "*"
+varbench = {file = ".", editable = true}
+pdflatex = "*"
+pdf2image = "*"
+timeout-decorator = "*"
+cairosvg = "*"
+diff-match-patch = "*"
+datasets = "*"
+huggingface-hub = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
