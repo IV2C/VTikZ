@@ -1,4 +1,0 @@
-54c54
-<   \fill [BlueGrey900] (56, 0) circle [radius=20];
----
->   \fill [Red] (56, 0) circle [radius=20];

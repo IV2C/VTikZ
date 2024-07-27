@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+setup.py
+tests/test_compilers.py
+varbench/__init__.py
+varbench/run_evaluation.py
+varbench.egg-info/PKG-INFO
+varbench.egg-info/SOURCES.txt
+varbench.egg-info/dependency_links.txt
+varbench.egg-info/requires.txt
+varbench.egg-info/top_level.txt

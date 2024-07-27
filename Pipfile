@@ -12,9 +12,9 @@ pdflatex = "*"
 pdf2image = "*"
 timeout-decorator = "*"
 cairosvg = "*"
-diff-match-patch = "*"
 datasets = "*"
 huggingface-hub = "*"
+pygit2 = "*"
 
 [dev-packages]
 
