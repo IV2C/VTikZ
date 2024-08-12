@@ -1,10 +1,7 @@
 """given a folder of sets, compute the diff between the reference and input
 
-usage:
 
-python diffcompute.py --folder <folder>
-
-where <folder> is the folder containing the splits, each splits contains the sets
+the folder contains the splits, each splits contains the entries
 """
 
 import os
@@ -13,26 +10,34 @@ import argparse
 import subprocess
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--folder", type=str, required=True)
-args = parser.parse_args()
+def diffcompute(folder):
+    """
+    Compute the differences between the 'input' and 'reference' directories for each set in the given folder.
 
+    Parameters:
+        folder (str): The path to the folder containing the splits and sets.
 
-for split in os.listdir(args.folder):
-    for set in os.listdir(os.path.join(args.folder, split)):
-        with open(os.path.join(args.folder, split, set, f"{set}.patch"),"w") as f:
-            subprocess.run(
-                [
-                    "diff",
-                    "-u",
-                    os.path.join(args.folder, split, set, "input"),
-                    os.path.join(
-                        args.folder,
-                        split,
-                        set,
-                        "reference"
-                    ),
-                    "--exclude",
-                    ".git",
-                ],stdout=f
-            )
+    Returns:
+        None
+
+    This function iterates over each split and set in the given folder. For each set, it computes the differences between the 'input' and 'reference' directories using the 'diff' command. The differences are written to a file named '{set}.patch' in the corresponding set directory. The '--exclude' option is used to exclude the '.git' directory from the comparison.
+
+    Note: The 'subprocess.run' function is used to execute the 'diff' command. The 'stdout' parameter is set to the file object 'f' to write the output directly to the file.
+
+    Example usage:
+        diffcompute('/path/to/folder')
+    """
+    for split in os.listdir(folder):
+        for entry in os.listdir(os.path.join(folder, split)):
+            with open(os.path.join(folder, split, entry, f"{entry}.patch"), "w") as f:
+                subprocess.run(
+                    [
+                        "diff",
+                        "-u",
+                        os.path.join(folder, split, entry, "input"),
+                        os.path.join(folder, split, entry, "reference"),
+                        "--exclude",
+                        ".git",
+                    ],
+                    stdout=f,
+                )
