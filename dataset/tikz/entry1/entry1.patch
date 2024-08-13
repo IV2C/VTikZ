@@ -1,6 +1,6 @@
-diff -u --exclude .git input/repository/dog.tex reference/repository/dog.tex
---- input/repository/dog.tex	2024-08-13 16:27:28.966425044 +0200
-+++ reference/repository/dog.tex	2024-07-19 16:57:41.605518153 +0200
+diff -u --exclude .git input/dog.tex reference/dog.tex
+--- input/dog.tex	2024-08-13 16:37:30.511079018 +0200
++++ reference/dog.tex	2024-07-19 16:57:41.605518153 +0200
 @@ -51,7 +51,7 @@
      .. controls ++(  0:20) and ++(315:20) .. ++( 40,64)
      .. controls ++(135:20) and ++( 45:20) .. ++(-80, 0)

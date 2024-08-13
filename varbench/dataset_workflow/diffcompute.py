@@ -34,8 +34,8 @@ def diffcompute(folder):
                     [
                         "diff",
                         "-u",
-                        "input/repository",
-                        "reference/repository",
+                        "input",
+                        "reference",
                         "--exclude",
                         ".git",
                     ],
