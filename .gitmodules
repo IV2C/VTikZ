@@ -1,3 +1,6 @@
 [submodule "tikzentry1"]
-	path = dataset/tikz/entry1/input/repository
+	path = dataset/tikz/entry1/input
 	url = git@github.com:VarBench-SE/tikz.git
+[submodule "svgentry1"]
+	path = dataset/svg/entry1/input
+	url = git@github.com:VarBench-SE/svg.git

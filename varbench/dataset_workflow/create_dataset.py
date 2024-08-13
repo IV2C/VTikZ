@@ -44,28 +44,29 @@ def commit_changes(repo_path) -> str:
 ### parser arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", type=str, required=True, help="path to the dataset")
-parser.add_argument("--hf_token", type=str, help="token for huggingface")#TODO
 args = parser.parse_args()
 
 ### dataset creation code
 dataset_dict = {}
 
-
 dataset_path = args.dataset
 
 diffcompute(dataset_path)
 
-for split in os.listdir(dataset_path):
-    current_split = []
-    for entry in os.listdir(os.path.join(dataset_path, split)):
-        commit_id = commit_changes(os.path.join(dataset_path, split, entry,"input"))
-        current_split.append({
-            "repository": "https://github.com/VarBench-SE/" + split,
+for subset in os.listdir(dataset_path):
+    current_subset = []
+    for entry in os.listdir(os.path.join(dataset_path, subset)):
+        commit_id = commit_changes(os.path.join(dataset_path, subset, entry,"input"))
+        current_subset.append({
+            "repository": "https://github.com/VarBench-SE/" + subset,
             "commit_id": commit_id,
-            "prompt": open(os.path.join(dataset_path, split, entry, "prompt.txt")).read(),
-            "patch": open(os.path.join(dataset_path, split, entry, f"{entry}.patch")).read(),
+            "prompt": open(os.path.join(dataset_path, subset, entry, "prompt.txt")).read(),
+            "patch": open(os.path.join(dataset_path, subset, entry, f"{entry}.patch")).read(),
             })
-    dataset_dict[split] = current_split
+    dataset_dict[subset] = current_subset
 
-dataset = Dataset.from_dict(pd.DataFrame(dataset_dict))
-dataset.push_to_hub("CharlyR/varbench")
+
+for subset in dataset_dict:
+    current_subset = pd.DataFrame(dataset_dict[subset])
+    dataset = Dataset.from_dict(pd.DataFrame(current_subset))
+    dataset.push_to_hub("CharlyR/varbench",config_name=subset)

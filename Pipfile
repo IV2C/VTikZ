@@ -15,6 +15,9 @@ cairosvg = "*"
 datasets = "*"
 huggingface-hub = "*"
 pygit2 = "*"
+docker = "*"
+torchvision = "*"
+torchaudio = "*"
 
 [dev-packages]
 

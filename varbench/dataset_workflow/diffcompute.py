@@ -1,7 +1,7 @@
 """given a folder of sets, compute the diff between the reference and input
 
 
-the folder contains the splits, each splits contains the entries
+the folder contains the subsets, each subsets contains the entries
 """
 
 import os
@@ -15,30 +15,30 @@ def diffcompute(folder):
     Compute the differences between the 'input' and 'reference' directories for each set in the given folder.
 
     Parameters:
-        folder (str): The path to the folder containing the splits and sets.
+        folder (str): The path to the folder containing the subsets and sets.
 
     Returns:
         None
 
-    This function iterates over each split and set in the given folder. For each set, it computes the differences between the 'input' and 'reference' directories using the 'diff' command. The differences are written to a file named '{set}.patch' in the corresponding set directory. The '--exclude' option is used to exclude the '.git' directory from the comparison.
+    This function iterates over each subset and set in the given folder. For each set, it computes the differences between the 'input' and 'reference' directories using the 'diff' command. The differences are written to a file named '{set}.patch' in the corresponding set directory. The '--exclude' option is used to exclude the '.git' directory from the comparison.
 
     Note: The 'subprocess.run' function is used to execute the 'diff' command. The 'stdout' parameter is set to the file object 'f' to write the output directly to the file.
 
     Example usage:
         diffcompute('/path/to/folder')
     """
-    for split in os.listdir(folder):
-        for entry in os.listdir(os.path.join(folder, split)):
-            with open(os.path.join(folder, split, entry, f"{entry}.patch"), "w") as f:
+    for subset in os.listdir(folder):
+        for entry in os.listdir(os.path.join(folder, subset)):
+            with open(os.path.join(folder, subset, entry, f"{entry}.patch"), "w") as f:
                 subprocess.run(
                     [
                         "diff",
                         "-u",
-                        "input/repository",
-                        "reference/repository",
+                        "input",
+                        "reference",
                         "--exclude",
                         ".git",
                     ],
-                    cwd=os.path.join(folder, split, entry),
+                    cwd=os.path.join(folder, subset, entry),
                     stdout=f,
                 )
