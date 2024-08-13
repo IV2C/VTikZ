@@ -13,7 +13,7 @@
       "args": "--split tikz"
     },
     {
-      "name": "Python Debugger: Current File with Arguments",
+      "name": "dataset creation",
       "type": "debugpy",
       "request": "launch",
       "program": "${file}",

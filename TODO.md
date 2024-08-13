@@ -1,7 +1,7 @@
 # TODO
 
-- [ ] either make a script to add an entry in the dataset or just doucemnt the command to do it.
-- [ ] Make the dataset with a python script => put it in a github workflow file
+- [X] either make a script to add an entry in the dataset or just doucemnt the command to do it.
+- [X] Make the dataset with a python script => put it in a github workflow file
   - Create a new entry in the dataset:
     - Add submodule corresponding to the split(tikz,svg,etc) with the name "input" `git submodule add --name dog2 git@github.com:VarBench-SE/tikz.git dog2/input`
     - Copy the folder of the submodule to a directory with the name reference and delete the .git in that folder
@@ -16,7 +16,7 @@
   - Pull the dataset
   - For each entry
     - Clone the repo 
-    - Prompt the llm(via gauthier/aider or agentless)
+    - Prompt the llm(via gauthier/aider or agentless or genie)
     - Get the new patch
     - compare the diff to the "reference" patch
 

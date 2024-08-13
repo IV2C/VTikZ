@@ -27,5 +27,12 @@ Not that the name must be specified with `<SPLIT_NAME><ENTRY_NAME>`
 For example "tikz_entry5"
 
 ### Publishing the dataset
-TODO
+You can run the following command:
+
+```sh
+python3 -m varbench.dataset_workflow.create_dataset --dataset <dataset_path>
+```
+
+The script will first compute the patches for each entry, then will add, commit, and push the changes to get a commit id and create the dataset with the prompt, the repo, the id of the commit, and the patch.
+
 

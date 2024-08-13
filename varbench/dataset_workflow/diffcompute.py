@@ -34,10 +34,11 @@ def diffcompute(folder):
                     [
                         "diff",
                         "-u",
-                        os.path.join(folder, split, entry, "input"),
-                        os.path.join(folder, split, entry, "reference"),
+                        "input/repository",
+                        "reference/repository",
                         "--exclude",
                         ".git",
                     ],
+                    cwd=os.path.join(folder, split, entry),
                     stdout=f,
                 )
