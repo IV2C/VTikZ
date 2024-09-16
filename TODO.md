@@ -13,6 +13,7 @@
       - find the commit pointed 
       - Add in the dictonnary : the name of the repo, the commit hash, the prompt, and the diff
     - Create a dataset from the dictionnary and push it to huggingface
+- [ ] maybe I will need to change the patches manually to replace the paths(for now there is a "renaming" of input by reference, I might need to replace all reference/... to input/ to prevent the renaming), but it might not be necessary
 - [ ] Make run_evaluation file
   - proper prompt template
 - [ ] ascii art "compiler"

@@ -1,8 +1,0 @@
-{
-  "tikz": {
-    "commit_id": "265a7bf1618306601a50f4d4f8d42d323a414dee",
-    "patch": "diff -u --exclude .git input\/dog.tex reference\/dog.tex\n--- input\/dog.tex\t2024-08-13 16:37:30.511079018 +0200\n+++ reference\/dog.tex\t2024-07-19 16:57:41.605518153 +0200\n@@ -51,7 +51,7 @@\n     .. controls ++(  0:20) and ++(315:20) .. ++( 40,64)\n     .. controls ++(135:20) and ++( 45:20) .. ++(-80, 0)\n     .. controls ++(225:20) and ++(180:20) .. cycle;\n-  \\fill [BlueGrey900] (56, 0) circle [radius=20];\n+  \\fill [Red] (56, 0) circle [radius=20];\n   \\fill [fill color] (-8,-112)\n   -- ++(16,0) -- ++(0,-32) arc (180:360:24)\n   arc (180:0:8) arc (360:180:40);\n",
-    "prompt": "Change the color of the eyes of the dog described by this tikz file to red",
-    "repository": "https:\/\/github.com\/VarBench-SE\/tikz"
-  }
-}
