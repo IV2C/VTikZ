@@ -60,7 +60,7 @@ for subset in os.listdir(dataset_path):
         current_subset.append({
             "repository": "https://github.com/VarBench-SE/" + subset,
             "commit_id": commit_id,
-            "prompt": open(os.path.join(dataset_path, subset, entry, "prompt.txt")).read(),
+            "instruction": open(os.path.join(dataset_path, subset, entry, "instruction.txt")).read(),
             "patch": open(os.path.join(dataset_path, subset, entry, f"{entry}.patch")).read(),
             })
     dataset_dict[subset] = current_subset

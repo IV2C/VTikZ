@@ -8,7 +8,6 @@ pytest = "*"
 setuptools = "*"
 build = "*"
 varbench = {file = ".", editable = true}
-pdflatex = "*"
 pdf2image = "*"
 timeout-decorator = "*"
 cairosvg = "*"
@@ -18,6 +17,8 @@ pygit2 = "*"
 docker = "*"
 torchvision = "*"
 torchaudio = "*"
+outlines = "*"
+attrs = "*"
 
 [dev-packages]
 

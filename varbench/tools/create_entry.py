@@ -48,4 +48,4 @@ match subset:
         subprocess.run(["git", "submodule", "add", "--name",f"svgentry{new_entry_number}","--", "git@github.com:VarBench-SE/svg.git", input_repo_path])
 
 copytree(input_repo_path, os.path.join(new_entry_path, "reference"),ignore=ignore_patterns("*.git"))
-open(os.path.join(new_entry_path,"prompt.txt"), "w").close()
+open(os.path.join(new_entry_path,"instruction.txt"), "w").close()

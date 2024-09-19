@@ -11,7 +11,7 @@
     - For each entry/repo
       - Commit and push the changes
       - find the commit pointed 
-      - Add in the dictonnary : the name of the repo, the commit hash, the prompt, and the diff
+      - Add in the dictonnary : the name of the repo, the commit hash, the instruction, and the diff
     - Create a dataset from the dictionnary and push it to huggingface
 - [ ] maybe I will need to change the patches manually to replace the paths(for now there is a "renaming" of input by reference, I might need to replace all reference/... to input/ to prevent the renaming), but it might not be necessary
 - [ ] Make run_evaluation file
@@ -20,8 +20,10 @@
 - [ ] github action
   - [ ] create a store docker images(for now one docker image is stored in docker.io)
   - [ ] creates and publishes the dataset
-- dockerize execution
-
+- [ ] dockerize execution
+- [ ] Add a api option for run evaluation
+- [ ] Finish outlines implementation
+- [ ] Find a way to compile latex to pdf(easier is to use subprocess but cleaner to find a library?)
 
 ## Side notes
 - maybe I will need to change the patches manually to replace the paths(for now there is a "renaming" of input by reference, I might need to replace all reference/... to input/ to prevent the renaming), but it might not be necessary
