@@ -17,7 +17,6 @@ pygit2 = "*"
 docker = "*"
 torchvision = "*"
 torchaudio = "*"
-outlines = "*"
 attrs = "*"
 
 [dev-packages]
