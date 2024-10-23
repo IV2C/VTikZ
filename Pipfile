@@ -18,6 +18,7 @@ docker = "*"
 torchvision = "*"
 torchaudio = "*"
 attrs = "*"
+vllm = "*"
 
 [dev-packages]
 

@@ -9,30 +9,15 @@ The dataset is created from the scripts situated in varbench/dataset_workflow
 
 - Each folder in the dataset is a subset.
 - Each subset contains a list of entries in the dataset in the form of a folder.
-- These folders contain a folder input and a folder reference (the folder input is a git repository so that it can be referenced in the dataset).
-- Each entry in the dataset has a instruction and a patch as well(which is the difference between the reference and the input).
+- These folders contain an input and a folder solutions.
+- Each entry in the dataset has a instruction as well.
 
-### Creating a new entry
-First run the following command
-```sh
-python3 -m varbench.tools.create_entry [-h] name
-```
-It will create a new entry in the dataset situated at ./dataset  
-You will then need to modify the content of the input and the reference, and put the associated instruction file named `instruction.txt`
-
-### Removing an entry in the dataset
-Simply run the following command with the name of the entry you want to delete
-```sh
-python3 -m varbench.tools.remove_entry [-h] name
-```
-Not that the name must be specified with `<SUBSET_NAME><ENTRY_NAME>`  
-For example "tikzentry5"
 
 ### Publishing the dataset
 You can run the following command:
 
 ```sh
-python3 -m varbench.create_dataset [-h] --dataset DATASET
+python3 -m varbench.dataset_workflow.create_dataset [-h] --dataset DATASET
 ```
 
 The script will first compute the patches for each entry, then will add, commit, and push the changes to get a commit id and create the dataset with the instruction, the repo, the id of the commit, and the patch.

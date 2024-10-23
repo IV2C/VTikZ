@@ -1,44 +1,41 @@
-"""given a folder of sets, compute the diff between the reference and input
+"""given a folder of sets, compute the diff between the input and solutions
 
 
 the folder contains the subsets, each subsets contains the entries
 """
-
 import os
 import argparse
 
-import subprocess
+import difflib
 
-
-def diffcompute(folder):
+def diffcompute(folder:str)-> list[str]:
     """
-    Compute the differences between the 'input' and 'reference' directories for each set in the given folder.
+    Compute the differences between the 'input' and 'solutions' for each subset in the given folder.
 
     Parameters:
-        folder (str): The path to the folder containing the subsets and sets.
+        folder (str): The path to the folder containing the input and solution(the entry in the dataset).
 
     Returns:
         None
 
-    This function iterates over each subset and set in the given folder. For each set, it computes the differences between the 'input' and 'reference' directories using the 'diff' command. The differences are written to a file named '{set}.patch' in the corresponding set directory. The '--exclude' option is used to exclude the '.git' directory from the comparison.
-
-    Note: The 'subprocess.run' function is used to execute the 'diff' command. The 'stdout' parameter is set to the file object 'f' to write the output directly to the file.
+    This function iterates over each subset and set in the given folder. For each set, it computes the differences between the 'input' and 'solutions'.
 
     Example usage:
         diffcompute('/path/to/folder')
     """
-    for subset in os.listdir(folder):
-        for entry in os.listdir(os.path.join(folder, subset)):
-            with open(os.path.join(folder, subset, entry, f"{entry}.patch"), "w") as f:
-                subprocess.run(
-                    [
-                        "diff",
-                        "-u",
-                        "input",
-                        "reference",
-                        "--exclude",
-                        ".git",
-                    ],
-                    cwd=os.path.join(folder, subset, entry),
-                    stdout=f,
-                )
+    
+    solution_folder = os.path.join(folder,"solutions")
+    
+    input_path = os.path.join(folder,[filename for filename in os.listdir(folder) if "input" in filename][0])#getting the input.? file
+    
+    with open(input_path) as input_file:
+        input = input_file.read().splitlines(keepends=True)
+        diffs:set = set()
+        for solution in os.listdir(solution_folder):
+            with open(os.path.join(solution_folder,solution)) as solution_file:
+                
+                solution = solution_file.read().splitlines(keepends=True)
+                current_diff = "".join(list(difflib.unified_diff(input, solution, n=0))[2:])#getting the current diff without context
+                diffs.add(current_diff)
+                
+    return list(diffs)

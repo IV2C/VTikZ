@@ -1,5 +1,5 @@
+import difflib
 from datasets import Dataset
-from transformers import GenerationConfig, AutoTokenizer, AutoModelForCausalLM
 import subprocess
 import os
 from ..prompt_templates import *
@@ -82,6 +82,16 @@ def evaluate_svg(subset: Dataset, generator, it_tuned: bool):
         subset (Dataset): the subset to evaluate the model on
         pipeline (Pipeline): the model to evaluate
     """
+
+def _compute(self, inputs, predictions, diffs):
+    """Returns the scores"""
+    # TODO: Compute the different scores of the module
+
+    varscore = sum(
+        "".join(list(difflib.unified_diff(i, p, n=0))[2:]) in d
+        for i, p, d in zip(inputs, predictions, diffs)
+    ) / len(predictions)
+    return {"varscore": varscore}
 
 
 evaluation_dispatcher = {"tikz": evaluate_tikz, "svg": evaluate_svg}
