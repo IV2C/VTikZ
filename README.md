@@ -1,7 +1,15 @@
 # VarBench
 
-## Requirements
-In order to run this evaluation, you will need pytorch along with everything in the 
+## Evaluation
+
+### Running the evaluation
+The evaluation can be run for any subset using
+
+```sh
+python3 -m varbench.run_evaluation [-h] --subset SUBSETS [SUBSETS ...] --model MODEL --model_type MODEL_TYPE
+```
+
+
 
 ## Dataset
 
@@ -22,11 +30,4 @@ python3 -m varbench.dataset_workflow.create_dataset [-h] --dataset DATASET
 
 The script will first compute the patches for each entry, then will add, commit, and push the changes to get a commit id and create the dataset with the instruction, the repo, the id of the commit, and the patch.
 
-## Evaluation
 
-### Running the evaluation
-The evaluation can be run for any subset using
-
-```sh
-python3 -m varbench.run_evaluation [-h] --subsets SUBSETS [SUBSETS ...] --models MODELS [MODELS ...]
-```

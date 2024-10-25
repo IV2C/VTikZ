@@ -5,8 +5,9 @@
 - [X] Make the dataset with a python script
 - [X] refactor dataset creation
 - [X] change diff computation
-- [ ] refactor run-evaluation
-  - [ ] Use vllm and openai inference via a wrapper for evaluation(get inspired by https://github.com/HumanEval-V/HumanEval-V-Benchmark/blob/main/models/vllm_model.py)
+- [X] refactor run-evaluation
+  - [X] Use vllm and openai inference via a wrapper for evaluation(get inspired by https://github.com/HumanEval-V/HumanEval-V-Benchmark/blob/main/models/vllm_model.py)
+- [ ] Finish implementin openai batch api
 - [ ] ascii art "compiler"
 - [ ] github action
   - [ ] creates and publishes the dataset

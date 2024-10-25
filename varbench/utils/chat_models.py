@@ -1,0 +1,15 @@
+import json
+import uuid
+
+class ChatCompletionRequest:
+    def __init__(
+        self,  messages,custom_id=uuid.uuid4(), model="gpt-3.5-turbo-0125", max_tokens=1000
+    ):
+        self.custom_id = custom_id
+        self.method = "POST"
+        self.url = "/v1/chat/completions"
+        self.body = {model: model, messages: messages}
+        self.max_tokens = max_tokens
+
+    def to_json(self) -> str:
+        return json.dumps(self.__dict__)
