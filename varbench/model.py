@@ -1,6 +1,9 @@
 from io import BufferedReader, BytesIO
 from typing import Iterable
 from openai.types.chat.chat_completion_message_param import ChatCompletionMessageParam
+from loguru import logger
+
+from varbench.utils.parsing import parse_openai_jsonl
 
 
 class LLM_Model:
@@ -11,7 +14,10 @@ class LLM_Model:
         pass
 
     def batchRequest(
-        self, messages: Iterable[Iterable[ChatCompletionMessageParam]], **kwargs
+        self,
+        messages: Iterable[Iterable[ChatCompletionMessageParam]],
+        ids: Iterable[str],
+        **kwargs,
     ) -> Iterable[str]:
         pass
 
@@ -27,7 +33,7 @@ class VLLM_model(LLM_Model):
             trust_remote_code=True,
             tensor_parallel_size=gpu_number,
             gpu_memory_utilization=0.9,
-            **kwargs
+            **kwargs,
         )
         self.temperature = temperature
 
@@ -35,7 +41,10 @@ class VLLM_model(LLM_Model):
         return self.batchRequest(messages=[messages], **kwargs)[0]
 
     def batchRequest(
-        self, messages: Iterable[Iterable[ChatCompletionMessageParam]], **kwargs
+        self,
+        messages: Iterable[Iterable[ChatCompletionMessageParam]],
+        ids: Iterable[str],
+        **kwargs,
     ) -> Iterable[str]:
         self.samplingParams: SamplingParams = SamplingParams(
             temperature=self.temperature, stop="\n```\n", **kwargs
@@ -49,8 +58,9 @@ class VLLM_model(LLM_Model):
 
 from openai import OpenAI
 import os
-from utils.chat_models import ChatCompletionRequest
+from varbench.utils.chat_models import ChatCompletionRequest
 from time import sleep
+
 
 class API_model(LLM_Model):
     def __init__(
@@ -73,12 +83,18 @@ class API_model(LLM_Model):
         return completion.choices[-1].message.content
 
     def batchRequest(
-        self, messages: Iterable[Iterable[ChatCompletionMessageParam]], **kwargs
+        self,
+        messages: Iterable[Iterable[ChatCompletionMessageParam]],
+        ids: Iterable[str],
+        **kwargs,
     ) -> Iterable[str]:
         batch_str = "\n".join(
-            [ChatCompletionRequest(messages=message).to_json() for message in messages]
+            [
+                ChatCompletionRequest(messages=message, custom_id=id).to_json()
+                for message, id in zip(messages, ids)
+            ]
         )
-        batch_file = BytesIO(batch_str)
+        batch_file = BytesIO(batch_str.encode())
         batch_input_file = self.client.files.create(file=batch_file, purpose="batch")
         batch_input_file_id = batch_input_file.id
 
@@ -86,15 +102,29 @@ class API_model(LLM_Model):
             input_file_id=batch_input_file_id,
             endpoint="/v1/chat/completions",
             completion_window="24h",
-            metadata={"description": "varbench eval job"},
+            metadata={"description": "VarBench eval job"},
         )
         batch_id = batch.id
         while True:
             batch_status = self.client.batches.retrieve(batch_id)
+            logger.debug("Current_status:" + batch_status.status)
+            file_id = batch_status.output_file_id
             match (batch_status.status):
                 case "completed":
-                    file_response = self.client.files.content("file-xyz123")
-        pass
+                    file_response = self.client.files.content(file_id)
+                    logger.info(file_response.response)
+                    logger.info(file_response)
+                    simplified_response = parse_openai_jsonl(file_response.text)
+                    return [
+                        simplified_response[id] for id in ids
+                    ]  # returns the ids in order
+                case "expired":
+                    logger.error("OpenAI batch expired: " + batch_status)
+                    return
+                case "failed":
+                    logger.error("Openai batched failed: " + batch_status)
+                case _:
+                    sleep(300)
 
 
 from enum import Enum

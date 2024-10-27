@@ -13,4 +13,5 @@
   - [ ] creates and publishes the dataset
 - [ ] Add an api option for run evaluation
 - [ ] Remake latex-Compiler
-
+- [ ] add vision-only models
+- [ ] add possibility for multimodal input in models ->https://platform.openai.com/docs/guides/vision

@@ -3,6 +3,7 @@ pyproject.toml
 setup.py
 tests/test_compilers.py
 varbench/__init__.py
+varbench/model.py
 varbench/prompt_templates.py
 varbench/run_evaluation.py
 varbench.egg-info/PKG-INFO

@@ -19,6 +19,7 @@ torchvision = "*"
 torchaudio = "*"
 attrs = "*"
 vllm = "*"
+loguru = "*"
 
 [dev-packages]
 
