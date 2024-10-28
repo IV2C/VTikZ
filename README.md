@@ -13,7 +13,7 @@ python3 -m varbench.run_evaluation [-h] --subsets SUBSETS [SUBSETS ...] --model_
 - `--subsets`, `-s`: Name of the subset(s) to evaluate the model on. Default is `["tikz", "svg"]`.
 - `--model_type`, `-t`: Type of the model to evaluate. Required.
 - `--model`, `-m`: Name of the model to evaluate. Required.
-- `--gpu_number`: GPU number to use for evaluation. Default is `0`.
+- `--gpu_number`: GPU number to use for evaluation. Default is `1`.
 - `--api_url`: URL of the OpenAI completion compatible API. Default is `"https://api.openai.com/v1"`.
 - `--api_key`: API key for authentication, defaults to the environment variable `OPENAI_API_KEY`.
 - `--temperature`: Temperature setting for model sampling. Default is `0.7`.
