@@ -20,6 +20,24 @@ python3 -m varbench.run_evaluation [-h] --subsets SUBSETS [SUBSETS ...] --model_
 
 This command will evaluate the specified model on the given subsets using the provided parameters.
 
+#### Examples:
+
+- **Using the API model:**
+
+  ```sh
+  python3 -m varbench.run_evaluation --subsets tikz svg --model_type API --model gpt-3.5-turbo --api_key YOUR_API_KEY
+  ```
+
+  Replace `YOUR_API_KEY` with your actual API key.
+
+- **Using the VLLM model:**
+
+  ```sh
+  python3 -m varbench.run_evaluation --subsets tikz svg --model_type VLLM --model llama-2 --gpu_number 0
+  ```
+
+  This command uses the VLLM model named `llama-2` and specifies GPU number 0 for evaluation.
+
 
 
 ## Dataset
