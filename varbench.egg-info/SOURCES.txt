@@ -2,6 +2,8 @@ README.md
 pyproject.toml
 setup.py
 tests/test_compilers.py
+tests/test_evaluator.py
+tests/test_model_completion.py
 varbench/__init__.py
 varbench/model.py
 varbench/prompt_templates.py

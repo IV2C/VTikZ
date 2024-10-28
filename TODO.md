@@ -7,11 +7,15 @@
 - [X] change diff computation
 - [X] refactor run-evaluation
   - [X] Use vllm and openai inference via a wrapper for evaluation(get inspired by https://github.com/HumanEval-V/HumanEval-V-Benchmark/blob/main/models/vllm_model.py)
-- [ ] Finish implementin openai batch api
+- [X] Finish implementing openai batch api
+- [X] Add an api option for run evaluation
+- [X] Make a score object and change the evaluator to return it (change the tests as well)
+- [X] Remake latex-Compiler
+- [X] Make some first simple data
+- [X] text squid, find other possible solutions for dataset
+- [ ] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
+- [ ] Create synthetic data
 - [ ] ascii art "compiler"
 - [ ] github action
   - [ ] creates and publishes the dataset
-- [ ] Add an api option for run evaluation
-- [ ] Remake latex-Compiler
-- [ ] add vision-only models
-- [ ] add possibility for multimodal input in models ->https://platform.openai.com/docs/guides/vision
+- [ ] Add a config file containing vllm config 

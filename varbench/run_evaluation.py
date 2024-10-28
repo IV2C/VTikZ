@@ -44,20 +44,11 @@ parser.add_argument(
     required=True,
     help="Name of the model to evaluate",
 )
-parser.add_argument(
-    "--subsets",
-    "-s",
-    nargs="+",
-    type=str,
-    required=False,
-    help="Name of the subset(s) to evaluate the model on",
-    default=["subset1", "subset2"]
-)
 
 parser.add_argument(
     "--gpu_number",
     type=int,
-    default=0,
+    default=1,
     help="GPU number to use for evaluation"
 )
 
@@ -88,22 +79,22 @@ args = parser.parse_args()
 subsets = args.subsets
 model_type = args.model_type
 
-kargs:dict = {}
-kargs.models = args.model
-kargs.gpu_number = args.gpu_number
-kargs.api_url = args.api_url
-kargs.api_key = args.api_key
-kargs.temperature = args.temperature
+key_args:dict = {}
+key_args["model_name"] = args.model
+key_args["gpu_number"] = args.gpu_number
+key_args["api_url"] = args.api_url
+key_args["api_key"] = args.api_key
+key_args["temperature"] = args.temperature
 
 
 llm_model:LLM_Model = None
 # loading model
 match model_type:
     case ModelType.API:
-        llm_model = API_model(**kargs)
+        llm_model = API_model(**key_args)
     case ModelType.VLLM:
-        llm_model = VLLM_model(**kargs)
+        llm_model = VLLM_model(**key_args)
 
 for subset in subsets:
     dataset = load_dataset("CharlyR/varbench", subset, split="train")
-    evaluate[subset](dataset, llm_model)
+    evaluate(dataset, llm_model)

@@ -45,7 +45,7 @@ for subset in os.listdir(dataset_path):
         diffs = diffcompute(entry_path)
         current_subset.append(
             {
-                "name": entry,
+                "id": entry,
                 "code": input_code,
                 "instruction": instruction,
                 "diffs": diffs,
@@ -59,7 +59,7 @@ print(dataset_dict)
 
 features = Features(
     {
-        "name": Value("string"),
+        "id": Value("string"),
         "code": Value("string"),
         "instruction": Value("string"),
         "diffs": Sequence(Value("string")),

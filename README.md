@@ -33,7 +33,7 @@ This command will evaluate the specified model on the given subsets using the pr
 - **Using the VLLM model:**
 
   ```sh
-  python3 -m varbench.run_evaluation --subsets tikz svg --model_type VLLM --model llama-2 --gpu_number 0
+  python3 -m varbench.run_evaluation --subsets tikz svg --model_type VLLM --model meta-llama/Llama-3.2-1B-Instruct --gpu_number 2
   ```
 
   This command uses the VLLM model named `llama-2` and specifies GPU number 0 for evaluation.
