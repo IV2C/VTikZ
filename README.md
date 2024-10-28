@@ -6,8 +6,19 @@
 The evaluation can be run for any subset using
 
 ```sh
-python3 -m varbench.run_evaluation [-h] --subset SUBSETS [SUBSETS ...] --model MODEL --model_type MODEL_TYPE
+python3 -m varbench.run_evaluation [-h] --subsets SUBSETS [SUBSETS ...] --model_type MODEL_TYPE --model MODEL [--gpu_number GPU_NUMBER] [--api_url API_URL] [--api_key API_KEY] [--temperature TEMPERATURE]
 ```
+
+#### Arguments:
+- `--subsets`, `-s`: Name of the subset(s) to evaluate the model on. Default is `["tikz", "svg"]`.
+- `--model_type`, `-t`: Type of the model to evaluate. Required.
+- `--model`, `-m`: Name of the model to evaluate. Required.
+- `--gpu_number`: GPU number to use for evaluation. Default is `0`.
+- `--api_url`: URL of the OpenAI completion compatible API. Default is `"https://api.openai.com/v1"`.
+- `--api_key`: API key for authentication, defaults to the environment variable `OPENAI_API_KEY`.
+- `--temperature`: Temperature setting for model sampling. Default is `0.7`.
+
+This command will evaluate the specified model on the given subsets using the provided parameters.
 
 
 
