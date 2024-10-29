@@ -5,16 +5,15 @@ import os
 import argparse
 from transformers.pipelines.pt_utils import KeyDataset
 from .evaluation.evaluator import evaluate
-from .model import LLM_Model,VLLM_model,API_model,ModelType
+from .model import LLM_Model, VLLM_model, API_model, ModelType
+import json
 
+from loguru import logger
 # login(token=os.environ.get("HF_TOKEN"))
 
-    
+
 def model_type_mapper(value):
-    api_map = {
-        'API':ModelType.API,
-        'VLLM':ModelType.VLLM
-    }
+    api_map = {"API": ModelType.API, "VLLM": ModelType.VLLM}
     if value.upper() not in api_map:
         raise argparse.ArgumentTypeError(f"Invalid API type: {value}")
     return api_map[value.upper()]
@@ -27,7 +26,7 @@ parser.add_argument(
     nargs="+",
     type=str,
     help="Name of the subset(s) to evaluate the model on",
-    default=["tikz","svg"]
+    default=["tikz", "svg"],
 )
 parser.add_argument(
     "--model_type",
@@ -35,7 +34,7 @@ parser.add_argument(
     type=model_type_mapper,
     required=True,
     help="type of the model to evaluate",
-    default=ModelType.VLLM
+    default=ModelType.VLLM,
 )
 parser.add_argument(
     "--model",
@@ -46,40 +45,39 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "--gpu_number",
-    type=int,
-    default=1,
-    help="GPU number to use for evaluation"
+    "--gpu_number", type=int, default=1, help="GPU number to use for evaluation"
 )
 
 parser.add_argument(
     "--api_url",
     type=str,
     default="https://api.openai.com/v1",
-    help="URL of the openai completion compatible API"
+    help="URL of the openai completion compatible API",
 )
 
 parser.add_argument(
     "--api_key",
     type=str,
     default=None,
-    help="API key for authentication, will default to the ENV variable OPENAI_API_KEY"
+    help="API key for authentication, will default to the ENV variable OPENAI_API_KEY",
 )
 
 parser.add_argument(
     "--temperature",
     type=float,
     default=0.7,
-    help="Temperature setting for model sampling"
+    help="Temperature setting for model sampling",
 )
-
+parser.add_argument(
+    "--pass", type=int, default=1, help="Number of generations per prompt"
+)
 
 args = parser.parse_args()
 
 subsets = args.subsets
 model_type = args.model_type
 
-key_args:dict = {}
+key_args: dict = {}
 key_args["model_name"] = args.model
 key_args["gpu_number"] = args.gpu_number
 key_args["api_url"] = args.api_url
@@ -87,7 +85,7 @@ key_args["api_key"] = args.api_key
 key_args["temperature"] = args.temperature
 
 
-llm_model:LLM_Model = None
+llm_model: LLM_Model = None
 # loading model
 match model_type:
     case ModelType.API:
@@ -95,6 +93,18 @@ match model_type:
     case ModelType.VLLM:
         llm_model = VLLM_model(**key_args)
 
+if not os.path.exists("./results"):
+    os.mkdir("./results")
+
+result_path = os.path.join("./results", args.model.replace("/", "_"))
+
+if not os.path.exists(result_path):
+    os.mkdir(result_path)
+
+
 for subset in subsets:
     dataset = load_dataset("CharlyR/varbench", subset, split="train")
-    evaluate(dataset, llm_model)
+    result = evaluate(dataset, llm_model)
+    logger.info(result)
+    with open(os.path.join(result_path, subset)) as subset_result:
+        subset_result.write(json.dumps(result))

@@ -7,12 +7,14 @@ from varbench.utils.parsing import parse_openai_jsonl
 
 
 class LLM_Model:
-    def __init__(self, model_name, temperature,
-        **kwargs) -> None:
+    def __init__(self, model_name, temperature, n=1, **kwargs) -> None:
         self.model_name = model_name
+        self.temperature = temperature
+        self.n = n
 
-    def request(self, messages: Iterable[ChatCompletionMessageParam],
-        **kwargs) -> str:
+    def request(
+        self, messages: Iterable[ChatCompletionMessageParam], **kwargs
+    ) -> Iterable[str]:
         pass
 
     def batchRequest(
@@ -20,7 +22,7 @@ class LLM_Model:
         messages: Iterable[Iterable[ChatCompletionMessageParam]],
         ids: Iterable[str],
         **kwargs,
-    ) -> Iterable[str]:
+    ) -> Iterable[Iterable[str]]:
         pass
 
 
@@ -28,37 +30,42 @@ from vllm import LLM, SamplingParams
 
 
 class VLLM_model(LLM_Model):
-    def __init__(self, model_name, temperature, gpu_number=None,
-        **kwargs) -> None:
-        
-        super.__init__()
-        self.llm: LLM = LLM(
-            model=model_name,
-            trust_remote_code=True,
-            tensor_parallel_size=gpu_number,
-            gpu_memory_utilization=0.95,
-            dtype="float16",
-            cpu_offload_gb=15,
-            max_model_len = 4096
-        )
-        self.temperature = temperature
+    def __init__(self, model_name, temperature, n=1, gpu_number=None, **kwargs) -> None:
 
-    def request(self, messages: Iterable[ChatCompletionMessageParam],
-        **kwargs) -> str:
+        super().__init__(model_name, temperature, n)
+        llm_args = {
+            "model": model_name,
+            "trust_remote_code": True,
+            "gpu_memory_utilization": 0.95,
+            "dtype": "float16",
+            "cpu_offload_gb": 15,
+            "max_model_len": 4096,
+        }
+
+        if gpu_number is not None:
+            llm_args["tensor_parallel_size"] = gpu_number
+    
+        self.llm: LLM = LLM(**llm_args)
+
+    def request(
+        self, messages: Iterable[ChatCompletionMessageParam], **kwargs
+    ) -> Iterable[str]:
         return self.batchRequest(messages=[messages])[0]
 
     def batchRequest(
         self,
         messages: Iterable[Iterable[ChatCompletionMessageParam]],
         ids: Iterable[str],
-        **kwargs
-    ) -> Iterable[str]:
+        **kwargs,
+    ) -> Iterable[Iterable[str]]:
         self.samplingParams: SamplingParams = SamplingParams(
-            temperature=self.temperature, stop="\n```\n"
+            temperature=self.temperature, stop="\n```\n", n=self.n,max_tokens=2048
         )
-        outputs = self.llm.chat(messages=messages, sampling_params=self.samplingParams)
+        outputs = self.llm.chat(
+            messages=messages, sampling_params=self.samplingParams
+        )
         return [
-            "".join([output.text for output in completion.outputs])
+            [output.text for output in completion.outputs]
             for completion in outputs
         ]
 
@@ -71,10 +78,15 @@ from time import sleep
 
 class API_model(LLM_Model):
     def __init__(
-        self, model_name, temperature, api_url="https://api.openai.com/v1", api_key=None,
-        **kwargs
+        self,
+        model_name,
+        temperature,
+        n=None,
+        api_url="https://api.openai.com/v1",
+        api_key=None,
+        **kwargs,
     ) -> None:
-        super.__init__()
+        super().__init__(model_name, temperature, n)
 
         if not api_key:
             api_key = os.environ.get("OPENAI_API_KEY")
@@ -83,12 +95,12 @@ class API_model(LLM_Model):
             base_url=api_url,
             api_key=api_key,
         )
-        self.temperature = temperature
 
-    def request(self, messages: Iterable[ChatCompletionMessageParam],
-        **kwargs) -> str:
+    def request(
+        self, messages: Iterable[ChatCompletionMessageParam], **kwargs
+    ) -> Iterable[str]:
         completion = self.client.chat.completions.create(
-            messages=messages, stop=["\n```\n"]
+            messages=messages, stop=["\n```\n"], n=self.n
         )
         return completion.choices[-1].message.content
 
@@ -96,11 +108,13 @@ class API_model(LLM_Model):
         self,
         messages: Iterable[Iterable[ChatCompletionMessageParam]],
         ids: Iterable[str],
-        **kwargs
-    ) -> Iterable[str]:
+        **kwargs,
+    ) -> Iterable[Iterable[str]]:
         batch_str = "\n".join(
             [
-                ChatCompletionRequest(messages=message, custom_id=id).to_json()
+                ChatCompletionRequest(
+                    messages=message, custom_id=id, n=self.n
+                ).to_json()
                 for message, id in zip(messages, ids)
             ]
         )

@@ -24,10 +24,10 @@ class TestEvaluator(unittest.TestCase):
         )
 
         # mock llm_model
-        model: LLM_Model = LLM_Model()
+        model: LLM_Model = LLM_Model("model-name",0)
         model.batchRequest = MagicMock(
             return_value=[
-                "\\begin{tikzpicture} \\draw (0,1) -- (1,0); \\end{tikzpicture}"
+                ["\\begin{tikzpicture} \\draw (0,1) -- (1,0); \\end{tikzpicture}"]
             ]
         )
 
@@ -51,8 +51,8 @@ class TestEvaluator(unittest.TestCase):
         )
 
         # mock llm_model
-        model: LLM_Model = LLM_Model()
-        model.batchRequest = MagicMock(return_value=["wrong_return_value"])
+        model: LLM_Model = LLM_Model("model-name",0)
+        model.batchRequest = MagicMock(return_value=[["wrong_return_value"]])
 
         # expected result
         expected = {"individual_scores": {"example1": False}, "varscore": 0.0}
@@ -78,11 +78,11 @@ class TestEvaluator(unittest.TestCase):
         )
 
         # mock llm_model
-        model: LLM_Model = LLM_Model()
+        model: LLM_Model = LLM_Model("model-name",0)
         model.batchRequest = MagicMock(
             return_value=[
-                "\\begin{tikzpicture} \\draw (0,1) -- (1,0); \\end{tikzpicture}",
-                "wrong_return_value",
+                ["\\begin{tikzpicture} \\draw (0,1) -- (1,0); \\end{tikzpicture}"],
+                ["wrong_return_value"],
             ]
         )
 
@@ -113,11 +113,11 @@ class TestEvaluator(unittest.TestCase):
         )
 
         # mock llm_model
-        model: LLM_Model = LLM_Model()
+        model: LLM_Model = LLM_Model("model-name",0)
         model.batchRequest = MagicMock(
             return_value=[
-                "\\begin{tikzpicture} \\draw (0,1) -- (1,0); \\end{tikzpicture}",
-                "\\begin{tikzpicture} \\draw (0,1) -- (1,0); \\end{tikzpicture}",
+                ["\\begin{tikzpicture} \\draw (0,1) -- (1,0); \\end{tikzpicture}"],
+                ["\\begin{tikzpicture} \\draw (0,1) -- (1,0); \\end{tikzpicture}"],
             ]
         )
 

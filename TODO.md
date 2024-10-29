@@ -13,6 +13,7 @@
 - [X] Remake latex-Compiler
 - [X] Make some first simple data
 - [X] text squid, find other possible solutions for dataset
+- [ ] implement pass@k
 - [ ] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
 - [ ] Create synthetic data
 - [ ] ascii art "compiler"

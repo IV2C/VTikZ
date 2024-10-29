@@ -1,4 +1,8 @@
-# VarBench
+<h1 align="center">
+ VarBench
+</h1>
+
+<p align="center">  <a href="https://github.com/VarBench-SE/VarBench">🏠 Home Page</a> • <a href="https://huggingface.co/datasets/CharlyR/varbench">🤗 Dataset</a>   </p>
 
 ## Evaluation
 
@@ -17,6 +21,7 @@ python3 -m varbench.run_evaluation [-h] --subsets SUBSETS [SUBSETS ...] --model_
 - `--api_url`: URL of the OpenAI completion compatible API. Default is `"https://api.openai.com/v1"`.
 - `--api_key`: API key for authentication, defaults to the environment variable `OPENAI_API_KEY`.
 - `--temperature`: Temperature setting for model sampling. Default is `0.7`.
+- `--pass`: number of gneerated responses, used to compute pass@k. default is 1
 
 This command will evaluate the specified model on the given subsets using the provided parameters.
 
@@ -36,8 +41,9 @@ This command will evaluate the specified model on the given subsets using the pr
   python3 -m varbench.run_evaluation --subsets tikz svg --model_type VLLM --model meta-llama/Llama-3.2-1B-Instruct --gpu_number 2
   ```
 
-  This command uses the VLLM model named `llama-2` and specifies GPU number 0 for evaluation.
+  This command uses the VLLM model named `llama-3.2` and specifies GPU number 2 for evaluation.
 
+  tips: you can tweak the logging level of vllm via `export VLLM_LOGGING_LEVEL=DEBUG`
 
 
 ## Dataset

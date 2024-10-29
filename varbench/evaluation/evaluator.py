@@ -16,8 +16,8 @@ def evaluate(subset: Dataset, model: LLM_Model):
     predictions = model.batchRequest(
         subset_processed["messages"], subset_processed["id"]
     )
-    subset_processed:Dataset = subset_processed.add_column("predictions", predictions)
-    subset_processed.to_csv(".tmp/computed_dataset_"+model.model_name)
+    subset_processed: Dataset = subset_processed.add_column("predictions", predictions)
+    subset_processed.save_to_disk(".tmp/computed_dataset_" + model.model_name)
 
     return _compute(
         subset_processed["id"],
@@ -46,10 +46,16 @@ def create_message_row(row):
 
 
 def _compute(ids, inputs, predictions, diffs):
+
+    def _diffs(input, predictions: list) -> list:
+        return [
+            "".join(list(difflib.unified_diff(input, prediction, n=0))[2:])
+            for prediction in predictions
+        ]
+
     """Returns the scores"""
     result_list = [
-        ("".join(list(difflib.unified_diff(i, p, n=0))[2:]) in d)
-        for i, p, d in zip(inputs, predictions, diffs)
+        bool(set(_diffs(i, p)) & set(d)) for i, p, d in zip(inputs, predictions, diffs)
     ]
 
     individual_scores = {id: result for id, result in zip(ids, result_list)}

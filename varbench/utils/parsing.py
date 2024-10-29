@@ -15,9 +15,9 @@ def parse_openai_jsonl(input_data: str) -> dict[str, str]:
 
         # Extract the custom_id and response
         custom_id = data["custom_id"]
-        response = data["response"]["body"]["choices"][0]["message"]["content"]
+        responses = [response["message"]["content"] for response in data["response"]["body"]["choices"]]
 
         # Store the response associated with the custom_id
         if custom_id:
-            custom_id_to_response[custom_id] = response
+            custom_id_to_response[custom_id] = responses
     return custom_id_to_response
