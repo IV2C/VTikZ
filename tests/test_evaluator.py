@@ -1,13 +1,30 @@
 import unittest
 import os
 import timeout_decorator
+from varbench.compilers import Compiler, TexCompiler
 from varbench.evaluation.evaluator import evaluate
 from varbench.model import LLM_Model
 from unittest.mock import MagicMock
 from datasets import Dataset
+from PIL import Image
 
 
 class TestEvaluator(unittest.TestCase):
+
+    def setUp(self) -> None:
+        with open("tests/resources/tikz/input.tex") as in_text:
+            self.input_tex = in_text.read()
+        with open("tests/resources/tikz/reference.tex") as in_text:
+            self.ref_tex = in_text.read()
+        self.ref_diff = "@@ -7 +7 @@\n-\\begin{tikzpicture} \\draw (0,0) -- (1,1); \\end{tikzpicture}+\\begin{tikzpicture} \\draw (0,1) -- (1,0); \\end{tikzpicture}"
+        self.compiler: TexCompiler = TexCompiler()
+        self.compiler.compile_from_string = MagicMock(
+            return_value=Image.open("tests/resources/images/reference.jpeg")
+        )
+
+        self.model: LLM_Model = LLM_Model("model-name", 0)
+
+        return super().setUp()
 
     def test_evaluator_metric_exists(self):
 
@@ -15,26 +32,26 @@ class TestEvaluator(unittest.TestCase):
         dummy_dataset: Dataset = Dataset.from_dict(
             {
                 "id": ["example1"],
-                "code": [
-                    "\\begin{tikzpicture} \\draw (0,0) -- (1,1); \\end{tikzpicture}"
-                ],
+                "code": [self.input_tex],
                 "instruction": ["Rotate the line"],
-                "diffs": [["@@ -30 +30 @@\n-0+1@@ -39 +39 @@\n-1+0"]],
+                "diffs": [[self.ref_diff]],
+                "result_description": [
+                    "a line going from the top left to the bottom right"
+                ],
+                "solution_image": [Image.open("tests/resources/images/reference.jpeg")],
             }
         )
 
         # mock llm_model
-        model: LLM_Model = LLM_Model("model-name",0)
-        model.batchRequest = MagicMock(
-            return_value=[
-                ["\\begin{tikzpicture} \\draw (0,1) -- (1,0); \\end{tikzpicture}"]
-            ]
-        )
+        self.model.batchRequest = MagicMock(return_value=[[self.ref_tex]])
 
         # expected result
-        expected = {"individual_scores": {"example1": True}, "varscore": 1.0}
+        expected = {"diffs_score": 1.0}
 
-        self.assertEqual(evaluate(dummy_dataset, model), expected)
+        self.assertEqual(
+            evaluate(dummy_dataset, self.model, self.compiler)[0].get("diffs_score"),
+            expected["diffs_score"],
+        )
 
     def test_evaluator_metric_not_exists(self):
 
@@ -42,22 +59,26 @@ class TestEvaluator(unittest.TestCase):
         dummy_dataset: Dataset = Dataset.from_dict(
             {
                 "id": ["example1"],
-                "code": [
-                    "\\begin{tikzpicture} \\draw (0,0) -- (1,1); \\end{tikzpicture}"
-                ],
+                "code": [self.input_tex],
                 "instruction": ["Rotate the line"],
-                "diffs": [["@@ -30 +30 @@\n-0+1@@ -39 +39 @@\n-1+0"]],
+                "diffs": [[self.ref_diff]],
+                "result_description": [
+                    "a line going from the top left to the bottom right"
+                ],
+                "solution_image": [Image.open("tests/resources/images/reference.jpeg")],
             }
         )
 
         # mock llm_model
-        model: LLM_Model = LLM_Model("model-name",0)
-        model.batchRequest = MagicMock(return_value=[["wrong_return_value"]])
+        self.model.batchRequest = MagicMock(return_value=[["wrong_return_value"]])
 
         # expected result
-        expected = {"individual_scores": {"example1": False}, "varscore": 0.0}
+        expected = {"diffs_score": 0.0}
 
-        self.assertEqual(evaluate(dummy_dataset, model), expected)
+        self.assertEqual(
+            evaluate(dummy_dataset, self.model, self.compiler)[0].get("diffs_score"),
+            expected["diffs_score"],
+        )
 
     def test_evaluator_metric_exists_multiple(self):
 
@@ -66,33 +87,39 @@ class TestEvaluator(unittest.TestCase):
             {
                 "id": ["example1", "example2"],
                 "code": [
-                    "\\begin{tikzpicture} \\draw (0,0) -- (1,1); \\end{tikzpicture}",
-                    "\\begin{tikzpicture} \\draw (0,0) -- (1,1); \\end{tikzpicture}",
+                    self.input_tex,
+                    self.input_tex,
                 ],
                 "instruction": ["Rotate the line", "Rotate the line"],
                 "diffs": [
-                    ["@@ -30 +30 @@\n-0+1@@ -39 +39 @@\n-1+0"],
-                    ["@@ -30 +30 @@\n-0+1@@ -39 +39 @@\n-1+0"],
+                    [self.ref_diff],
+                    [self.ref_diff],
                 ],
+                "result_description": [
+                    "a line going from the top left to the bottom right",
+                    "a line going from the top left to the bottom right"
+                ],
+                "solution_image": [Image.open("tests/resources/images/reference.jpeg"),Image.open("tests/resources/images/reference.jpeg")],
             }
         )
 
         # mock llm_model
-        model: LLM_Model = LLM_Model("model-name",0)
-        model.batchRequest = MagicMock(
+        self.model.batchRequest = MagicMock(
             return_value=[
-                ["\\begin{tikzpicture} \\draw (0,1) -- (1,0); \\end{tikzpicture}"],
+                [self.ref_tex],
                 ["wrong_return_value"],
             ]
         )
 
         # expected result
         expected = {
-            "individual_scores": {"example1": True, "example2": False},
-            "varscore": 0.5,
+            "diffs_score": 0.5,
         }
 
-        self.assertEqual(evaluate(dummy_dataset, model), expected)
+        self.assertEqual(
+            evaluate(dummy_dataset, self.model, self.compiler)[0].get("diffs_score"),
+            expected["diffs_score"],
+        )
 
     def test_evaluator_metric_exists_complex(self):
 
@@ -101,33 +128,39 @@ class TestEvaluator(unittest.TestCase):
             {
                 "id": ["example1", "example2"],
                 "code": [
-                    "\\begin{tikzpicture} \\draw (0,0) -- (1,1); \\end{tikzpicture}",
-                    "\\begin{tikzpicture} \\draw (0,0) -- (1,1); \\end{tikzpicture}",
+                    self.input_tex,
+                    self.input_tex,
                 ],
                 "instruction": ["Rotate the line", "Rotate the line"],
                 "diffs": [
-                    ["abc", "def", "@@ -30 +30 @@\n-0+1@@ -39 +39 @@\n-1+0"],
-                    ["abc", "@@ -30 +30 @@\n-0+1@@ -39 +39 @@\n-1+0", "def"],
+                    ["abc", "def", self.ref_diff],
+                    ["abc", self.ref_diff, "def"],
                 ],
+                "result_description": [
+                    "a line going from the top left to the bottom right",
+                    "a line going from the top left to the bottom right"
+                ],
+                "solution_image": [Image.open("tests/resources/images/reference.jpeg"),Image.open("tests/resources/images/reference.jpeg")],
             }
         )
 
         # mock llm_model
-        model: LLM_Model = LLM_Model("model-name",0)
-        model.batchRequest = MagicMock(
+        self.model.batchRequest = MagicMock(
             return_value=[
-                ["\\begin{tikzpicture} \\draw (0,1) -- (1,0); \\end{tikzpicture}"],
-                ["\\begin{tikzpicture} \\draw (0,1) -- (1,0); \\end{tikzpicture}"],
+                [self.ref_tex],
+                [self.ref_tex],
             ]
         )
 
         # expected result
         expected = {
-            "individual_scores": {"example1": True, "example2": True},
-            "varscore": 1.0,
+            "diffs_score": 1.0,
         }
 
-        self.assertEqual(evaluate(dummy_dataset, model), expected)
+        self.assertEqual(
+            evaluate(dummy_dataset, self.model, self.compiler)[0].get("diffs_score"),
+            expected["diffs_score"],
+        )
 
 
 if __name__ == "__main__":

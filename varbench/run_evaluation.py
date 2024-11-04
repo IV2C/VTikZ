@@ -4,11 +4,14 @@ from transformers import pipeline, GenerationConfig, AutoModelForCausalLM, AutoT
 import os
 import argparse
 from transformers.pipelines.pt_utils import KeyDataset
+
+from varbench.compilers import Compiler, SvgCompiler, TexCompiler
 from .evaluation.evaluator import evaluate
 from .model import LLM_Model, VLLM_model, API_model, ModelType
 import json
 
 from loguru import logger
+
 # login(token=os.environ.get("HF_TOKEN"))
 
 
@@ -104,7 +107,18 @@ if not os.path.exists(result_path):
 
 for subset in subsets:
     dataset = load_dataset("CharlyR/varbench", subset, split="train")
-    result = evaluate(dataset, llm_model)
-    logger.info(result)
+
+    # creating compiler
+    compiler: Compiler = None
+    match subset:
+        case "tikz":
+            compiler = TexCompiler()
+        case "svg":
+            compiler = SvgCompiler()
+
+    # evaluating
+    result_scores, score_dataset = evaluate(dataset, llm_model, compiler)
+    logger.info(result_scores)
+    score_dataset.to_csv("tmp.csv")
     with open(os.path.join(result_path, subset)) as subset_result:
-        subset_result.write(json.dumps(result))
+        subset_result.write(json.dumps(result_scores))

@@ -1,8 +1,9 @@
 import unittest
 import os
+import PIL.Image
 import timeout_decorator
 import time
-
+import numpy as np
 
 class TestCompilers(unittest.TestCase):
 
@@ -36,9 +37,8 @@ class TestCompilers(unittest.TestCase):
         with open(tikzfile, "r") as f:
             tikzstring = f.read()
         
-        output = os.path.join("tests/resources/tikz", "dog.png")
-        compiler.compile_from_string(tikzstring, output)
-        self.assertTrue(os.path.exists(output), msg="Output file does not exist")
+        result:PIL.Image = compiler.compile_from_string(tikzstring)
+        self.assertTrue(np.any(np.array(result)))
 
     @timeout_decorator.timeout(10)
     def test_svg_from_string(self):
@@ -49,14 +49,13 @@ class TestCompilers(unittest.TestCase):
         with open(svgFile, "r") as f:
             svgstring = f.read()
         
-        output = os.path.join("tests/resources/svg", "dog.png")
-        compiler.compile_from_string(svgstring, output)
-        self.assertTrue(os.path.exists(output), msg="Output file does not exist")
+        result:PIL.Image = compiler.compile_from_string(svgstring)
+        self.assertTrue(np.any(np.array(result)))
     
 
     def tearDown(self):
-        #if os.path.exists("tests/resources/tikz/dog.png"):
-        #    os.remove("tests/resources/tikz/dog.png")
+        if os.path.exists("tests/resources/tikz/dog.png"):
+            os.remove("tests/resources/tikz/dog.png")
         if os.path.exists("tests/resources/svg/dog.png"):
             os.remove("tests/resources/svg/dog.png")
    

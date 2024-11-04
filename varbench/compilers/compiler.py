@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 import os
 
+import PIL.Image
+
 
 class Compiler(ABC):
     def __init__(self):
@@ -13,5 +15,5 @@ class Compiler(ABC):
         pass
 
     @abstractmethod
-    def compile_from_string(self, input_string, output):
+    def compile_from_string(self, input_string) -> PIL.Image:
         pass

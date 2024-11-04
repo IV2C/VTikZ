@@ -13,9 +13,20 @@
 - [X] Remake latex-Compiler
 - [X] Make some first simple data
 - [X] text squid, find other possible solutions for dataset
-- [ ] implement pass@k
+- [X] implement pass@k
+- [X] test pass@k
+- [X] complex oracle
+  - [X] vlm or computer-vision("Are the eyes red")
+  - [X] Image comparison(image diff)
+  - [ ] line diff(need to think, either same as before with only one column diff, or a new one with only the lines)
+- [ ] Test compilers when image not compilable
+- [ ] Assessment of vlm on checking 
 - [ ] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
-- [ ] Create synthetic data
+- [ ] Create synthetic data and then verify
+- [ ] Test LLM-only models then compare with Multimodal with image in input
+- [ ] Implement LLM+something solution and test it
+- [ ] Explore which other things can be tested(tikz, svg, ascii, what else?)
+Eventually
 - [ ] ascii art "compiler"
 - [ ] github action
   - [ ] creates and publishes the dataset
