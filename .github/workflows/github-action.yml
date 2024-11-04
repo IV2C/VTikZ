@@ -30,6 +30,19 @@ jobs:
             sudo apt-get install texlive-latex-extra
             python -m pip install --upgrade pip
             pip install -r requirements.txt
+            pip install coverage coverage-badge
       - name: run tests
         run: |
-            python -m unittest tests/*
+            coverage run -m unittest tests/*
+            coverage html
+            coverage-badge -o coverage.svg
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: htmlcov/
+      - name: Upload coverage-badge report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-badge
+          path: coverage.svg
