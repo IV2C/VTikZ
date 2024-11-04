@@ -16,7 +16,7 @@ class ClipComparer:
         model_name: str = "ViT-bigG-14-quickgelu",
         pretrained_name: str = "metaclip_fullcc",
         force_cpu: bool = False,
-        policy: Callable[[list[float]], float] = lambda l: max(l),
+        policy: Callable[[list[float]], float] = lambda l: max(l) if len(l)>0 else 0,
     ) -> None:
         """
         Initializes the ClipComparer with a specified model and pretrained weights.

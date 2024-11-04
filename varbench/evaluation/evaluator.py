@@ -11,6 +11,14 @@ from ..compilers import Compiler, CompilerException
 from PIL.Image import Image
 import torch
 import pandas as pd
+import re
+
+
+def _get_first_code_block(text):
+    # Regular expression to find the first code block, ignoring the language specifier
+    match = re.search(r"```[a-zA-Z]*\n(.*?)```", text, re.DOTALL)
+    return match.group(1).strip() if match else None
+
 
 def evaluate(subset: Dataset, model: LLM_Model, compiler: Compiler):
 
@@ -19,6 +27,10 @@ def evaluate(subset: Dataset, model: LLM_Model, compiler: Compiler):
     predictions = model.batchRequest(
         subset_processed["messages"], subset_processed["id"]
     )
+    predictions = [
+        [_get_first_code_block(prediction) for prediction in row_predictions]
+        for row_predictions in predictions
+    ]
     subset_processed: Dataset = subset_processed.add_column("predictions", predictions)
     subset_processed.save_to_disk(".tmp/computed_dataset_" + model.model_name)
 
