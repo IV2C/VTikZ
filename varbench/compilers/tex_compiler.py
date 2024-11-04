@@ -4,6 +4,7 @@ import os
 import subprocess
 from pdf2image import convert_from_path
 from loguru import logger
+from .compiler import CompilerException
 
 
 class TexCompiler(Compiler):
@@ -13,9 +14,13 @@ class TexCompiler(Compiler):
         pass
 
     def compile(self, input: str, output: str):
-        subprocess.run(
-            ["pdflatex", "-output-directory", self.cache_path, input],
+        output = subprocess.run(
+            ["pdflatex", "-halt-on-error", "-output-directory", self.cache_path, input],
+            capture_output=True,
         )
+        if output.returncode != 0:
+            raise CompilerException()
+
         output_file_name = os.path.join(
             self.cache_path, os.path.basename(input).replace("tex", "pdf")
         )
@@ -30,9 +35,19 @@ class TexCompiler(Compiler):
         file.write(input_string)
         file.flush()
         file.close()
-        subprocess.run(
-            ["pdflatex", "-output-directory", self.cache_path, tmp_file_path],
+        output = subprocess.run(
+            [
+                "pdflatex",
+                "-halt-on-error",
+                "-output-directory",
+                self.cache_path,
+                tmp_file_path,
+            ],
+            capture_output=True,
         )
+        if output.returncode != 0:
+            raise CompilerException()
+        
         output_file_name = os.path.join(
             self.cache_path, os.path.basename(tmp_file_path).replace("tex", "pdf")
         )

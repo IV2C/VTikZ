@@ -17,3 +17,6 @@ class Compiler(ABC):
     @abstractmethod
     def compile_from_string(self, input_string) -> PIL.Image:
         pass
+
+class CompilerException(Exception):
+    pass

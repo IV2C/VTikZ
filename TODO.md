@@ -19,7 +19,7 @@
   - [X] vlm or computer-vision("Are the eyes red")
   - [X] Image comparison(image diff)
   - [ ] line diff(need to think, either same as before with only one column diff, or a new one with only the lines)
-- [ ] Test compilers when image not compilable
+- [X] Test compilers when image not compilable
 - [ ] Assessment of vlm on checking 
 - [ ] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
 - [ ] Create synthetic data and then verify

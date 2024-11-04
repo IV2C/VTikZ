@@ -7,10 +7,10 @@ from varbench.evaluation.clip_comparer import ClipComparer
 from ..prompt_templates import *
 from ..model import LLM_Model
 from loguru import logger
-from ..compilers import Compiler
+from ..compilers import Compiler, CompilerException
 from PIL.Image import Image
 import torch
-
+import pandas as pd
 
 def evaluate(subset: Dataset, model: LLM_Model, compiler: Compiler):
 
@@ -29,7 +29,7 @@ def evaluate(subset: Dataset, model: LLM_Model, compiler: Compiler):
         subset_processed["predictions"],
         subset_processed["diffs"],
         subset_processed["result_description"],
-        subset_processed["solution_image"],
+        subset_processed["image_solution"],
     )
 
 
@@ -59,7 +59,7 @@ def _compute(
     diffs: list[str],
     result_descriptions: list[str],
     image_solutions: list[Image],
-) -> tuple[object, Dataset]:
+) -> tuple[object, pd.DataFrame]:
     """
     Computes the score.
 
@@ -81,10 +81,17 @@ def _compute(
         ]
 
     def _images(predictions: list[list[str]]) -> list[list[Image]]:
-        return [
-            [compiler.compile_from_string(prediction) for prediction in row_predictions]
-            for row_predictions in predictions
-        ]
+        output_images: list[list[Image]] = []
+        for row_predictions in predictions:
+            row_output_images = []
+            for prediction in row_predictions:
+                try:
+                    result_image = compiler.compile_from_string(prediction)
+                    row_output_images.append(result_image)
+                except CompilerException:
+                    pass
+            output_images.append(row_output_images)
+        return output_images
 
     # first computing if any of the diffs are in the prediction, if so the score is 1 for the row
     individual_diffs_scores = [
@@ -93,6 +100,10 @@ def _compute(
 
     # computing the clip similarity between compiled images and descriptions of results, as well as the image similarities
     images_lists = _images(predictions)
+    prediction_pass_len = len(predictions[0])
+    individual_compiling_scores = [
+        len(image_list) / prediction_pass_len for image_list in images_lists
+    ]
 
     clip_comparer: ClipComparer = ClipComparer(force_cpu=True)
     # TODO:Add a command line parameter for the clip parameters?
@@ -109,6 +120,7 @@ def _compute(
     diff_score = sum(individual_diffs_scores) / len(predictions)
     text_score = sum(individual_text_scores) / len(predictions)
     image_score = sum(individual_image_scores) / len(predictions)
+    compiling_score = sum(individual_compiling_scores) / len(images_lists)
 
     varscores = [
         d if d else (t + i) / 2
@@ -118,15 +130,16 @@ def _compute(
     ]
     varscore = sum(varscores) / len(varscores)
 
-    #logger.info(individual_diffs_scores)
-    #logger.info(individual_text_scores)
-    #logger.info(individual_image_scores)
+    # logger.info(individual_diffs_scores)
+    # logger.info(individual_text_scores)
+    # logger.info(individual_image_scores)
 
-    output_dataset: Dataset = Dataset.from_dict(
+    output_dataset: pd.DataFrame = pd.DataFrame.from_dict(
         {
             "individual_diffs_scores": individual_diffs_scores,
             "individual_text_scores": individual_text_scores,
             "individual_image_scores": individual_image_scores,
+            "individual_compiling_scores": individual_compiling_scores,
             "id": ids,
         }
     )
@@ -136,4 +149,5 @@ def _compute(
         "varscore": varscore,
         "text_scores": text_score,
         "image_score": image_score,
+        "compiling_score": compiling_score,
     }, output_dataset
