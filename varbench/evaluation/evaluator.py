@@ -27,10 +27,12 @@ def evaluate(subset: Dataset, model: LLM_Model, compiler: Compiler):
     predictions = model.batchRequest(
         subset_processed["messages"], subset_processed["id"]
     )
+    logger.info(predictions)
     predictions = [
-        [_get_first_code_block(prediction) for prediction in row_predictions]
+        [_get_first_code_block(prediction) for prediction in row_predictions if _get_first_code_block(prediction)]
         for row_predictions in predictions
     ]
+    logger.info(predictions)
     subset_processed: Dataset = subset_processed.add_column("predictions", predictions)
     subset_processed.save_to_disk(".tmp/computed_dataset_" + model.model_name)
 
