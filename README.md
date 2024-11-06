@@ -72,4 +72,23 @@ python3 -m varbench.dataset_workflow.create_dataset [-h] --dataset DATASET
 
 The script will first compute the patches for each entry, then will add, commit, and push the changes to get a commit id and create the dataset with the instruction, the repo, the id of the commit, and the patch.
 
+## Synthetic data generation
+###  Usage
+
+This script uses either the `OPENAI` or `GROQ` API to generate modifications to code files in a specified folder. You provide the API type, model name, and folder path, along with optional parameters for temperature and the number of examples.
+
+#### How to Run
+
+##### Arguments
+- `--api_type` (`-a`): Specifies the API type to use. Options are `OPENAI` or `GROQ`. **Required**.
+- `--model` (`-m`): Specifies the name of the model to use. **Required**.
+- `--folder` (`-f`): Path to the folder containing code files to be processed. **Required**.
+- `--temperature`: Controls randomness in the output (default: 0.7).
+- `--number_gen` (`-n`): Number of modification examples to generate for each file (default: 1).
+
+##### Example Command
+
+```bash
+python3 -m varbench.synthetic_generation.run_generation -a GROQ -m "mixtral-8x7b-32768" -f "varbench/synthetic_generation/resources" --temperature 0.8 -n 3
+```
 

@@ -1,0 +1,54 @@
+{
+  "modifications": [
+    {
+      "id": "bigger ears",
+      "instruction": "increase the size of the ears by changing the y radius in the first ellipse of the dog's head to 160 and x radius to 200 in the line: \fill [fill color] (0,-64) ellipse [x radius=160, y radius=144];",
+      "result_description": "A dog with bigger ears"
+    },
+    {
+      "id": "larger tongue",
+      "instruction": "increase the size of the tongue by changing the x radius in the ellipse of the dog's tongue to 40 in the line: \fill [fill color](0,-192) ellipse [x radius=28, y radius=32];",
+      "result_description": "A dog with a larger tongue"
+    },
+    {
+      "id": "different nose color",
+      "instruction": "change the color of the nose to Red500 by replacing BlueGrey900 with Red500 in the line: \fill [BlueGrey900] (56, 0) circle [radius=20];",
+      "result_description": "A dog with a red nose"
+    },
+    {
+      "id": "no tongue",
+      "instruction": "delete the code for the tongue in the line: \fill [fill color](0,-192) ellipse [x radius=28, y radius=32];",
+      "result_description": "A dog without a tongue"
+    },
+    {
+      "id": "smaller body",
+      "instruction": "decrease the size of the body by changing the x radius in the first ellipse of the dog's body to 120 and y radius to 80 in the line: \fill [fill color] (0,-64) ellipse [x radius=160, y radius=144];",
+      "result_description": "A dog with a smaller body"
+    },
+    {
+      "id": "patterned ears",
+      "instruction": "add a pattern to the ears by adding a foreach loop that draws small circles inside the ears",
+      "result_description": "A dog with patterned ears"
+    },
+    {
+      "id": "longer neck",
+      "instruction": "increase the size of the neck by changing the y coordinate of the second ellipse of the dog's body to 64 in the line: \fill [fill color] (0, 32) ellipse [x radius=128, y radius=112];",
+      "result_description": "A dog with a longer neck"
+    },
+    {
+      "id": "no nose",
+      "instruction": "delete the code for the nose in the line: \fill [BlueGrey900] (56, 0) circle [radius=20];",
+      "result_description": "A dog without a nose"
+    },
+    {
+      "id": "thinner legs",
+      "instruction": "decrease the size of the legs by changing the x radius in the ellipse of the dog's legs to 20 and y radius to 10 in the line: \fill [fill color] (32,96) .. controls ++( 75:128) and ++(105:128) .. ++(192,  0) .. controls ++(285: 96) and ++(285: 96) .. ++(-80,-32) .. controls ++(105: 64) and ++( 75: 32) .. cycle;",
+      "result_description": "A dog with thinner legs"
+    },
+    {
+      "id": "curly ears",
+      "instruction": "change the shape of the ears to curly by adding a sin or cos function to the first ellipse of the dog's head",
+      "result_description": "A dog with curly ears"
+    }
+  ]
+}

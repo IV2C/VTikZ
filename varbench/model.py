@@ -1,6 +1,6 @@
 from io import BufferedReader, BytesIO
 from typing import Iterable
-from openai.types.chat.chat_completion_message_param import ChatCompletionMessageParam
+from openai.types.chat import ChatCompletionMessageParam
 from loguru import logger
 
 from varbench.utils.parsing import parse_openai_jsonl
@@ -71,14 +71,14 @@ from openai import OpenAI
 import os
 from varbench.utils.chat_models import ChatCompletionRequest
 from time import sleep
-
+from typing import Any
 
 class API_model(LLM_Model):
     def __init__(
         self,
         model_name,
         temperature,
-        n=None,
+        n=1,
         api_url="https://api.openai.com/v1",
         api_key=None,
         no_batch=False,
@@ -89,6 +89,7 @@ class API_model(LLM_Model):
         if not api_key:
             api_key = os.environ.get("OPENAI_API_KEY")
 
+        
         self.client = OpenAI(
             base_url=api_url,
             api_key=api_key,

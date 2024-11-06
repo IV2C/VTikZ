@@ -1,5 +1,5 @@
 import json
-
+import re
 
 def parse_openai_jsonl(input_data: str) -> dict[str, str]:
     # Split the JSONL input into separate lines
@@ -21,3 +21,8 @@ def parse_openai_jsonl(input_data: str) -> dict[str, str]:
         if custom_id:
             custom_id_to_response[custom_id] = responses
     return custom_id_to_response
+
+def get_first_code_block(text):
+    # Regular expression to find the first code block, ignoring the language specifier
+    match = re.search(r"```[a-zA-Z]*\n(.*?)```", text, re.DOTALL)
+    return match.group(1).strip() if match else None

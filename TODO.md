@@ -22,9 +22,12 @@
 - [X] Test compilers when image not compilable
 - [X] Fix evaluator tests
 - [X] fix line diff
-- [ ] Assessment of vlm on checking 
-- [ ] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
+- [X] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
 - [ ] Create synthetic data and then verify
+- [ ] test vision
+  - [ ] openai
+  - [ ] vllm
+- [ ] Assessment of vlm on checking 
 - [ ] Test LLM-only models then compare with Multimodal with image in input
 - [ ] Implement LLM+something solution and test it
 - [ ] Explore which other things can be tested(tikz, svg, ascii, what else?)

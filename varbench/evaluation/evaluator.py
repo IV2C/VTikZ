@@ -13,12 +13,9 @@ import torch
 import pandas as pd
 import re
 from .line_diff_scorer import compute_line_score
+from ..utils.parsing import get_first_code_block
+from ..utils.diffs import diffs
 
-
-def _get_first_code_block(text):
-    # Regular expression to find the first code block, ignoring the language specifier
-    match = re.search(r"```[a-zA-Z]*\n(.*?)```", text, re.DOTALL)
-    return match.group(1).strip() if match else None
 
 
 def evaluate(subset: Dataset, model: LLM_Model, compiler: Compiler):
@@ -54,7 +51,7 @@ def create_message_row(row):
     messages = [
         {
             "role": "system",
-            "content": SYSTEM,
+            "content": SYSTEM_PROMPT_GENERATION,
         },
         {"role": "user", "content": user_instruction},
     ]
@@ -85,12 +82,7 @@ def _compute(
         image_solutions (list[PIL.Image.Image]): List of solution images.
     """
 
-    def _diffs(input, predictions: list) -> list:
-        predictions = [prediction.split("\n") for prediction in predictions]
-        return [
-            "".join(list(difflib.unified_diff(input.split("\n"), prediction, n=0))[2:])
-            for prediction in predictions
-        ]
+    
 
     def _images(predictions: list[list[str]]) -> list[list[Image]]:
         output_images: list[list[Image]] = []
@@ -110,9 +102,9 @@ def _compute(
     # getting the code from the predictions
     predictions = [
         [
-            _get_first_code_block(prediction)
+            get_first_code_block(prediction)
             for prediction in row_predictions
-            if _get_first_code_block(prediction)
+            if get_first_code_block(prediction)
         ]
         for row_predictions in predictions
     ]
@@ -123,7 +115,7 @@ def _compute(
     ]
 
     # first computing if any of the diffs are in the prediction, if so the score is 1 for the row
-    individual_diffs = [_diffs(i, p) for i, p in zip(inputs, predictions)]
+    individual_diffs = [diffs(i, p) for i, p in zip(inputs, predictions)]
     logger.info(individual_diffs)
     individual_diffs_scores = [
         bool(set(i) & set(d)) for i, d in zip(individual_diffs, diffs)
