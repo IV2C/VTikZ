@@ -14,11 +14,11 @@ class TexCompiler(Compiler):
         pass
 
     def compile(self, input: str, output: str):
-        output = subprocess.run(
+        output_cmd = subprocess.run(
             ["pdflatex", "-halt-on-error", "-output-directory", self.cache_path, input],
             capture_output=True,
         )
-        if output.returncode != 0:
+        if output_cmd.returncode != 0:
             raise CompilerException()
 
         output_file_name = os.path.join(

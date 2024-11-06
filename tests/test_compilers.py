@@ -14,7 +14,7 @@ class TestCompilers(unittest.TestCase):
 
         compiler = TexCompiler()
         tikzfile = os.path.join("tests/resources/tikz", "dog.tex")
-        output = os.path.join("tests/resources/tikz", "dog.png")
+        output = os.path.join("tests/resources/tikz", "dog.jpeg")
         compiler.compile(tikzfile, output)
         self.assertTrue(os.path.exists(output), msg="Output file does not exist")
 
@@ -24,7 +24,7 @@ class TestCompilers(unittest.TestCase):
 
         compiler = SvgCompiler()
         svgFile = os.path.join("tests/resources/svg", "dog.svg")
-        output = os.path.join("tests/resources/svg", "dog.png")
+        output = os.path.join("tests/resources/svg", "dog.jpeg")
         compiler.compile(svgFile, output)
         self.assertTrue(os.path.exists(output), msg="Output file does not exist")
 

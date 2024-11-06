@@ -48,7 +48,7 @@ class ClipComparer:
             list[float]:  A list of similarity scores, containing
                                scores between each image in `images` and its corresponding description, computed according to the policy.
         """
-        results: list[list[float]] = []
+        results: list[float] = []
 
         with torch.no_grad():
             for image_list, result_description in zip(images, result_descriptions):
@@ -82,7 +82,7 @@ class ClipComparer:
             list[float]: A list of similarity scores, containing
                                scores between each image in `images` and its corresponding reference image, computed according to the policy.
         """
-        results: list[list[float]] = []
+        results: list[float] = []
 
         with torch.no_grad():
             for image_list, reference in zip(images, references):

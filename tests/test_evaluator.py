@@ -31,6 +31,7 @@ class TestEvaluator(unittest.TestCase):
         with open("tests/resources/tikz/reference.md") as in_text:
             self.ref_tex = in_text.read()
         self.ref_diff = _diffs(self.input_tex,[_get_first_code_block(self.ref_tex)])[0]
+        self.wrong_diff = "@@ -375 +375 @@"
         print(self.ref_diff)
         self.compiler: TexCompiler = TexCompiler()
         self.compiler.compile_from_string = MagicMock(
@@ -147,8 +148,8 @@ class TestEvaluator(unittest.TestCase):
                 ],
                 "instruction": ["Rotate the line", "Rotate the line"],
                 "diffs": [
-                    ["abc", "def", self.ref_diff],
-                    ["abc", self.ref_diff, "def"],
+                    [self.wrong_diff, self.wrong_diff, self.ref_diff],
+                    [self.wrong_diff, self.ref_diff, self.wrong_diff],
                 ],
                 "result_description": [
                     "a line going from the top left to the bottom right",

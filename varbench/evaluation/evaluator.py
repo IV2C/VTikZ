@@ -65,7 +65,7 @@ def _compute(
     ids: list[str],
     inputs: list[str],
     predictions: list[list[str]],
-    diffs: list[list[str]],
+    diff_list: list[list[str]],
     result_descriptions: list[str],
     image_solutions: list[Image],
 ) -> tuple[object, pd.DataFrame]:
@@ -77,7 +77,7 @@ def _compute(
         ids (list[str]): List of dataset identifiers.
         inputs (list[str]): List of input code snippets.
         predictions (list[list[str]]): Model-generated predictions for fulfilling the instructions, organized as a list of lists for pass@k scoring.
-        diffs (list[str]): List of code diffs that fulfill the instruction.
+        diff_list (list[str]): List of code diffs that fulfill the instruction.
         descriptions (list[str]): List of descriptions of the expected results, used for scoring with a CLIP model.
         image_solutions (list[PIL.Image.Image]): List of solution images.
     """
@@ -118,11 +118,11 @@ def _compute(
     individual_diffs = [diffs(i, p) for i, p in zip(inputs, predictions)]
     logger.info(individual_diffs)
     individual_diffs_scores = [
-        bool(set(i) & set(d)) for i, d in zip(individual_diffs, diffs)
+        bool(set(i) & set(d)) for i, d in zip(individual_diffs, diff_list)
     ]
 
     # getting line scores
-    individual_lines_scores = compute_line_score(individual_diffs, diffs)
+    individual_lines_scores = compute_line_score(individual_diffs, diff_list)
 
     # computing the clip similarity between compiled images and descriptions of results, as well as the image similarities
     images_lists = _images(predictions)

@@ -1,54 +1,54 @@
 {
   "modifications": [
     {
-      "id": "bigger ears",
-      "instruction": "increase the size of the ears by changing the y radius in the first ellipse of the dog's head to 160 and x radius to 200 in the line: \fill [fill color] (0,-64) ellipse [x radius=160, y radius=144];",
+      "id": "increase_ear_size",
+      "instruction": "Modify the code to increase the size of the dog's ears",
       "result_description": "A dog with bigger ears"
     },
     {
-      "id": "larger tongue",
-      "instruction": "increase the size of the tongue by changing the x radius in the ellipse of the dog's tongue to 40 in the line: \fill [fill color](0,-192) ellipse [x radius=28, y radius=32];",
-      "result_description": "A dog with a larger tongue"
+      "id": "change_fur_color",
+      "instruction": "Change the color of the dog's fur to a darker shade",
+      "result_description": "A dog with a darker brown fur"
     },
     {
-      "id": "different nose color",
-      "instruction": "change the color of the nose to Red500 by replacing BlueGrey900 with Red500 in the line: \fill [BlueGrey900] (56, 0) circle [radius=20];",
-      "result_description": "A dog with a red nose"
+      "id": "modify_paw_shape",
+      "instruction": "Change the shape of the dog's paws to a more rounded shape",
+      "result_description": "A dog with rounded paws"
     },
     {
-      "id": "no tongue",
-      "instruction": "delete the code for the tongue in the line: \fill [fill color](0,-192) ellipse [x radius=28, y radius=32];",
-      "result_description": "A dog without a tongue"
+      "id": "add_a_tongue",
+      "instruction": "Add a tongue to the dog's mouth",
+      "result_description": "A dog with a tongue hanging out of its mouth"
     },
     {
-      "id": "smaller body",
-      "instruction": "decrease the size of the body by changing the x radius in the first ellipse of the dog's body to 120 and y radius to 80 in the line: \fill [fill color] (0,-64) ellipse [x radius=160, y radius=144];",
-      "result_description": "A dog with a smaller body"
+      "id": "increase_eye_size",
+      "instruction": "Increase the size of the dog's eyes",
+      "result_description": "A dog with bigger eyes"
     },
     {
-      "id": "patterned ears",
-      "instruction": "add a pattern to the ears by adding a foreach loop that draws small circles inside the ears",
-      "result_description": "A dog with patterned ears"
+      "id": "change_eye_color",
+      "instruction": "Change the color of the dog's eyes to blue",
+      "result_description": "A dog with blue eyes"
     },
     {
-      "id": "longer neck",
-      "instruction": "increase the size of the neck by changing the y coordinate of the second ellipse of the dog's body to 64 in the line: \fill [fill color] (0, 32) ellipse [x radius=128, y radius=112];",
-      "result_description": "A dog with a longer neck"
+      "id": "add_a_collar",
+      "instruction": "Add a collar to the dog's neck",
+      "result_description": "A dog with a collar around its neck"
     },
     {
-      "id": "no nose",
-      "instruction": "delete the code for the nose in the line: \fill [BlueGrey900] (56, 0) circle [radius=20];",
-      "result_description": "A dog without a nose"
+      "id": "change_background_color",
+      "instruction": "Change the background color to a bright green",
+      "result_description": "A dog on a bright green background"
     },
     {
-      "id": "thinner legs",
-      "instruction": "decrease the size of the legs by changing the x radius in the ellipse of the dog's legs to 20 and y radius to 10 in the line: \fill [fill color] (32,96) .. controls ++( 75:128) and ++(105:128) .. ++(192,  0) .. controls ++(285: 96) and ++(285: 96) .. ++(-80,-32) .. controls ++(105: 64) and ++( 75: 32) .. cycle;",
-      "result_description": "A dog with thinner legs"
+      "id": "increase_snout_length",
+      "instruction": "Increase the length of the dog's snout",
+      "result_description": "A dog with a longer snout"
     },
     {
-      "id": "curly ears",
-      "instruction": "change the shape of the ears to curly by adding a sin or cos function to the first ellipse of the dog's head",
-      "result_description": "A dog with curly ears"
+      "id": "add_a_ball",
+      "instruction": "Add a ball next to the dog",
+      "result_description": "A dog with a ball next to it"
     }
   ]
 }

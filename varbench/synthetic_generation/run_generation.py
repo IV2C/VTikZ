@@ -154,7 +154,7 @@ for subset in os.listdir(folder_path):
                         compiling_images.append(current_image)
                     except CompilerException:
                         logger.info(
-                            "Image compiling failed, code " + modification.result_code
+                            "Image compiling failed, code " + code
                         )
                 if len(compiling_images) == 0:
                     all_images.append(None)

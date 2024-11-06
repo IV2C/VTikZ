@@ -18,7 +18,7 @@ class TestClipComparer(unittest.TestCase):
         ]
         result_descriptions = ["a drawing of a dog with red eyes"]
         results = clip_comparer.clip_scores(images, result_descriptions)
-        self.assertTrue(results[0][0] == max(results[0]))
+        self.assertTrue(results[0] == max(results))
 
     def test_image_comparison(self):
         clip_comparer: ClipComparer = ClipComparer(force_cpu=True)
@@ -32,7 +32,7 @@ class TestClipComparer(unittest.TestCase):
         ]
         ref_images = [Image.open("tests/resources/images/dog-redeye.jpeg")]
         results = clip_comparer.image_similarities(images, ref_images)
-        self.assertTrue(results[0][0] == max(results[0]))
+        self.assertTrue(results[0] == max(results))
 
 
 if __name__ == "__main__":

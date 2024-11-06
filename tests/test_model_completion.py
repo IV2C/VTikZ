@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 from openai.types.chat.chat_completion_message_param import ChatCompletionMessageParam
 
 
@@ -52,11 +52,12 @@ class TestModelCompletion(unittest.TestCase):
 
         self.assertTrue(len(response) == len(response[0]) == len(response[1]) == 2)
 
+    @unittest.skipIf(True, "High resource test")
     def test_vllm_batch(self):
         """This test uses the openai API, which uses money, hence the skipped test"""
         from varbench.model import VLLM_model
 
-        model: VLLM_model = VLLM_model("meta-llama/Llama-3.2-1B-Instruct", 0)
+        model: VLLM_model = VLLM_model("meta-llama/Llama-3.2-1B-Instruct", 0,gpu_number=1)
 
         messages: list[list[ChatCompletionMessageParam]] = [
             [
@@ -76,7 +77,7 @@ class TestModelCompletion(unittest.TestCase):
         print(response)
 
         self.assertTrue(len(response) == 2)
-
+    @unittest.skipIf(True, "high resource test")
     def test_vllm_batch_n2(self):
         """This test uses the openai API, which uses money, hence the skipped test"""
         from varbench.model import VLLM_model
