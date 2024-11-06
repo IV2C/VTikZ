@@ -18,9 +18,10 @@
 - [X] complex oracle
   - [X] vlm or computer-vision("Are the eyes red")
   - [X] Image comparison(image diff)
-  - [ ] line diff(need to think, either same as before with only one column diff, or a new one with only the lines)
+  - [X] line diff(need to think, either same as before with only one column diff, or a new one with only the lines)
 - [X] Test compilers when image not compilable
-- [ ] Fix evaluator tests
+- [X] Fix evaluator tests
+- [X] fix line diff
 - [ ] Assessment of vlm on checking 
 - [ ] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
 - [ ] Create synthetic data and then verify

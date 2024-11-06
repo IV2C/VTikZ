@@ -32,9 +32,9 @@ def compute_line_score(
     ]
     # getting all the scores of each diff with the references
     all_pass_scores = [
-        [_max_overlap(ref_dif, prediction_row_diffs) for ref_dif in reference_row_diffs]
-        for reference_row_diffs, prediction_row_diffs in zip(
-            reference_line_modified, predictions_line_modified
+        [_max_overlap(pred_diff,reference_row_diffs) for pred_diff in prediction_row_diffs]
+        for prediction_row_diffs,reference_row_diffs in zip(
+             predictions_line_modified,reference_line_modified
         )
     ]
 

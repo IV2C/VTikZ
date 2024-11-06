@@ -130,7 +130,7 @@ def _compute(
     ]
 
     # getting line scores
-    individual_lines_scores = compute_line_score(individual_diffs, predictions)
+    individual_lines_scores = compute_line_score(individual_diffs, diffs)
 
     # computing the clip similarity between compiled images and descriptions of results, as well as the image similarities
     images_lists = _images(predictions)
@@ -181,9 +181,10 @@ def _compute(
             "individual_compiling_scores": individual_compiling_scores,
             "individual_parsing_scores": individual_parsing_scores,
             "individual_lines_scores": individual_lines_scores,
-            "predictions": predictions,
             "result_description": result_descriptions,
+            "individual_diffs":individual_diffs,
             "id": ids,
+            "predictions": predictions,
         }
     )
 
