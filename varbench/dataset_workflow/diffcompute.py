@@ -29,12 +29,12 @@ def diffcompute(folder:str)-> list[str]:
     input_path = os.path.join(folder,[filename for filename in os.listdir(folder) if "input" in filename][0])#getting the input.? file
     
     with open(input_path) as input_file:
-        input = input_file.read().splitlines(keepends=True)
+        input = input_file.read().splitlines()
         diffs:set = set()
         for solution in os.listdir(solution_folder):
             with open(os.path.join(solution_folder,solution)) as solution_file:
                 
-                solution = solution_file.read().splitlines(keepends=True)
+                solution = solution_file.read().splitlines()
                 current_diff = "".join(list(difflib.unified_diff(input, solution, n=0))[2:])#getting the current diff without context
                 diffs.add(current_diff)
                 

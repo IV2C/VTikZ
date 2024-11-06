@@ -21,19 +21,26 @@ python3 -m varbench.run_evaluation [-h] --subsets SUBSETS [SUBSETS ...] --model_
 - `--api_url`: URL of the OpenAI completion compatible API. Default is `"https://api.openai.com/v1"`.
 - `--api_key`: API key for authentication, defaults to the environment variable `OPENAI_API_KEY`.
 - `--temperature`: Temperature setting for model sampling. Default is `0.7`.
-- `--pass`: number of gneerated responses, used to compute pass@k. default is 1
-
+- `--passk`: number of gneerated responses, used to compute pass@k. default is 1
+- `--no_batch`: whether or not to use batch requests, relevant when the api provider does not provide an equivalent. Default is False.
 This command will evaluate the specified model on the given subsets using the provided parameters.
 
 #### Examples:
 
 - **Using the API model:**
 
+  ###### With the openai api
   ```sh
   python3 -m varbench.run_evaluation --subsets tikz svg --model_type API --model gpt-3.5-turbo --api_key YOUR_API_KEY
   ```
 
   Replace `YOUR_API_KEY` with your actual API key.
+
+  ###### With another openai compaptible api
+  ```sh
+  python3 -m varbench.run_evaluation --subsets tikz --model_type API --temperature 0.7 --passk 5 --api_url https://api.groq.com/openai/v1 --api_key $GROQ_API_KEY -m llama-3.1-70b-versatile --no_batch
+  ```
+
 
 - **Using the VLLM model:**
 

@@ -72,7 +72,13 @@ parser.add_argument(
     help="Temperature setting for model sampling",
 )
 parser.add_argument(
-    "--pass", type=int, default=1, help="Number of generations per prompt"
+    "--passk", type=int, default=1, help="Number of generations per prompt"
+)
+parser.add_argument(
+    "--no_batch",
+    default=False,
+    action="store_true",
+    help="whether or not to use batch requests, relevant when the api provider does not provide an equivalent",
 )
 
 args = parser.parse_args()
@@ -86,6 +92,8 @@ key_args["gpu_number"] = args.gpu_number
 key_args["api_url"] = args.api_url
 key_args["api_key"] = args.api_key
 key_args["temperature"] = args.temperature
+key_args["no_batch"] = args.no_batch
+key_args["n"] = args.passk
 
 
 llm_model: LLM_Model = None
@@ -119,6 +127,6 @@ for subset in subsets:
     # evaluating
     result_scores, score_dataset = evaluate(dataset, llm_model, compiler)
     logger.info(result_scores)
-    score_dataset.to_csv("tmp.csv")
-    with open(os.path.join(result_path, subset)) as subset_result:
+    score_dataset.to_csv(os.path.join(result_path, subset+".csv"))
+    with open(os.path.join(result_path, subset+".json"), "w") as subset_result:
         subset_result.write(json.dumps(result_scores))

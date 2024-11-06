@@ -12,6 +12,7 @@ from PIL.Image import Image
 import torch
 import pandas as pd
 import re
+from .line_diff_scorer import compute_line_score
 
 
 def _get_first_code_block(text):
@@ -27,13 +28,10 @@ def evaluate(subset: Dataset, model: LLM_Model, compiler: Compiler):
     predictions = model.batchRequest(
         subset_processed["messages"], subset_processed["id"]
     )
-    logger.info(predictions)
-    predictions = [
-        [_get_first_code_block(prediction) for prediction in row_predictions if _get_first_code_block(prediction)]
-        for row_predictions in predictions
-    ]
-    logger.info(predictions)
+
     subset_processed: Dataset = subset_processed.add_column("predictions", predictions)
+    logger.info(subset_processed["messages"])
+    logger.info(subset_processed["predictions"])
     subset_processed.save_to_disk(".tmp/computed_dataset_" + model.model_name)
 
     return _compute(
@@ -70,7 +68,7 @@ def _compute(
     ids: list[str],
     inputs: list[str],
     predictions: list[list[str]],
-    diffs: list[str],
+    diffs: list[list[str]],
     result_descriptions: list[str],
     image_solutions: list[Image],
 ) -> tuple[object, pd.DataFrame]:
@@ -107,16 +105,39 @@ def _compute(
             output_images.append(row_output_images)
         return output_images
 
-    # first computing if any of the diffs are in the prediction, if so the score is 1 for the row
-    individual_diffs_scores = [
-        bool(set(_diffs(i, p)) & set(d)) for i, p, d in zip(inputs, predictions, diffs)
+    pass_size = len(predictions[0])  # getting the number of k for the pass@k
+    dataset_lenght = len(image_solutions)
+    # getting the code from the predictions
+    predictions = [
+        [
+            _get_first_code_block(prediction)
+            for prediction in row_predictions
+            if _get_first_code_block(prediction)
+        ]
+        for row_predictions in predictions
     ]
+
+    # computing parsing score
+    individual_parsing_scores = [
+        len(prediction_n) / pass_size for prediction_n in predictions
+    ]
+
+    # first computing if any of the diffs are in the prediction, if so the score is 1 for the row
+    individual_diffs = [_diffs(i, p) for i, p in zip(inputs, predictions)]
+    logger.info(individual_diffs)
+    individual_diffs_scores = [
+        bool(set(i) & set(d)) for i, d in zip(individual_diffs, diffs)
+    ]
+
+    # getting line scores
+    individual_lines_scores = compute_line_score(individual_diffs, predictions)
 
     # computing the clip similarity between compiled images and descriptions of results, as well as the image similarities
     images_lists = _images(predictions)
     prediction_pass_len = len(predictions[0])
     individual_compiling_scores = [
-        len(image_list) / prediction_pass_len for image_list in images_lists
+        (len(image_list) / prediction_pass_len) if prediction_pass_len != 0 else 0
+        for image_list in images_lists
     ]
 
     clip_comparer: ClipComparer = ClipComparer(force_cpu=True)
@@ -131,15 +152,19 @@ def _compute(
 
     # individual_diffs_scores = {id: result for id, result in zip(ids, result_list)}
 
-    diff_score = sum(individual_diffs_scores) / len(predictions)
-    text_score = sum(individual_text_scores) / len(predictions)
-    image_score = sum(individual_image_scores) / len(predictions)
-    compiling_score = sum(individual_compiling_scores) / len(images_lists)
+    diff_score = sum(individual_diffs_scores) / dataset_lenght
+    text_score = sum(individual_text_scores) / dataset_lenght
+    image_score = sum(individual_image_scores) / dataset_lenght
+    compiling_score = sum(individual_compiling_scores) / dataset_lenght
+    parsing_score = sum(individual_parsing_scores) / dataset_lenght
+    line_score = sum(individual_lines_scores) / dataset_lenght
 
     varscores = [
         d if d else (t + i) / 2
         for d, t, i in zip(
-            individual_diffs_scores, individual_text_scores, individual_image_scores
+            individual_diffs_scores,
+            individual_text_scores,
+            individual_image_scores,
         )
     ]
     varscore = sum(varscores) / len(varscores)
@@ -154,14 +179,20 @@ def _compute(
             "individual_text_scores": individual_text_scores,
             "individual_image_scores": individual_image_scores,
             "individual_compiling_scores": individual_compiling_scores,
+            "individual_parsing_scores": individual_parsing_scores,
+            "individual_lines_scores": individual_lines_scores,
+            "predictions": predictions,
+            "result_description": result_descriptions,
             "id": ids,
         }
     )
 
     return {
+        "line_score": line_score,
         "diffs_score": diff_score,
         "varscore": varscore,
         "text_scores": text_score,
         "image_score": image_score,
         "compiling_score": compiling_score,
+        "parsing_score": parsing_score,
     }, output_dataset

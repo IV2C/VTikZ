@@ -1,6 +1,4 @@
-import unittest
-import os
-import timeout_decorator
+import unittest2
 from openai.types.chat.chat_completion_message_param import ChatCompletionMessageParam
 
 

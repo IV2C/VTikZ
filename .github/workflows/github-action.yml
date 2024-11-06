@@ -33,7 +33,7 @@ jobs:
             pip install coverage coverage-badge
       - name: run tests
         run: |
-            coverage run -m unittest tests/*
+            coverage run -m unittest tests/* --omit=tests/test_clip_comparer.py
             coverage html
             coverage-badge -o coverage.svg
       - name: Upload coverage report

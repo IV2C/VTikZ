@@ -44,7 +44,7 @@ class VLLM_model(LLM_Model):
 
         if gpu_number is not None:
             llm_args["tensor_parallel_size"] = gpu_number
-    
+
         self.llm: LLM = LLM(**llm_args)
 
     def request(
@@ -59,14 +59,11 @@ class VLLM_model(LLM_Model):
         **kwargs,
     ) -> Iterable[Iterable[str]]:
         self.samplingParams: SamplingParams = SamplingParams(
-            temperature=self.temperature, stop="\n```\n", n=self.n,max_tokens=2048
+            temperature=self.temperature, stop="\n```\n", n=self.n, max_tokens=2048
         )
-        outputs = self.llm.chat(
-            messages=messages, sampling_params=self.samplingParams
-        )
+        outputs = self.llm.chat(messages=messages, sampling_params=self.samplingParams)
         return [
-            [output.text for output in completion.outputs]
-            for completion in outputs
+            [output.text for output in completion.outputs] for completion in outputs
         ]
 
 
@@ -84,10 +81,11 @@ class API_model(LLM_Model):
         n=None,
         api_url="https://api.openai.com/v1",
         api_key=None,
+        no_batch=False,
         **kwargs,
     ) -> None:
         super().__init__(model_name, temperature, n)
-
+        self.no_batch = no_batch
         if not api_key:
             api_key = os.environ.get("OPENAI_API_KEY")
 
@@ -100,7 +98,10 @@ class API_model(LLM_Model):
         self, messages: Iterable[ChatCompletionMessageParam], **kwargs
     ) -> Iterable[str]:
         completion = self.client.chat.completions.create(
-            messages=messages, stop=["\n```\n"], n=self.n
+            messages=messages,
+            stop=["\n```\n"],
+            model=self.model_name,
+            temperature=self.temperature,
         )
         return completion.choices[-1].message.content
 
@@ -110,6 +111,17 @@ class API_model(LLM_Model):
         ids: Iterable[str],
         **kwargs,
     ) -> Iterable[Iterable[str]]:
+
+        # using single requests if no batch
+        if self.no_batch:
+            return [
+                [self.request(messages_n) for _ in range(self.n)]
+                for messages_n in messages
+            ]
+
+        # Using the openai batch api otherwise
+
+        # creating message completion objects
         batch_str = "\n".join(
             [
                 ChatCompletionRequest(
@@ -118,6 +130,7 @@ class API_model(LLM_Model):
                 for message, id in zip(messages, ids)
             ]
         )
+        # creating "false" file to provide to the api
         batch_file = BytesIO(batch_str.encode())
         batch_input_file = self.client.files.create(file=batch_file, purpose="batch")
         batch_input_file_id = batch_input_file.id
@@ -129,6 +142,7 @@ class API_model(LLM_Model):
             metadata={"description": "VarBench eval job"},
         )
         batch_id = batch.id
+        # loop for response handling
         while True:
             batch_status = self.client.batches.retrieve(batch_id)
             logger.debug("Current_status:" + batch_status.status)
