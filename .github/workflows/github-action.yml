@@ -26,7 +26,7 @@ jobs:
             pip install coverage coverage-badge
       - name: run tests
         run: |
-            coverage run --include=tests/**.py --omit=tests/test_clip_comparer.py -m unittest test/*
+            coverage run --include=tests/*.py --omit=tests/test_clip_comparer.py -m unittest discover test
             coverage html
             coverage-badge -o coverage.svg
       - name: Upload coverage report
