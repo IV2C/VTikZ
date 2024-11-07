@@ -2,53 +2,53 @@
   "modifications": [
     {
       "id": "change_dog_to_cat",
-      "instruction": "replace all instances of dog with cat",
-      "result_description": "a cat's face"
+      "instruction": "change the dog to a cat",
+      "result_description": "a cat face"
     },
     {
-      "id": "make_the_dog's_ears_bigger",
-      "instruction": "change the radius of the ear ellipse to 200",
+      "id": "make_ears_bigger",
+      "instruction": "make the ears of the dog bigger",
       "result_description": "a dog with bigger ears"
     },
     {
-      "id": "change_the_dog's_nose_color",
-      "instruction": "change the color of the nose to Pink500",
-      "result_description": "a dog with a pink nose"
+      "id": "change_color_to_green",
+      "instruction": "change the color of the dog to green",
+      "result_description": "a green dog"
     },
     {
-      "id": "add_a_tongue_to_the_dog",
-      "instruction": "add a red triangle shape below the nose",
+      "id": "add_whiskers",
+      "instruction": "add whiskers to the dog",
+      "result_description": "a dog with whiskers"
+    },
+    {
+      "id": "change_eyes_to_blue",
+      "instruction": "change the color of the eyes to blue",
+      "result_description": "a dog with blue eyes"
+    },
+    {
+      "id": "add_a_tongue",
+      "instruction": "add a tongue to the dog",
       "result_description": "a dog with a tongue"
     },
     {
-      "id": "change_the_dog's_eye_color",
-      "instruction": "change the color of the eyes to Green400",
-      "result_description": "a dog with green eyes"
+      "id": "change_nose_to_pink",
+      "instruction": "change the color of the nose to pink",
+      "result_description": "a dog with a pink nose"
     },
     {
-      "id": "make_the_dog's_body_fatter",
-      "instruction": "change the x radius of the body ellipse to 200",
-      "result_description": "a dog with a fatter body"
+      "id": "add_a_collar",
+      "instruction": "add a collar to the dog",
+      "result_description": "a dog with a collar"
     },
     {
-      "id": "change_the_dog's_tail_color",
-      "instruction": "change the color of the tail to Blue500",
-      "result_description": "a dog with a blue tail"
+      "id": "make_body_fatter",
+      "instruction": "make the body of the dog fatter",
+      "result_description": "a fat dog"
     },
     {
-      "id": "add_a_hat_to_the_dog",
-      "instruction": "add a black triangle shape on top of the dog's head",
-      "result_description": "a dog with a hat"
-    },
-    {
-      "id": "change_the_dog's_face_color",
-      "instruction": "change the color of the face to Yellow500",
-      "result_description": "a dog with a yellow face"
-    },
-    {
-      "id": "make_the_dog's_paws_bigger",
-      "instruction": "change the radius of the paws circle to 3",
-      "result_description": "a dog with bigger paws"
+      "id": "change_paws_to_white",
+      "instruction": "change the color of the paws to white",
+      "result_description": "a dog with white paws"
     }
   ]
 }

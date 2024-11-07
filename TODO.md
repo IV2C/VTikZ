@@ -23,6 +23,7 @@
 - [X] Fix evaluator tests
 - [X] fix line diff
 - [X] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
+- [X] fix workflow
 - [ ] Create synthetic data and then verify
 - [ ] test vision
   - [ ] openai
