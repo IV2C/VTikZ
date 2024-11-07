@@ -2,6 +2,7 @@ from io import BufferedReader, BytesIO
 from typing import Iterable
 from openai.types.chat import ChatCompletionMessageParam
 from loguru import logger
+from tenacity import retry, wait_exponential
 
 from varbench.utils.parsing import parse_openai_jsonl
 
@@ -27,20 +28,32 @@ class LLM_Model:
 
 
 from vllm import LLM, SamplingParams
+import configparser
 
 
 class VLLM_model(LLM_Model):
     def __init__(self, model_name, temperature, n=1, gpu_number=None, **kwargs) -> None:
 
         super().__init__(model_name, temperature, n)
-        llm_args = {
-            "model": model_name,
-            "trust_remote_code": True,
-            "gpu_memory_utilization": 0.95,
-            "dtype": "float16",
-            "cpu_offload_gb": 15,
-            "max_model_len": 4096,
-        }
+        config = configparser.ConfigParser()
+        config.read("config.cfg")
+
+        def _make_numerical(string_value: str) -> float | int | str:
+            try:
+                result = int(string_value)
+            except ValueError:
+                try:
+                    result = float(string_value)
+                except ValueError:
+                    if string_value == "True":
+                        result = True
+                    elif string_value == "False":
+                        result = False
+                    return string_value
+            return result
+
+        vlmconf = {key: _make_numerical(value) for key, value in config["VLLM"].items()}
+        llm_args = {"model": model_name, **vlmconf}
 
         if gpu_number is not None:
             llm_args["tensor_parallel_size"] = gpu_number
@@ -73,6 +86,7 @@ from varbench.utils.chat_models import ChatCompletionRequest
 from time import sleep
 from typing import Any
 
+
 class API_model(LLM_Model):
     def __init__(
         self,
@@ -88,23 +102,29 @@ class API_model(LLM_Model):
         self.no_batch = no_batch
         if not api_key:
             api_key = os.environ.get("OPENAI_API_KEY")
+        self.simplified = "groq" in api_url
+        if self.simplified:
+            self.simple_n = n
+            n = 1
 
-        
         self.client = OpenAI(
             base_url=api_url,
             api_key=api_key,
         )
 
+    @retry(wait=wait_exponential(multiplier=1, min=4))
     def request(
         self, messages: Iterable[ChatCompletionMessageParam], **kwargs
     ) -> Iterable[str]:
+        logger.info(f"Requesting to {self.client.base_url}")
         completion = self.client.chat.completions.create(
             messages=messages,
             stop=["\n```\n"],
             model=self.model_name,
             temperature=self.temperature,
+            n=self.n,
         )
-        return completion.choices[-1].message.content
+        return [choice.message.content for choice in completion.choices]
 
     def batchRequest(
         self,
@@ -113,12 +133,16 @@ class API_model(LLM_Model):
         **kwargs,
     ) -> Iterable[Iterable[str]]:
 
-        # using single requests if no batch
-        if self.no_batch:
+        # Some APIs such as Groq do not provide either batch or generation with n so we force it to 1 and generate sequentially
+        if self.simplified:
             return [
-                [self.request(messages_n) for _ in range(self.n)]
+                [self.request(messages_n)[0] for _ in range(self.simple_n)]
                 for messages_n in messages
             ]
+
+        # using single requests if no batch
+        if self.no_batch:
+            return [self.request(messages_n) for messages_n in messages]
 
         # Using the openai batch api otherwise
 

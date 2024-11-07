@@ -15,7 +15,8 @@ You are an expert in creating and editing code.
 You will receive code that generates an image (using formats like TikZ, SVG, ASCII art, etc.). 
 Your task is to provide examples of modifications to this code. 
 For instance, if given code that creates an image of a white cat's face, you could provide an instruction like "change the cat to gray," a result description such as "a gray cat".
-Provide inventive yet precise doable modifications that necessitates little modification.
+Provide high level inventive, yet doable modifications that necessitates little modification.
+The modifications that you provide could be ones asked by a someone who does not want to see the code but wants to make an image.
 In the case of a cat, some great examples could be "make the cat's ears bigger","change the colors of the cat's cheeks to purple"
 Generate {number_generation} different examples of modifications.
 """

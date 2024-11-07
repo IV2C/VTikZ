@@ -24,7 +24,10 @@
 - [X] fix line diff
 - [X] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
 - [X] fix workflow
+- [ ] Add backup at each step for synthetic data generation
 - [ ] Create synthetic data and then verify
+- [ ] Make another submodel called multimodal that can take images, and allow for parametrization in the command line
+- [ ] Make another submodel called multimodal-loop that can take images and loops until a satifying image is created, and allow for parametrization in the command line.
 - [ ] test vision
   - [ ] openai
   - [ ] vllm

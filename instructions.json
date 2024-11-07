@@ -1,54 +1,30 @@
 {
+  "General_description": "The original code generates images of a dog's face using different shades of the same color on each face side for the face, ears and spots on each iteration with every 3 iterations being directly below and then to the side to resemble an upright rectangle of dogs. Each dog's face is randomly assigned different base colors creating a unique image every time the code is executed.",
   "modifications": [
     {
-      "id": "change_dog_to_cat",
-      "instruction": "change the dog to a cat",
-      "result_description": "a cat face"
+      "id": "cat_code_modification",
+      "instruction": "Change the shape of the head of the dog to make it more cat-like.",
+      "result_description": "The head of the dog is changed to resemble a cat's head with a more rounded and triangle-shaped head compared to the current shape."
     },
     {
-      "id": "make_ears_bigger",
-      "instruction": "make the ears of the dog bigger",
-      "result_description": "a dog with bigger ears"
+      "id": "paws_modification",
+      "instruction": "Add paws to the bottom of the image of the dog's head for each iteration.",
+      "result_description": "Each dog face in the grid is appended with one of the front paws of the dog drawn."
     },
     {
-      "id": "change_color_to_green",
-      "instruction": "change the color of the dog to green",
-      "result_description": "a green dog"
+      "id": "random_background_modification",
+      "instruction": "Use a separate random color for the background of each iteration of the dog face.",
+      "result_description": "Background for each iteration now varies slightly."
     },
     {
-      "id": "add_whiskers",
-      "instruction": "add whiskers to the dog",
-      "result_description": "a dog with whiskers"
+      "id": "add_nose_modification",
+      "instruction": "Change the shape of the nose of the dog to resemble that of a bunny.",
+      "result_description": "Nose area is made slightly rounded and shorter."
     },
     {
-      "id": "change_eyes_to_blue",
-      "instruction": "change the color of the eyes to blue",
-      "result_description": "a dog with blue eyes"
-    },
-    {
-      "id": "add_a_tongue",
-      "instruction": "add a tongue to the dog",
-      "result_description": "a dog with a tongue"
-    },
-    {
-      "id": "change_nose_to_pink",
-      "instruction": "change the color of the nose to pink",
-      "result_description": "a dog with a pink nose"
-    },
-    {
-      "id": "add_a_collar",
-      "instruction": "add a collar to the dog",
-      "result_description": "a dog with a collar"
-    },
-    {
-      "id": "make_body_fatter",
-      "instruction": "make the body of the dog fatter",
-      "result_description": "a fat dog"
-    },
-    {
-      "id": "change_paws_to_white",
-      "instruction": "change the color of the paws to white",
-      "result_description": "a dog with white paws"
+      "id": "rotate_head_modification",
+      "instruction": "Change the direction of the heads of every second iteration.",
+      "result_description": "Each second image in the array is rotated 45 degrees clockwise."
     }
   ]
 }

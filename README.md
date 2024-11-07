@@ -75,20 +75,55 @@ The script will first compute the patches for each entry, then will add, commit,
 ## Synthetic data generation
 ###  Usage
 
-This script uses either the `OPENAI` or `GROQ` API to generate modifications to code files in a specified folder. You provide the API type, model name, and folder path, along with optional parameters for temperature and the number of examples.
+This script is designed to facilitate code modification and dataset generation. It takes in code samples, asks an LLM to generate instructions that can be applied to the code(in a structured json format), then asks another LLM to generate the code modified according to the instruction.
 
-#### How to Run
+### Argument Details
 
-##### Arguments
-- `--api_type` (`-a`): Specifies the API type to use. Options are `OPENAI` or `GROQ`. **Required**.
-- `--model` (`-m`): Specifies the name of the model to use. **Required**.
-- `--folder` (`-f`): Path to the folder containing code files to be processed. **Required**.
-- `--temperature`: Controls randomness in the output (default: 0.7).
-- `--number_gen` (`-n`): Number of modification examples to generate for each file (default: 1).
+| Argument          | Type       | Description                                                                                        | Default            |
+|-------------------|------------|----------------------------------------------------------------------------------------------------|--------------------|
+| `--api_type_ins`, `-a`     | `ApiType` (OPENAI or GROQ) | Specifies the API type for generating instructions.                                              | `GROQ`             |
+| `--model_ins`, `-mi`       | `str`      | Name of the model to use for instruction generation. Required.                                  | None               |
+| `--model_type_gen`, `-t`   | `ModelType` (API or VLLM) | Model type for generating code samples.                                                         | `VLLM`             |
+| `--model_gen`, `-mg`       | `str`      | Name of the model used for code generation. Required.                                           | None               |
+| `--temperature`   | `float`    | Sampling temperature for the model.                                                               | `0.7`              |
+| `--folder`, `-f`           | `str`      | Path to the folder containing code files for processing. Required.                              | None               |
+| `--number_gen`, `-ng`       | `int`      | Number of generated code modification examples per input.                                       | `5`                |
+| `--api_url`       | `str`      | API endpoint URL for the code generation model.                                                          | `https://api.openai.com/v1` |
+| `--api_key`       | `str`      | API key for authentication of the code generation model. . Defaults to the `OPENAI_API_KEY` environment variable if unset.       | None               |
+| `--gpu_number`    | `int`      | GPU number for for the code generation model.                                                                    | `1`                |
+| `--passk` `-k`    | `int`      | number of tries to generate code from the code generation model.                                                                   | `3`                |
+### Usage Examples
 
-##### Example Command
+#### Example 1: Using GROQ API with VLLM Model
+Generate code modifications using a GROQ model for instruction generation and a VLLM model for code generation.
 
 ```bash
-python3 -m varbench.synthetic_generation.run_generation -a GROQ -m "mixtral-8x7b-32768" -f "varbench/synthetic_generation/resources" --temperature 0.8 -n 3
+python -m varbench.synthetic_generation.run_generation -a GROQ -mi "llama-3.1-70b-versatile" -t VLLM -mg "meta-llama/Llama-3.2-1B" -f "varbench/synthetic_generation/resources" -ng 5 -k 10 --temperature 0.8
+```
+
+#### Example 2: Using OpenAI API with Custom API Model
+In this example, we use an OpenAI model for both instruction and code generation.
+
+```bash
+python -m varbench.synthetic_generation.run_generation -a OPENAI -mi "text-davinci-003" -t API -mg "text-davinci-003" -f "varbench/synthetic_generation/resources" --temperature 0.7 -n 5
+```
+
+#### Example 3: Using Groq API for both instruction and generation models
+Process code files using a higher sampling temperature for more variation.
+
+```bash
+python -m varbench.synthetic_generation.run_generation -a GROQ -mi "llama-3.1-70b-versatile" -t API --api_url "https://api.groq.com/openai/v1" --api_key $GROQ_API_KEY -mg "llama-3.1-70b-versatile" -f "varbench/synthetic_generation/resources" --temperature 1.0 -n 5
+```
+#### Example 4: Using Groq API for instruction and GLHF for code generation
+Process code files using a higher sampling temperature for more variation.
+
+```bash
+python -m varbench.synthetic_generation.run_generation -a GROQ -mi "llama-3.1-70b-versatile" -t API --api_url "https://glhf.chat/api/openai/v1" --api_key $GLHF_API_KEY -mg "hf:meta-llama/Llama-3.1-70B-Instruct" -f "varbench/synthetic_generation/resources" --temperature 1.0 -n 5
+```
+
+### Additional Notes
+- **Environment Variables**: If `--api_key` is not provided, the script uses `OPENAI_API_KEY`.
+- **Api specifications**: To simplify the usage code, I only implemented structured generation for api models with the groq and openai APIs(hence the only two possible selections). The code generation model uses the same backend as the evaluation module, and can either be connected to an API or a local running model. 
+
 ```
 
