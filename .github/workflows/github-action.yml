@@ -56,18 +56,19 @@ jobs:
         with:
           fetch-depth: 0  # Fetch full history for branch update
 
+      - name: Force checkout main and reset to dev
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          git reset --hard dev
+          git push origin main --force
+
       - name: Download coverage artifacts
         uses: actions/download-artifact@v4
         with:
           name: coverage-badge
           path: DOC/images/
-
-      - name: Merge dev into main
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout main
-          git merge dev --ff-only
 
       - name: Add coverage badge to main branch
         run: |
