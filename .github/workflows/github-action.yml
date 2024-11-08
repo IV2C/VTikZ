@@ -60,7 +60,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage-badge
-          path: DOC/images/coverage.svg
+          path: DOC/images/
 
       - name: Merge dev into main
         run: |
