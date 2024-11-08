@@ -21,6 +21,7 @@ jobs:
             sudo apt-get install texlive-fonts-recommended
             sudo apt-get install texlive-fonts-extra
             sudo apt-get install texlive-latex-extra
+            sudo apt-get install poppler-utils
             python -m pip install --upgrade pip
             pip install -r requirements.txt
             pip install coverage coverage-badge
