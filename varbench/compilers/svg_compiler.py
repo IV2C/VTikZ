@@ -17,5 +17,5 @@ class SvgCompiler(Compiler):
             return PIL.Image.open(
             io.BytesIO(cairosvg.svg2png(bytestring=input_string.encode()))
         )
-        except ParseError:
-            raise CompilerException()
+        except ParseError as pe:
+            raise CompilerException(pe.msg)

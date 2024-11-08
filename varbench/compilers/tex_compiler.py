@@ -46,7 +46,7 @@ class TexCompiler(Compiler):
             capture_output=True,
         )
         if output.returncode != 0:
-            raise CompilerException()
+            raise CompilerException(output.stderr.decode())
         
         output_file_name = os.path.join(
             self.cache_path, os.path.basename(tmp_file_path).replace("tex", "pdf")
