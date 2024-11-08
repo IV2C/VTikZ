@@ -18,5 +18,10 @@ class Compiler(ABC):
     def compile_from_string(self, input_string) -> PIL.Image:
         pass
 
+
 class CompilerException(Exception):
-    pass
+    def __init__(self, message:str, *args: object) -> None:
+        self.message = message
+        super().__init__(*args)
+    def __str__(self) -> str:
+        return f"[CompilerExceptionself:{self.message}]"

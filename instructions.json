@@ -1,30 +1,30 @@
 {
-  "General_description": "The original code generates images of a dog's face using different shades of the same color on each face side for the face, ears and spots on each iteration with every 3 iterations being directly below and then to the side to resemble an upright rectangle of dogs. Each dog's face is randomly assigned different base colors creating a unique image every time the code is executed.",
+  "general_description": "An image of a dog's face",
   "modifications": [
     {
-      "id": "cat_code_modification",
-      "instruction": "Change the shape of the head of the dog to make it more cat-like.",
-      "result_description": "The head of the dog is changed to resemble a cat's head with a more rounded and triangle-shaped head compared to the current shape."
+      "id": "increase_ear_size",
+      "instruction": "Make the dog's ears bigger",
+      "result_description": "A dog with larger ears"
     },
     {
-      "id": "paws_modification",
-      "instruction": "Add paws to the bottom of the image of the dog's head for each iteration.",
-      "result_description": "Each dog face in the grid is appended with one of the front paws of the dog drawn."
+      "id": "change_nose_color",
+      "instruction": "Change the color of the dog's nose to purple",
+      "result_description": "The dog's nose is now purple"
     },
     {
-      "id": "random_background_modification",
-      "instruction": "Use a separate random color for the background of each iteration of the dog face.",
-      "result_description": "Background for each iteration now varies slightly."
+      "id": "add_hat",
+      "instruction": "Add a red hat to the dog's head",
+      "result_description": "The dog is now wearing a red hat"
     },
     {
-      "id": "add_nose_modification",
-      "instruction": "Change the shape of the nose of the dog to resemble that of a bunny.",
-      "result_description": "Nose area is made slightly rounded and shorter."
+      "id": "change_eye_color",
+      "instruction": "Change the color of the dog's eyes to green",
+      "result_description": "The dog's eyes are now green"
     },
     {
-      "id": "rotate_head_modification",
-      "instruction": "Change the direction of the heads of every second iteration.",
-      "result_description": "Each second image in the array is rotated 45 degrees clockwise."
+      "id": "change_tongue_color",
+      "instruction": "Change the color of the dog's tongue to blue",
+      "result_description": "The dog's tongue is now blue"
     }
   ]
 }

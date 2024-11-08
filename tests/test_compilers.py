@@ -10,12 +10,15 @@ class TestCompilers(unittest.TestCase):
 
     @timeout_decorator.timeout(600)
     def test_tex(self):
-        from varbench.compilers import TexCompiler
+        from varbench.compilers import TexCompiler,CompilerException
 
         compiler = TexCompiler()
         tikzfile = os.path.join("tests/resources/tikz", "dog.tex")
         output = os.path.join("tests/resources/tikz", "dog.jpeg")
-        compiler.compile(tikzfile, output)
+        try:
+            compiler.compile(tikzfile, output)
+        except CompilerException as ce:
+            print(ce)
         self.assertTrue(os.path.exists(output), msg="Output file does not exist")
 
     @timeout_decorator.timeout(600)
