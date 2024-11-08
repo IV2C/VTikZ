@@ -4,7 +4,7 @@ from openai.types.chat import ChatCompletionMessageParam
 from loguru import logger
 from tenacity import retry, wait_exponential
 
-from varbench.utils.parsing import parse_openai_jsonl
+from varbench.utils.parsing import get_config, parse_openai_jsonl
 
 
 class LLM_Model:
@@ -35,25 +35,7 @@ class VLLM_model(LLM_Model):
     def __init__(self, model_name, temperature, n=1, gpu_number=None, **kwargs) -> None:
 
         super().__init__(model_name, temperature, n)
-        config = configparser.ConfigParser()
-        config.read("config.cfg")
-
-        def _make_numerical(string_value: str) -> float | int | str:
-            try:
-                result = int(string_value)
-            except ValueError:
-                try:
-                    result = float(string_value)
-                except ValueError:
-                    if string_value == "True":
-                        result = True
-                    elif string_value == "False":
-                        result = False
-                    return string_value
-            return result
-
-        vlmconf = {key: _make_numerical(value) for key, value in config["VLLM"].items()}
-        llm_args = {"model": model_name, **vlmconf}
+        llm_args = {"model": model_name, **get_config("VLLM")}
 
         if gpu_number is not None:
             llm_args["tensor_parallel_size"] = gpu_number
