@@ -18,6 +18,9 @@ jobs:
       - name: Install dependencies
         run: |
             sudo apt-get install texlive-latex-base
+            sudo apt-get install texlive-fonts-recommended
+            sudo apt-get install texlive-fonts-extra
+            sudo apt-get install texlive-latex-extra
             python -m pip install --upgrade pip
             pip install -r requirements.txt
             pip install coverage coverage-badge
