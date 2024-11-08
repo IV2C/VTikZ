@@ -4,6 +4,9 @@
 
 <p align="center">  <a href="https://github.com/VarBench-SE/VarBench">🏠 Home Page</a> • <a href="https://huggingface.co/datasets/CharlyR/varbench">🤗 Dataset</a>   </p>
 
+![](DOC/images/coverage.svg)
+
+
 ## Evaluation
 
 ### Running the evaluation

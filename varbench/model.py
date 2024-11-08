@@ -94,7 +94,7 @@ class API_model(LLM_Model):
             api_key=api_key,
         )
 
-    @retry(wait=wait_exponential(multiplier=1, min=4))
+    #@retry(wait=wait_exponential(multiplier=1, min=4))
     def request(
         self, messages: Iterable[ChatCompletionMessageParam], **kwargs
     ) -> Iterable[str]:

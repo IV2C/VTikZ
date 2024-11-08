@@ -1,30 +1,30 @@
 {
-  "general_description": "An image of a dog's face",
+  "general_description": "The code generates a simple dog face with a brown and grey body, pink nose and blue grey ears.",
   "modifications": [
     {
-      "id": "increase_ear_size",
-      "instruction": "Make the dog's ears bigger",
-      "result_description": "A dog with larger ears"
+      "id": "change_ear_color",
+      "instruction": "Change the color of the dog's ears to red",
+      "result_description": "The dog's ears are now red"
     },
     {
-      "id": "change_nose_color",
-      "instruction": "Change the color of the dog's nose to purple",
-      "result_description": "The dog's nose is now purple"
+      "id": "change_body_pattern",
+      "instruction": "Add spots to the dog's brown body",
+      "result_description": "The dog's body has spots all over"
     },
     {
-      "id": "add_hat",
-      "instruction": "Add a red hat to the dog's head",
-      "result_description": "The dog is now wearing a red hat"
+      "id": "change_nose_shape",
+      "instruction": "Make the dog's nose more pointy",
+      "result_description": "The dog's nose is now more pointy"
     },
     {
-      "id": "change_eye_color",
-      "instruction": "Change the color of the dog's eyes to green",
-      "result_description": "The dog's eyes are now green"
+      "id": "change_eyes",
+      "instruction": "Add eyes to the dog",
+      "result_description": "The dog now has eyes"
     },
     {
-      "id": "change_tongue_color",
-      "instruction": "Change the color of the dog's tongue to blue",
-      "result_description": "The dog's tongue is now blue"
+      "id": "change_bark",
+      "instruction": "Make the dog's mouth more open as if it's barking",
+      "result_description": "The dog's mouth is now more open as if it's barking"
     }
   ]
 }
