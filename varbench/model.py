@@ -85,9 +85,6 @@ class API_model(LLM_Model):
         if not api_key:
             api_key = os.environ.get("OPENAI_API_KEY")
         self.simplified = "groq" in api_url
-        if self.simplified:
-            self.simple_n = n
-            n = 1
 
         self.client = OpenAI(
             base_url=api_url,
@@ -99,6 +96,15 @@ class API_model(LLM_Model):
         self, messages: Iterable[ChatCompletionMessageParam], **kwargs
     ) -> Iterable[str]:
         logger.info(f"Requesting to {self.client.base_url}")
+        if self.simplified:
+            return [self.client.chat.completions.create(
+            messages=messages,
+            stop=["\n```\n"],
+            model=self.model_name,
+            temperature=self.temperature,
+            n=1,
+        ).choices[-1].message.content for _ in range(self.n) ]
+        
         completion = self.client.chat.completions.create(
             messages=messages,
             stop=["\n```\n"],
@@ -115,15 +121,8 @@ class API_model(LLM_Model):
         **kwargs,
     ) -> Iterable[Iterable[str]]:
 
-        # Some APIs such as Groq do not provide either batch or generation with n so we force it to 1 and generate sequentially
-        if self.simplified:
-            return [
-                [self.request(messages_n)[0] for _ in range(self.simple_n)]
-                for messages_n in messages
-            ]
-
         # using single requests if no batch
-        if self.no_batch:
+        if self.no_batch or self.simplified:
             return [self.request(messages_n) for messages_n in messages]
 
         # Using the openai batch api otherwise

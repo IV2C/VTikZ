@@ -2,7 +2,7 @@ import argparse
 from enum import Enum
 import pandas as pd
 from tqdm import tqdm
-from varbench.compilers import Compiler, TexCompiler, SvgCompiler, CompilerException
+from varbench.renderers import Renderer, TexRenderer, SvgRenderer, RendererException
 from varbench.model import API_model, LLM_Model, ModelType, VLLM_model
 from varbench.utils.diffs import diffs
 from varbench.utils.parsing import get_first_code_block
@@ -152,13 +152,13 @@ match model_type_gen:
 
 unfiltered_dataset = {}
 for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subsets"):
-    # creating compiler
-    compiler: Compiler = None
+    # creating renderer
+    renderer: Renderer = None
     match subset:
         case "tikz":
-            compiler = TexCompiler()
+            renderer = TexRenderer()
         case "svg":
-            compiler = SvgCompiler()
+            renderer = SvgRenderer()
         case _:
             logger.warning(f"unsupported subset {subset}")
             continue
@@ -222,9 +222,9 @@ for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subse
                         continue
                     treated_codes.add(code)
                     try:
-                        current_image = compiler.compile_from_string(code)
+                        current_image = renderer.from_string_to_image(code)
                         compiling_images.append(current_image)
-                    except CompilerException:
+                    except RendererException:
                         logger.info("Image compiling failed")
                 all_possible_codes.append(treated_codes)
                 if len(compiling_images) == 0:

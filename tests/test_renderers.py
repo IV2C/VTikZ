@@ -6,76 +6,76 @@ import time
 import numpy as np
 
 
-class TestCompilers(unittest.TestCase):
+class TestRenderers(unittest.TestCase):
 
     @timeout_decorator.timeout(600)
     def test_tex(self):
-        from varbench.compilers import TexCompiler,CompilerException
+        from varbench.renderers import TexRenderer,RendererException
 
-        compiler = TexCompiler()
+        compiler = TexRenderer()
         tikzfile = os.path.join("tests/resources/tikz", "dog.tex")
         output = os.path.join("tests/resources/tikz", "dog.jpeg")
         try:
-            compiler.compile(tikzfile, output)
-        except CompilerException as ce:
+            compiler.from_to_file(tikzfile, output)
+        except RendererException as ce:
             print(ce)
         self.assertTrue(os.path.exists(output), msg="Output file does not exist")
 
     @timeout_decorator.timeout(600)
     def test_svg(self):
-        from varbench.compilers import SvgCompiler
+        from varbench.renderers import SvgRenderer
 
-        compiler = SvgCompiler()
+        compiler = SvgRenderer()
         svgFile = os.path.join("tests/resources/svg", "dog.svg")
         output = os.path.join("tests/resources/svg", "dog.jpeg")
-        compiler.compile(svgFile, output)
+        compiler.from_to_file(svgFile, output)
         self.assertTrue(os.path.exists(output), msg="Output file does not exist")
 
     @timeout_decorator.timeout(600)
     def test_tex_from_string(self):
-        from varbench.compilers import TexCompiler
+        from varbench.renderers import TexRenderer
 
-        compiler = TexCompiler()
+        compiler = TexRenderer()
         tikzfile = os.path.join("tests/resources/tikz", "dog.tex")
         with open(tikzfile, "r") as f:
             tikzstring = f.read()
 
-        result: PIL.Image = compiler.compile_from_string(tikzstring)
+        result: PIL.Image = compiler.from_string_to_image(tikzstring)
         self.assertTrue(np.any(np.array(result)))
 
     @timeout_decorator.timeout(600)
     def test_svg_from_string(self):
-        from varbench.compilers import SvgCompiler
+        from varbench.renderers import SvgRenderer
 
-        compiler = SvgCompiler()
+        compiler = SvgRenderer()
         svgFile = os.path.join("tests/resources/svg", "dog.svg")
         with open(svgFile, "r") as f:
             svgstring = f.read()
 
-        result: PIL.Image = compiler.compile_from_string(svgstring)
+        result: PIL.Image = compiler.from_string_to_image(svgstring)
         self.assertTrue(np.any(np.array(result)))
 
     @timeout_decorator.timeout(600)
     def test_tex_from_string_exception(self):
-        from varbench.compilers import TexCompiler, CompilerException
+        from varbench.renderers import TexRenderer, RendererException
 
-        compiler = TexCompiler()
+        compiler = TexRenderer()
         tikzfile = os.path.join("tests/resources/tikz", "malformed.tex")
         with open(tikzfile, "r") as f:
             tikzstring = f.read()
 
-        self.assertRaises(CompilerException, compiler.compile_from_string, tikzstring)
+        self.assertRaises(RendererException, compiler.from_string_to_image, tikzstring)
 
     @timeout_decorator.timeout(600)
     def test_svg_from_string_exception(self):
-        from varbench.compilers import SvgCompiler, CompilerException
+        from varbench.renderers import SvgRenderer, RendererException
 
-        compiler = SvgCompiler()
+        compiler = SvgRenderer()
         svgFile = os.path.join("tests/resources/svg", "malformed.svg")
         with open(svgFile, "r") as f:
             svgstring = f.read()
 
-        self.assertRaises(CompilerException, compiler.compile_from_string, svgstring)
+        self.assertRaises(RendererException, compiler.from_string_to_image, svgstring)
 
     def tearDown(self):
         if os.path.exists("tests/resources/tikz/dog.jpeg"):

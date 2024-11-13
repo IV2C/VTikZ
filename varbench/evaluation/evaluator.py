@@ -7,7 +7,7 @@ from varbench.evaluation.clip_comparer import ClipComparer
 from ..prompt_templates import *
 from ..model import LLM_Model
 from loguru import logger
-from ..compilers import Compiler, CompilerException
+from ..renderers import Renderer, RendererException
 from PIL.Image import Image
 import torch
 import pandas as pd
@@ -18,7 +18,7 @@ from ..utils.diffs import diffs
 
 
 
-def evaluate(subset: Dataset, model: LLM_Model, compiler: Compiler):
+def evaluate(subset: Dataset, model: LLM_Model, renderer: Renderer):
 
     subset_processed = subset.map(create_message_row)
 
@@ -32,7 +32,7 @@ def evaluate(subset: Dataset, model: LLM_Model, compiler: Compiler):
     subset_processed.save_to_disk(".tmp/computed_dataset_" + model.model_name)
 
     return _compute(
-        compiler,
+        renderer,
         subset_processed["id"],
         subset_processed["code"],
         subset_processed["predictions"],
@@ -61,7 +61,7 @@ def create_message_row(row):
 
 
 def _compute(
-    compiler: Compiler,
+    renderer: Renderer,
     ids: list[str],
     inputs: list[str],
     predictions: list[list[str]],
@@ -73,7 +73,7 @@ def _compute(
     Computes the score.
 
     Args:
-        compiler (Compiler): Compiler to convert text to images.
+        renderer (Renderer): Renderer to convert text to images.
         ids (list[str]): List of dataset identifiers.
         inputs (list[str]): List of input code snippets.
         predictions (list[list[str]]): Model-generated predictions for fulfilling the instructions, organized as a list of lists for pass@k scoring.
@@ -90,9 +90,9 @@ def _compute(
             row_output_images = []
             for prediction in row_predictions:
                 try:
-                    result_image = compiler.compile_from_string(prediction)
+                    result_image = renderer.from_string_to_image(prediction)
                     row_output_images.append(result_image)
-                except CompilerException:
+                except RendererException:
                     pass
             output_images.append(row_output_images)
         return output_images

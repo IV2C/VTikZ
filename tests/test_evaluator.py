@@ -1,7 +1,7 @@
 import unittest
 import os
 import timeout_decorator
-from varbench.compilers import Compiler, TexCompiler
+from varbench.renderers import Renderer, TexRenderer
 from varbench.evaluation.evaluator import evaluate
 from varbench.model import LLM_Model
 from unittest.mock import MagicMock
@@ -33,8 +33,8 @@ class TestEvaluator(unittest.TestCase):
         self.ref_diff = _diffs(self.input_tex,[_get_first_code_block(self.ref_tex)])[0]
         self.wrong_diff = "@@ -375 +375 @@"
         print(self.ref_diff)
-        self.compiler: TexCompiler = TexCompiler()
-        self.compiler.compile_from_string = MagicMock(
+        self.renderer: TexRenderer = TexRenderer()
+        self.renderer.from_string_to_image = MagicMock(
             return_value=Image.open("tests/resources/images/reference.jpeg")
         )
 
@@ -62,7 +62,7 @@ class TestEvaluator(unittest.TestCase):
 
         # expected result
         expected = {"diffs_score": 1.0}
-        actual = evaluate(dummy_dataset, self.model, self.compiler)
+        actual = evaluate(dummy_dataset, self.model, self.renderer)
         self.assertEqual(
             actual[0].get("diffs_score"),
             expected["diffs_score"],
@@ -91,7 +91,7 @@ class TestEvaluator(unittest.TestCase):
         expected = {"diffs_score": 0.0}
 
         self.assertEqual(
-            evaluate(dummy_dataset, self.model, self.compiler)[0].get("diffs_score"),
+            evaluate(dummy_dataset, self.model, self.renderer)[0].get("diffs_score"),
             expected["diffs_score"],
         )
 
@@ -132,7 +132,7 @@ class TestEvaluator(unittest.TestCase):
         }
 
         self.assertEqual(
-            evaluate(dummy_dataset, self.model, self.compiler)[0].get("diffs_score"),
+            evaluate(dummy_dataset, self.model, self.renderer)[0].get("diffs_score"),
             expected["diffs_score"],
         )
 
@@ -173,7 +173,7 @@ class TestEvaluator(unittest.TestCase):
         }
 
         self.assertEqual(
-            evaluate(dummy_dataset, self.model, self.compiler)[0].get("diffs_score"),
+            evaluate(dummy_dataset, self.model, self.renderer)[0].get("diffs_score"),
             expected["diffs_score"],
         )
 

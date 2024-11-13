@@ -4,22 +4,22 @@ import os
 import PIL.Image
 
 
-class Compiler(ABC):
+class Renderer(ABC):
     def __init__(self):
         self.cache_path = os.path.join(os.environ.get("HOME"), ".cache/varbench")
         if not os.path.exists(self.cache_path):
             os.mkdir(self.cache_path)
 
     @abstractmethod
-    def compile(self, input, output):
+    def from_to_file(self, input, output):
         pass
 
     @abstractmethod
-    def compile_from_string(self, input_string) -> PIL.Image:
+    def from_string_to_image(self, input_string) -> PIL.Image:
         pass
 
 
-class CompilerException(Exception):
+class RendererException(Exception):
     def __init__(self, message:str, *args: object) -> None:
         self.message = message
         super().__init__(*args)

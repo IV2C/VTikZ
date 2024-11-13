@@ -1,30 +1,15 @@
 {
-  "general_description": "The code generates a simple dog face with a brown and grey body, pink nose and blue grey ears.",
+  "general_description": "A simple dog image generated using TikZ, with different parts of the dog's body having different colors.",
   "modifications": [
     {
-      "id": "change_ear_color",
-      "instruction": "Change the color of the dog's ears to red",
-      "result_description": "The dog's ears are now red"
+      "id": "dog_fur_shorter",
+      "instruction": "make the dog's fur shorter",
+      "result_description": "a dog with shorter fur"
     },
     {
-      "id": "change_body_pattern",
-      "instruction": "Add spots to the dog's brown body",
-      "result_description": "The dog's body has spots all over"
-    },
-    {
-      "id": "change_nose_shape",
-      "instruction": "Make the dog's nose more pointy",
-      "result_description": "The dog's nose is now more pointy"
-    },
-    {
-      "id": "change_eyes",
-      "instruction": "Add eyes to the dog",
-      "result_description": "The dog now has eyes"
-    },
-    {
-      "id": "change_bark",
-      "instruction": "Make the dog's mouth more open as if it's barking",
-      "result_description": "The dog's mouth is now more open as if it's barking"
+      "id": "blue_dog_collar",
+      "instruction": "add a blue dog collar",
+      "result_description": "a dog with a blue collar around its neck"
     }
   ]
 }

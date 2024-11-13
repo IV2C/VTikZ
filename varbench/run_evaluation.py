@@ -5,7 +5,7 @@ import os
 import argparse
 from transformers.pipelines.pt_utils import KeyDataset
 
-from varbench.compilers import Compiler, SvgCompiler, TexCompiler
+from varbench.renderers import Renderer, SvgRenderer, TexRenderer
 from .evaluation.evaluator import evaluate
 from .model import LLM_Model, VLLM_model, API_model, ModelType
 import json
@@ -117,15 +117,15 @@ for subset in subsets:
     dataset = load_dataset("CharlyR/varbench", subset, split="train")
 
     # creating compiler
-    compiler: Compiler = None
+    renderer: Renderer = None
     match subset:
         case "tikz":
-            compiler = TexCompiler()
+            renderer = TexRenderer()
         case "svg":
-            compiler = SvgCompiler()
+            renderer = SvgRenderer()
 
     # evaluating
-    result_scores, score_dataset = evaluate(dataset, llm_model, compiler)
+    result_scores, score_dataset = evaluate(dataset, llm_model, renderer)
     logger.info(result_scores)
     score_dataset.to_csv(os.path.join(result_path, subset+".csv"))
     with open(os.path.join(result_path, subset+".json"), "w") as subset_result:

@@ -10,7 +10,7 @@
 - [X] Finish implementing openai batch api
 - [X] Add an api option for run evaluation
 - [X] Make a score object and change the evaluator to return it (change the tests as well)
-- [X] Remake latex-Compiler
+- [X] Remake latex-renderer
 - [X] Make some first simple data
 - [X] text squid, find other possible solutions for dataset
 - [X] implement pass@k
@@ -19,12 +19,13 @@
   - [X] vlm or computer-vision("Are the eyes red")
   - [X] Image comparison(image diff)
   - [X] line diff(need to think, either same as before with only one column diff, or a new one with only the lines)
-- [X] Test compilers when image not compilable
+- [X] Test renderer when image not compilable
 - [X] Fix evaluator tests
 - [X] fix line diff
 - [X] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
 - [X] fix workflow
 - [X] Add a config file containing vllm config 
+- [ ] Fix diffs in the synthetic data generation
 - [ ] Add backup at each step for synthetic data generation
 - [ ] Create synthetic data and then verify
 - [ ] Make another submodel called multimodal that can take images, and allow for parametrization in the command line
@@ -34,7 +35,7 @@
 - [ ] Implement LLM+something solution and test it
 - [ ] Explore which other things can be tested(tikz, svg, ascii, what else?)
 Eventually
-- [ ] ascii art "compiler"
+- [ ] ascii art "renderer"
 - [ ] github action
   - [ ] creates and publishes the dataset
 

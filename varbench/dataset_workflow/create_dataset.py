@@ -11,7 +11,7 @@ import pandas as pd
 import os
 import argparse
 
-from varbench.compilers import Compiler, SvgCompiler, TexCompiler
+from varbench.renderers import Renderer, SvgRenderer, TexRenderer
 from .diffcompute import diffcompute
 import json
 
@@ -33,9 +33,9 @@ for subset in os.listdir(dataset_path):
     current_subset = []
     match (subset):
         case "tikz":
-            compiler: Compiler = TexCompiler()
+            renderer: Renderer = TexRenderer()
         case "svg":
-            compiler: Compiler = SvgCompiler()
+            renderer: Renderer = SvgRenderer()
     for entry in os.listdir(os.path.join(dataset_path, subset)):
 
         entry_path = os.path.join(dataset_path, subset, entry)
@@ -63,7 +63,7 @@ for subset in os.listdir(dataset_path):
             os.listdir(os.path.join(entry_path, "solutions"))[0],
         )
         with open(solution_path, "r") as solution_image_text:
-            image_solution: PIL.Image.Image = compiler.compile_from_string(
+            image_solution: PIL.Image.Image = renderer.from_string_to_image(
                 solution_image_text.read()
             )
 

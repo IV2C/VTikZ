@@ -1,7 +1,7 @@
 README.md
 pyproject.toml
 setup.py
-tests/test_compilers.py
+tests/test_renderers.py
 tests/test_evaluator.py
 tests/test_model_completion.py
 varbench/__init__.py
