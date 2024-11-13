@@ -4,7 +4,7 @@ import pandas as pd
 from tqdm import tqdm
 from varbench.renderers import Renderer, TexRenderer, SvgRenderer, RendererException
 from varbench.model import API_model, LLM_Model, ModelType, VLLM_model
-from varbench.utils.diffs import diffs
+from varbench.utils.patches import patches
 from varbench.utils.parsing import get_first_code_block
 from .api_generation import (
     groq_generation_format,
@@ -184,10 +184,10 @@ for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subse
                 {"role": "user", "content": content},
             ]
             # generating responses
-            modifications = instructor(
+            var_reponse_instructions = instructor(
                 messages=messages, model=model_ins, temperature=temperature
             )
-
+            modifications = var_reponse_instructions.modifications
             ##################"Generating modifications"################
             all_images = []
             all_possible_codes = []
@@ -195,7 +195,7 @@ for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subse
 
                 # prompt
                 user_instruction = IT_PROMPT.format(
-                    instruction=modification.instruction, content=content
+                    instruction=modification.instruction, content=var_reponse_instructions.commented_code
                 )
 
                 messages = [
@@ -225,7 +225,9 @@ for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subse
                         current_image = renderer.from_string_to_image(code)
                         compiling_images.append(current_image)
                     except RendererException:
-                        logger.info("Image compiling failed")
+                        logger.info("Image rendering failed")
+                    except Exception as e:
+                        logger.warning("Other rendering")
                 all_possible_codes.append(treated_codes)
                 if len(compiling_images) == 0:
                     all_images.append(None)
@@ -236,7 +238,7 @@ for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subse
             for modification in zip(modifications, all_images, content, possible_codes):
                 if not modification[1]:
                     continue
-                current_diffs = diffs(content, modification[3])
+                current_patch = patches(content, modification[3])
                 current_subset.append(
                     {
                         "id": modification[0].id,
@@ -244,7 +246,7 @@ for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subse
                         "result_description": modification[0].result_description,
                         "instruction": modification[0].instruction,
                         "image_solution": modification[1],
-                        "diffs": current_diffs,
+                        "patches": current_patch,
                     }
                 )
     if len(current_subset) > 0:
@@ -256,7 +258,7 @@ features = Features(
         "code": Value("string"),
         "instruction": Value("string"),
         "result_description": Value("string"),
-        "diffs": Sequence(Value("string")),
+        "patches": Sequence(Value("string")),
         "image_solution": Sequence(Image()),
     }
 )

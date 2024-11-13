@@ -8,7 +8,7 @@ import argparse
 
 import difflib
 
-def diffcompute(folder:str)-> list[str]:
+def patch_compute(folder:str)-> list[str]:
     """
     Compute the differences between the 'input' and 'solutions' for each subset in the given folder.
 

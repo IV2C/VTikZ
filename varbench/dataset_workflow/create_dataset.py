@@ -12,7 +12,7 @@ import os
 import argparse
 
 from varbench.renderers import Renderer, SvgRenderer, TexRenderer
-from .diffcompute import diffcompute
+from .patchcompute import patch_compute
 import json
 
 login(token=os.environ.get("HF_TOKEN"))
@@ -55,7 +55,7 @@ for subset in os.listdir(dataset_path):
         data = open(os.path.join(entry_path, "data.json")).read()
         data = json.loads(data)
 
-        diffs = diffcompute(entry_path)
+        patches = patch_compute(entry_path)
 
         solution_path = os.path.join(
             entry_path,
@@ -73,7 +73,7 @@ for subset in os.listdir(dataset_path):
                 "code": input_code,
                 "instruction": data["instruction"],
                 "result_description": data["result_description"],
-                "diffs": diffs,
+                "patches": patches,
                 "image_solution": image_solution,
             }
         )
@@ -87,7 +87,7 @@ features = Features(
         "code": Value("string"),
         "instruction": Value("string"),
         "result_description": Value("string"),
-        "diffs": Sequence(Value("string")),
+        "patches": Sequence(Value("string")),
         "image_solution": Image(),
     }
 )

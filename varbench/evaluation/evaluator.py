@@ -12,9 +12,9 @@ from PIL.Image import Image
 import torch
 import pandas as pd
 import re
-from .line_diff_scorer import compute_line_score
+from .line_patch_scorer import compute_line_score
 from ..utils.parsing import get_first_code_block
-from ..utils.diffs import diffs
+from ..utils.patches import patches
 
 
 
@@ -36,7 +36,7 @@ def evaluate(subset: Dataset, model: LLM_Model, renderer: Renderer):
         subset_processed["id"],
         subset_processed["code"],
         subset_processed["predictions"],
-        subset_processed["diffs"],
+        subset_processed["patches"],
         subset_processed["result_description"],
         subset_processed["image_solution"],
     )
@@ -65,7 +65,7 @@ def _compute(
     ids: list[str],
     inputs: list[str],
     predictions: list[list[str]],
-    diff_list: list[list[str]],
+    patch_list: list[list[str]],
     result_descriptions: list[str],
     image_solutions: list[Image],
 ) -> tuple[object, pd.DataFrame]:
@@ -77,7 +77,7 @@ def _compute(
         ids (list[str]): List of dataset identifiers.
         inputs (list[str]): List of input code snippets.
         predictions (list[list[str]]): Model-generated predictions for fulfilling the instructions, organized as a list of lists for pass@k scoring.
-        diff_list (list[str]): List of code diffs that fulfill the instruction.
+        patch_list (list[str]): List of code patch that fulfill the instruction.
         descriptions (list[str]): List of descriptions of the expected results, used for scoring with a CLIP model.
         image_solutions (list[PIL.Image.Image]): List of solution images.
     """
@@ -114,15 +114,15 @@ def _compute(
         len(prediction_n) / pass_size for prediction_n in predictions
     ]
 
-    # first computing if any of the diffs are in the prediction, if so the score is 1 for the row
-    individual_diffs = [diffs(i, p) for i, p in zip(inputs, predictions)]
-    logger.info(individual_diffs)
-    individual_diffs_scores = [
-        bool(set(i) & set(d)) for i, d in zip(individual_diffs, diff_list)
+    # first computing if any of the patches are in the prediction, if so the score is 1 for the row
+    individual_patches = [patches(i, p) for i, p in zip(inputs, predictions)]
+    logger.info(individual_patches)
+    individual_patches_scores = [
+        bool(set(i) & set(d)) for i, d in zip(individual_patches, patch_list)
     ]
 
     # getting line scores
-    individual_lines_scores = compute_line_score(individual_diffs, diff_list)
+    individual_lines_scores = compute_line_score(individual_patches, patch_list)
 
     # computing the clip similarity between compiled images and descriptions of results, as well as the image similarities
     images_lists = _images(predictions)
@@ -142,9 +142,9 @@ def _compute(
         images_lists, image_solutions
     )
 
-    # individual_diffs_scores = {id: result for id, result in zip(ids, result_list)}
+    # individual_patches_scores = {id: result for id, result in zip(ids, result_list)}
 
-    diff_score = sum(individual_diffs_scores) / dataset_lenght
+    patch_score = sum(individual_patches_scores) / dataset_lenght
     text_score = sum(individual_text_scores) / dataset_lenght
     image_score = sum(individual_image_scores) / dataset_lenght
     compiling_score = sum(individual_compiling_scores) / dataset_lenght
@@ -154,27 +154,27 @@ def _compute(
     varscores = [
         d if d else (t + i) / 2
         for d, t, i in zip(
-            individual_diffs_scores,
+            individual_patches_scores,
             individual_text_scores,
             individual_image_scores,
         )
     ]
     varscore = sum(varscores) / len(varscores)
 
-    # logger.info(individual_diffs_scores)
+    # logger.info(individual_patches_scores)
     # logger.info(individual_text_scores)
     # logger.info(individual_image_scores)
 
     output_dataset: pd.DataFrame = pd.DataFrame.from_dict(
         {
-            "individual_diffs_scores": individual_diffs_scores,
+            "individual_patches_scores": individual_patches_scores,
             "individual_text_scores": individual_text_scores,
             "individual_image_scores": individual_image_scores,
             "individual_compiling_scores": individual_compiling_scores,
             "individual_parsing_scores": individual_parsing_scores,
             "individual_lines_scores": individual_lines_scores,
             "result_description": result_descriptions,
-            "individual_diffs":individual_diffs,
+            "individual_patches":individual_patches,
             "id": ids,
             "predictions": predictions,
         }
@@ -182,7 +182,7 @@ def _compute(
 
     return {
         "line_score": line_score,
-        "diffs_score": diff_score,
+        "patches_score": patch_score,
         "varscore": varscore,
         "text_scores": text_score,
         "image_score": image_score,

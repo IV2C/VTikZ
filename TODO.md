@@ -1,10 +1,10 @@
 # TODO
 
 - [X] either make a script to add an entry in the dataset or just doucemnt the command to do it.
-- [X] diff computation
+- [X] patch computation
 - [X] Make the dataset with a python script
 - [X] refactor dataset creation
-- [X] change diff computation
+- [X] change patch computation
 - [X] refactor run-evaluation
   - [X] Use vllm and openai inference via a wrapper for evaluation(get inspired by https://github.com/HumanEval-V/HumanEval-V-Benchmark/blob/main/models/vllm_model.py)
 - [X] Finish implementing openai batch api
@@ -17,15 +17,15 @@
 - [X] test pass@k
 - [X] complex oracle
   - [X] vlm or computer-vision("Are the eyes red")
-  - [X] Image comparison(image diff)
-  - [X] line diff(need to think, either same as before with only one column diff, or a new one with only the lines)
+  - [X] Image comparison(image patch)
+  - [X] line patch(need to think, either same as before with only one column patch, or a new one with only the lines)
 - [X] Test renderer when image not compilable
 - [X] Fix evaluator tests
-- [X] fix line diff
+- [X] fix line patch
 - [X] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
 - [X] fix workflow
 - [X] Add a config file containing vllm config 
-- [ ] Fix diffs in the synthetic data generation
+- [ ] Fix patchs in the synthetic data generation
 - [ ] Add backup at each step for synthetic data generation
 - [ ] Create synthetic data and then verify
 - [ ] Make another submodel called multimodal that can take images, and allow for parametrization in the command line

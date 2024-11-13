@@ -16,7 +16,7 @@ import re
 class TestEvaluator(unittest.TestCase):
 
     def setUp(self) -> None:
-        def _diffs(input, predictions: list) -> list:
+        def _patches(input, predictions: list) -> list:
             predictions = [prediction.split("\n") for prediction in predictions]
             return [
                 "".join(list(difflib.unified_diff(input.split("\n"), prediction, n=0))[2:])
@@ -30,9 +30,9 @@ class TestEvaluator(unittest.TestCase):
             self.input_tex = _get_first_code_block(in_text.read())
         with open("tests/resources/tikz/reference.md") as in_text:
             self.ref_tex = in_text.read()
-        self.ref_diff = _diffs(self.input_tex,[_get_first_code_block(self.ref_tex)])[0]
-        self.wrong_diff = "@@ -375 +375 @@"
-        print(self.ref_diff)
+        self.ref_patch = _patches(self.input_tex,[_get_first_code_block(self.ref_tex)])[0]
+        self.wrong_patch = "@@ -375 +375 @@"
+        print(self.ref_patch)
         self.renderer: TexRenderer = TexRenderer()
         self.renderer.from_string_to_image = MagicMock(
             return_value=Image.open("tests/resources/images/reference.jpeg")
@@ -49,7 +49,7 @@ class TestEvaluator(unittest.TestCase):
                 "id": ["example1"],
                 "code": [self.input_tex],
                 "instruction": ["Rotate the line"],
-                "diffs": [[self.ref_diff]],
+                "pathes": [[self.ref_patch]],
                 "result_description": [
                     "a line going from the top left to the bottom right"
                 ],
@@ -61,11 +61,11 @@ class TestEvaluator(unittest.TestCase):
         self.model.batchRequest = MagicMock(return_value=[[self.ref_tex]])
 
         # expected result
-        expected = {"diffs_score": 1.0}
+        expected = {"patches_score": 1.0}
         actual = evaluate(dummy_dataset, self.model, self.renderer)
         self.assertEqual(
-            actual[0].get("diffs_score"),
-            expected["diffs_score"],
+            actual[0].get("patches_score"),
+            expected["patches_score"],
         )
 
     def test_evaluator_metric_not_exists(self):
@@ -76,7 +76,7 @@ class TestEvaluator(unittest.TestCase):
                 "id": ["example1"],
                 "code": [self.input_tex],
                 "instruction": ["Rotate the line"],
-                "diffs": [[self.ref_diff]],
+                "patches": [[self.ref_patch]],
                 "result_description": [
                     "a line going from the top left to the bottom right"
                 ],
@@ -88,11 +88,11 @@ class TestEvaluator(unittest.TestCase):
         self.model.batchRequest = MagicMock(return_value=[["wrong_return_value"]])
 
         # expected result
-        expected = {"diffs_score": 0.0}
+        expected = {"patches_score": 0.0}
 
         self.assertEqual(
-            evaluate(dummy_dataset, self.model, self.renderer)[0].get("diffs_score"),
-            expected["diffs_score"],
+            evaluate(dummy_dataset, self.model, self.renderer)[0].get("patches_score"),
+            expected["patches_score"],
         )
 
     def test_evaluator_metric_exists_multiple(self):
@@ -106,9 +106,9 @@ class TestEvaluator(unittest.TestCase):
                     self.input_tex,
                 ],
                 "instruction": ["Rotate the line", "Rotate the line"],
-                "diffs": [
-                    [self.ref_diff],
-                    [self.ref_diff],
+                "patches": [
+                    [self.ref_patch],
+                    [self.ref_patch],
                 ],
                 "result_description": [
                     "a line going from the top left to the bottom right",
@@ -128,12 +128,12 @@ class TestEvaluator(unittest.TestCase):
 
         # expected result
         expected = {
-            "diffs_score": 0.5,
+            "patches_score": 0.5,
         }
 
         self.assertEqual(
-            evaluate(dummy_dataset, self.model, self.renderer)[0].get("diffs_score"),
-            expected["diffs_score"],
+            evaluate(dummy_dataset, self.model, self.renderer)[0].get("patches_score"),
+            expected["patches_score"],
         )
 
     def test_evaluator_metric_exists_complex(self):
@@ -147,9 +147,9 @@ class TestEvaluator(unittest.TestCase):
                     self.input_tex,
                 ],
                 "instruction": ["Rotate the line", "Rotate the line"],
-                "diffs": [
-                    [self.wrong_diff, self.wrong_diff, self.ref_diff],
-                    [self.wrong_diff, self.ref_diff, self.wrong_diff],
+                "patches": [
+                    [self.wrong_patch, self.wrong_patch, self.ref_patch],
+                    [self.wrong_patch, self.ref_patch, self.wrong_patch],
                 ],
                 "result_description": [
                     "a line going from the top left to the bottom right",
@@ -169,12 +169,12 @@ class TestEvaluator(unittest.TestCase):
 
         # expected result
         expected = {
-            "diffs_score": 1.0,
+            "patches_score": 1.0,
         }
 
         self.assertEqual(
-            evaluate(dummy_dataset, self.model, self.renderer)[0].get("diffs_score"),
-            expected["diffs_score"],
+            evaluate(dummy_dataset, self.model, self.renderer)[0].get("patches_score"),
+            expected["patches_score"],
         )
 
 
