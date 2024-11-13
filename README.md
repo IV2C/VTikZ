@@ -48,13 +48,14 @@ This command will evaluate the specified model on the given subsets using the pr
 - **Using the VLLM model:**
 
   ```sh
-  python3 -m varbench.run_evaluation --subsets tikz svg --model_type VLLM --model meta-llama/Llama-3.2-1B-Instruct --gpu_number 2
+  python3 -m varbench.run_evaluation --subsets tikz svg --model_type VLLM --model meta-llama/Llama-3.2-1B-Instruct
   ```
 
-  This command uses the VLLM model named `llama-3.2` and specifies GPU number 2 for evaluation.
+  This command uses the VLLM model named `llama-3.2`.
 
-  tips: you can tweak the logging level of vllm via `export VLLM_LOGGING_LEVEL=DEBUG`
-
+  tips: 
+    - You can tweak the logging level of vllm via `export VLLM_LOGGING_LEVEL=DEBUG`
+    - You can modify the configurations of the vllm model by modifying the config.cgf at the root of the repository 
 
 ## Dataset
 
@@ -80,53 +81,50 @@ The script will first compute the patches for each entry, then will add, commit,
 
 This script is designed to facilitate code modification and dataset generation. It takes in code samples, asks an LLM to generate instructions that can be applied to the code(in a structured json format), then asks another LLM to generate the code modified according to the instruction.
 
-### Argument Details
+```markdown
+# Varbench Dataset Generator
 
-| Argument          | Type       | Description                                                                                        | Default            |
-|-------------------|------------|----------------------------------------------------------------------------------------------------|--------------------|
-| `--api_type_ins`, `-a`     | `ApiType` (OPENAI or GROQ) | Specifies the API type for generating instructions.                                              | `GROQ`             |
-| `--model_ins`, `-mi`       | `str`      | Name of the model to use for instruction generation. Required.                                  | None               |
-| `--model_type_gen`, `-t`   | `ModelType` (API or VLLM) | Model type for generating code samples.                                                         | `VLLM`             |
-| `--model_gen`, `-mg`       | `str`      | Name of the model used for code generation. Required.                                           | None               |
-| `--temperature`   | `float`    | Sampling temperature for the model.                                                               | `0.7`              |
-| `--folder`, `-f`           | `str`      | Path to the folder containing code files for processing. Required.                              | None               |
-| `--number_gen`, `-ng`       | `int`      | Number of generated code modification examples per input.                                       | `5`                |
-| `--api_url`       | `str`      | API endpoint URL for the code generation model.                                                          | `https://api.openai.com/v1` |
-| `--api_key`       | `str`      | API key for authentication of the code generation model. . Defaults to the `OPENAI_API_KEY` environment variable if unset.       | None               |
-| `--gpu_number`    | `int`      | GPU number for for the code generation model.                                                                    | `1`                |
-| `--passk` `-k`    | `int`      | number of tries to generate code from the code generation model.                                                                   | `3`                |
-### Usage Examples
+This script processes code files, generates model-based modifications, renders images, and uploads structured datasets to the Varbench Hub. It streamlines dataset creation by automating code transformations, visualization, and output organization.
 
-#### Example 1: Using GROQ API with VLLM Model
+## Usage
+
+### Command-Line Arguments
+
+| Argument           | Description                                                                                       | Default                       |
+|--------------------|---------------------------------------------------------------------------------------------------|-------------------------------|
+| `--model_type` / `-t` | Specifies the type of model to use (`VLLM` or `API`).                                              | `VLLM`                        |
+| `--model` / `-mg`     | **Required**: The model name to use for generation.                                               |                               |
+| `--temperature`       | Sampling temperature for model output variability.                                               | `0.7`                         |
+| `--folder` / `-f`     | **Required**: Path to the folder containing code files to process.                               |                               |
+| `--number_gen` / `-ng`| Number of example modifications to generate per code input.                                      | `5`                           |
+| `--api_url`           | URL of the OpenAI-compatible API for accessing the model.                                        | `https://api.openai.com/v1`   |
+| `--passk` / `-k`      | Number of generations per prompt for diversity.                                                  | `3`                           |
+| `--api_key`           | API key for authentication. Defaults to `OPENAI_API_KEY` environment variable if not provided.  |                               |
+
+### Examples
+
+#### Example 1: Using a VLLM Model
 Generate code modifications using a GROQ model for instruction generation and a VLLM model for code generation.
 
 ```bash
-python -m varbench.synthetic_generation.run_generation -a GROQ -mi "llama-3.1-70b-versatile" -t VLLM -mg "meta-llama/Llama-3.2-1B" -f "varbench/synthetic_generation/resources" -ng 5 -k 10 --temperature 0.8
+python -m varbench.synthetic_generation.run_generation --model_type VLLM -mg "meta-llama/Llama-3.2-1B" --folder "varbench/synthetic_generation/resources" --number_gen 5 --passk 10 --temperature 0.8
 ```
 
 #### Example 2: Using OpenAI API with Custom API Model
-In this example, we use an OpenAI model for both instruction and code generation.
+Use an OpenAI model for both instruction and code generation.
 
 ```bash
-python -m varbench.synthetic_generation.run_generation -a OPENAI -mi "text-davinci-003" -t API -mg "text-davinci-003" -f "varbench/synthetic_generation/resources" --temperature 0.7 -n 5
+python -m varbench.synthetic_generation.run_generation --model_type API -mg "text-davinci-003" --folder "varbench/synthetic_generation/resources" --temperature 0.7 --number_gen 5 --api_key $OPENAI_API_KEY
 ```
 
-#### Example 3: Using Groq API for both instruction and generation models
-Process code files using a higher sampling temperature for more variation.
-
-```bash
-python -m varbench.synthetic_generation.run_generation -a GROQ -mi "llama-3.1-70b-versatile" -t API --api_url "https://api.groq.com/openai/v1" --api_key $GROQ_API_KEY -mg "llama-3.1-70b-versatile" -f "varbench/synthetic_generation/resources" --temperature 1.0 -n 5
-```
-#### Example 4: Using Groq API for instruction and GLHF for code generation
-Process code files using a higher sampling temperature for more variation.
+#### Example 3: Using Groq API 
 
 ```bash
-python -m varbench.synthetic_generation.run_generation -a GROQ -mi "llama-3.1-70b-versatile" -t API --api_url "https://glhf.chat/api/openai/v1" --api_key $GLHF_API_KEY -mg "hf:meta-llama/Llama-3.1-70B-Instruct" -f "varbench/synthetic_generation/resources" --temperature 1.0 -n 5
+python -m varbench.synthetic_generation.run_generation --model_type API --model "llama-3.1-70b-versatile" --folder "varbench/synthetic_generation/resources" --temperature 1.0 --number_gen 5 --api_url "https://api.groq.com/openai/v1" --api_key $GROQ_API_KEY
 ```
+
 
 ### Additional Notes
 - **Environment Variables**: If `--api_key` is not provided, the script uses `OPENAI_API_KEY`.
-- **Api specifications**: To simplify the usage code, I only implemented structured generation for api models with the groq and openai APIs(hence the only two possible selections). The code generation model uses the same backend as the evaluation module, and can either be connected to an API or a local running model. 
-
 ```
 

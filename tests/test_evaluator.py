@@ -49,7 +49,7 @@ class TestEvaluator(unittest.TestCase):
                 "id": ["example1"],
                 "code": [self.input_tex],
                 "instruction": ["Rotate the line"],
-                "pathes": [[self.ref_patch]],
+                "patches": [[self.ref_patch]],
                 "result_description": [
                     "a line going from the top left to the bottom right"
                 ],

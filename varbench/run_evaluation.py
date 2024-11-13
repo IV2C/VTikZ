@@ -6,6 +6,7 @@ import argparse
 from transformers.pipelines.pt_utils import KeyDataset
 
 from varbench.renderers import Renderer, SvgRenderer, TexRenderer
+from varbench.utils.model_launch import launch_model
 from .evaluation.evaluator import evaluate
 from .model import LLM_Model, VLLM_model, API_model, ModelType
 import json
@@ -48,10 +49,6 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "--gpu_number", type=int, default=1, help="GPU number to use for evaluation"
-)
-
-parser.add_argument(
     "--api_url",
     type=str,
     default="https://api.openai.com/v1",
@@ -88,7 +85,6 @@ model_type = args.model_type
 
 key_args: dict = {}
 key_args["model_name"] = args.model
-key_args["gpu_number"] = args.gpu_number
 key_args["api_url"] = args.api_url
 key_args["api_key"] = args.api_key
 key_args["temperature"] = args.temperature
@@ -99,10 +95,14 @@ key_args["n"] = args.passk
 llm_model: LLM_Model = None
 # loading model
 match model_type:
-    case ModelType.API:
-        llm_model = API_model(**key_args)
     case ModelType.VLLM:
-        llm_model = VLLM_model(**key_args)
+        launch_model(**key_args)
+    case ModelType.API:
+        if not args.api_url:
+            logger.exception("api_url argument not specified")
+        
+
+llm_model = API_model(**key_args)
 
 if not os.path.exists("./results"):
     os.mkdir("./results")

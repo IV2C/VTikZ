@@ -25,17 +25,20 @@
 - [X] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
 - [X] fix workflow
 - [X] Add a config file containing vllm config 
-- [ ] Fix patchs in the synthetic data generation
+- [ ] switch from vllm launch in python to openai compaptible server
+- [ ] Fix patches in the synthetic data generation
 - [ ] Add backup at each step for synthetic data generation
+- [ ] Add backup at each step for benchmark
 - [ ] Create synthetic data and then verify
 - [ ] Make another submodel called multimodal that can take images, and allow for parametrization in the command line
-- [ ] Make another submodel called multimodal-loop that can take images and loops until a satifying image is created, and allow for parametrization in the command line.
+- [ ] Make another submodel called multimodal-loop that can take images and loops until a satisfying image is created, and allow for parametrization in the command line.
 - [ ] Assessment of vlm on checking 
 - [ ] Test LLM-only models then compare with Multimodal with image in input
 - [ ] Implement LLM+something solution and test it
 - [ ] Explore which other things can be tested(tikz, svg, ascii, what else?)
 Eventually
 - [ ] ascii art "renderer"
-- [ ] github action
+- [X] github action
+  - [ ] Tests
   - [ ] creates and publishes the dataset
 

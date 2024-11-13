@@ -3,12 +3,12 @@ from enum import Enum
 import pandas as pd
 from tqdm import tqdm
 from varbench.renderers import Renderer, TexRenderer, SvgRenderer, RendererException
-from varbench.model import API_model, LLM_Model, ModelType, VLLM_model
+from varbench.model import API_model, LLM_Model, ModelType
+from varbench.utils.model_launch import launch_model
 from varbench.utils.patches import patches
-from varbench.utils.parsing import get_first_code_block
+from varbench.utils.parsing import get_config, get_first_code_block
 from .api_generation import (
-    groq_generation_format,
-    openai_generation_format,
+    VarbenchResponses
 )
 import os
 from datasets import Dataset, Features, Sequence, Value, Image
@@ -25,13 +25,6 @@ class ApiType(Enum):
     GROQ = 1
 
 
-def api_type_mapper(value):
-    api_map = {"OPENAI": ApiType.OPENAI, "GROQ": ApiType.GROQ}
-    if value.upper() not in api_map:
-        raise argparse.ArgumentTypeError(f"Invalid API type: {value}")
-    return api_map[value.upper()]
-
-
 def model_type_mapper(value):
     api_map = {"API": ModelType.API, "VLLM": ModelType.VLLM}
     if value.upper() not in api_map:
@@ -42,33 +35,18 @@ def model_type_mapper(value):
 parser = argparse.ArgumentParser()
 
 parser.add_argument(
-    "--api_type_ins",
-    "-a",
-    type=api_type_mapper,
-    help="type of the api to use for the instruction generator",
-    default=ApiType.GROQ,
-)
-parser.add_argument(
-    "--model_ins",
-    "-mi",
-    type=str,
-    required=True,
-    help="Name of the model to use the instruction generator",
-)
-
-parser.add_argument(
-    "--model_type_gen",
+    "--model_type",
     "-t",
     type=model_type_mapper,
-    help="type of the model to use for the code generation",
+    help="type of the model",
     default=ModelType.VLLM,
 )
 parser.add_argument(
-    "--model_gen",
+    "--model",
     "-mg",
     type=str,
     required=True,
-    help="Name of the model to use for the code generation",
+    help="Name of the model to use",
 )
 
 parser.add_argument(
@@ -111,30 +89,17 @@ parser.add_argument(
     help="API key for authentication, will default to the ENV variable OPENAI_API_KEY",
 )
 
-parser.add_argument(
-    "--gpu_number", type=int, default=1, help="GPU number to use for evaluation"
-)
 
 args = parser.parse_args()
-
-api_type_ins = args.api_type_ins
-model_ins = args.model_ins
 temperature = args.temperature
 
-model_type_gen = args.model_type_gen
+model_type = args.model_type
 
 folder_path = os.path.abspath(args.folder)
 number_gen = args.number_gen
-match api_type_ins:
-    case ApiType.GROQ:
-        instructor = groq_generation_format
-    case ApiType.OPENAI:
-        instructor = openai_generation_format
-
 
 key_args: dict = {}
-key_args["model_name"] = args.model_gen
-key_args["gpu_number"] = args.gpu_number
+key_args["model_name"] = args.model
 key_args["api_url"] = args.api_url
 key_args["api_key"] = args.api_key
 key_args["temperature"] = args.temperature
@@ -143,12 +108,15 @@ key_args["n"] = args.passk
 
 llm_model: LLM_Model = None
 # loading model
-match model_type_gen:
-    case ModelType.API:
-        llm_model = API_model(**key_args)
+match model_type:
     case ModelType.VLLM:
-        llm_model = VLLM_model(**key_args)
+        launch_model(**key_args)
+        key_args["api_url"] = f"http://localhost:{get_config("VLLM")["port"]}"
+    case ModelType.API:
+        if not args.api_url:
+            logger.exception("api_url argument not specified")
 
+llm_model = API_model(**key_args)
 
 unfiltered_dataset = {}
 for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subsets"):
@@ -177,25 +145,28 @@ for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subse
             messages = [
                 {
                     "role": "system",
-                    "content": SYSTEM_PROMPT_INSTRUCTIONS.format(
-                        number_generation=number_gen
-                    ),
+                    "content": SYSTEM_PROMPT_INSTRUCTIONS,
                 },
                 {"role": "user", "content": content},
             ]
             # generating responses
-            var_reponse_instructions = instructor(
-                messages=messages, model=model_ins, temperature=temperature
+            var_reponse_instructions = llm_model.request(
+                messages=messages,
+                temperature=temperature,
+                response_format=VarbenchResponses,
             )
             modifications = var_reponse_instructions.modifications
             ##################"Generating modifications"################
             all_images = []
             all_possible_codes = []
-            for modification in tqdm(modifications,position=3,desc="Treating the  modifications"):
+            for modification in tqdm(
+                modifications, position=3, desc="Treating the modifications"
+            ):
 
                 # prompt
                 user_instruction = IT_PROMPT.format(
-                    instruction=modification.instruction, content=var_reponse_instructions.commented_code
+                    instruction=modification.instruction,
+                    content=var_reponse_instructions.commented_code,
                 )
 
                 messages = [

@@ -1,7 +1,7 @@
 import configparser
 import json
 import re
-
+from loguru import logger
 
 def parse_openai_jsonl(input_data: str) -> dict[str, str]:
     # Split the JSONL input into separate lines
@@ -34,23 +34,24 @@ def get_first_code_block(text):
     return match.group(1).strip() if match else None
 
 
-def make_numerical(string_value: str) -> float | int | str:
+def make_numerical(string_value: str) -> float | int | str | bool:
     try:
         result = int(string_value)
     except ValueError:
         try:
             result = float(string_value)
         except ValueError:
-            if string_value == "True":
-                result = True
-            elif string_value == "False":
-                result = False
+            if str(string_value) == "True":
+                return True
+            elif str(string_value) == "False":
+                return False
+            
+        
             return string_value
     return result
 
 
 def get_config(config_name: str):
     config = configparser.ConfigParser()
-    config.read("config.cfg")
-
+    config.read("config-varbench.cfg")
     return {key: make_numerical(value) for key, value in config[config_name].items()}
