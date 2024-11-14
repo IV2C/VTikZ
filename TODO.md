@@ -25,7 +25,15 @@
 - [X] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
 - [X] fix workflow
 - [X] Add a config file containing vllm config 
-- [ ] switch from vllm launch in python to openai compaptible server
+- [X] switch from vllm launch in python to openai compaptible server
+- [ ] Add local tests for each api types (class chat_api)
+  - [ ] Test openAI batch unstructured (structured)
+  - [ ] openai batch => TO SKIP
+  - [ ] add single request tests
+  - [ ] parameterize tests to test VLLMApi and GroqApi
+  - [ ] Add Parameter in VLMApi to start or not the api(get it from the config)
+  - [ ] change 30 to something bigger in sleep at line 201 in chat_api.py 
+- [ ] Change Model class by agent, remove VLM/OPENAI parameter in run_generation and run_evaluation, instantiate api depending on the api_url provided, add in documentation that the api used depends on the url(and that VLLM is launched in the case of a VLLM api)(maybe add a parameter to prevent vllm from being launched or maybe the opposite)
 - [ ] Fix patches in the synthetic data generation
 - [ ] Add backup at each step for synthetic data generation
 - [ ] Add backup at each step for benchmark

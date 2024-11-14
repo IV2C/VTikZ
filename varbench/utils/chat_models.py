@@ -9,7 +9,7 @@ class ChatCompletionRequest:
         self,
         messages: list,
         custom_id,
-        response_format:BaseModel,
+        response_format: BaseModel = None,
         model="gpt-3.5-turbo-0125",
         n=1,
         temperature=0,
@@ -24,11 +24,15 @@ class ChatCompletionRequest:
             "n": n,
             "temperature": temperature,
             "max_tokens": max_tokens,
-            "response_format":{
-                "type":"json_schema",
-                "json_schema":response_format.model_json_schema()
-            }
         }
+        if response_format:
+            self.body["response_format"] = {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": type(response_format).__name__,
+                    "schema": response_format.model_json_schema(),
+                },
+            }
 
     def to_json(self) -> str:
         return json.dumps(self.__dict__)

@@ -3,8 +3,7 @@ from enum import Enum
 import pandas as pd
 from tqdm import tqdm
 from varbench.renderers import Renderer, TexRenderer, SvgRenderer, RendererException
-from varbench.model import API_model, LLM_Model, ModelType
-from varbench.utils.model_launch import launch_model
+from varbench.agent import SimpleLLMAgent, Agent, ModelType
 from varbench.utils.patches import patches
 from varbench.utils.parsing import get_config, get_first_code_block
 from .api_generation import (
@@ -106,17 +105,12 @@ key_args["temperature"] = args.temperature
 key_args["no_batch"] = True
 key_args["n"] = args.passk
 
-llm_model: LLM_Model = None
+llm_model: Agent = None
 # loading model
-match model_type:
-    case ModelType.VLLM:
-        launch_model(**key_args)
-        key_args["api_url"] = f"http://localhost:{get_config("VLLM")["port"]}"
-    case ModelType.API:
-        if not args.api_url:
-            logger.exception("api_url argument not specified")
 
-llm_model = API_model(**key_args)
+key_args["api_url"] = f"http://localhost:{get_config("VLLM")["port"]}/v1"
+
+llm_model = SimpleLLMAgent(**key_args)
 
 unfiltered_dataset = {}
 for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subsets"):

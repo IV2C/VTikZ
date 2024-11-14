@@ -3,7 +3,7 @@ import os
 import timeout_decorator
 from varbench.renderers import Renderer, TexRenderer
 from varbench.evaluation.evaluator import evaluate
-from varbench.model import LLM_Model
+from varbench.agent import Agent
 from unittest.mock import MagicMock
 from datasets import Dataset
 from PIL import Image
@@ -38,7 +38,7 @@ class TestEvaluator(unittest.TestCase):
             return_value=Image.open("tests/resources/images/reference.jpeg")
         )
 
-        self.model: LLM_Model = LLM_Model("model-name", 0)
+        self.model: Agent = Agent("model-name", 0)
 
         return super().setUp()
     def test_evaluator_metric_exists(self):

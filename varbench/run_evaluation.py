@@ -8,7 +8,7 @@ from transformers.pipelines.pt_utils import KeyDataset
 from varbench.renderers import Renderer, SvgRenderer, TexRenderer
 from varbench.utils.model_launch import launch_model
 from .evaluation.evaluator import evaluate
-from .model import LLM_Model, VLLM_model, API_model, ModelType
+from .agent import Agent, VLLM_model, SimpleLLMAgent, ModelType
 import json
 
 from loguru import logger
@@ -92,7 +92,7 @@ key_args["no_batch"] = args.no_batch
 key_args["n"] = args.passk
 
 
-llm_model: LLM_Model = None
+llm_model: Agent = None
 # loading model
 match model_type:
     case ModelType.VLLM:
@@ -102,7 +102,7 @@ match model_type:
             logger.exception("api_url argument not specified")
         
 
-llm_model = API_model(**key_args)
+llm_model = SimpleLLMAgent(**key_args)
 
 if not os.path.exists("./results"):
     os.mkdir("./results")

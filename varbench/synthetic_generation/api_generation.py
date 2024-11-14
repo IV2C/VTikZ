@@ -34,25 +34,6 @@ class VarbenchResponses(BaseModel):
         description="List of modifications",
     )
 
-"""
-import instructor
 
-def groq_generation_format(
-    messages: list, model: str, temperature: int
-) -> VarbenchResponses:
-    client = Groq(
-        api_key=os.environ.get("GROQ_API_KEY"),
-    )
-    client = instructor.from_groq(client, mode=instructor.Mode.TOOLS)
 
-    responses = client.chat.completions.create(
-        model=model,
-        temperature=temperature,
-        messages=messages,
-        response_model=VarbenchResponses,
-    )
-    with open("instructions.json", "w") as outjson:
-        outjson.write(responses.model_dump_json(indent=2))
 
-    return responses
-"""

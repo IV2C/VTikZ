@@ -5,7 +5,7 @@ import os
 
 from varbench.evaluation.clip_comparer import ClipComparer
 from ..prompt_templates import *
-from ..model import LLM_Model
+from ..agent import Agent
 from loguru import logger
 from ..renderers import Renderer, RendererException
 from PIL.Image import Image
@@ -18,7 +18,7 @@ from ..utils.patches import patches
 
 
 
-def evaluate(subset: Dataset, model: LLM_Model, renderer: Renderer):
+def evaluate(subset: Dataset, model: Agent, renderer: Renderer):
 
     subset_processed = subset.map(create_message_row)
 
