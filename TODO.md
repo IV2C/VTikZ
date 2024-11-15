@@ -32,12 +32,11 @@
   - [X] parameterize tests to test VLLMApi and GroqApi
   - [X] Add Parameter in VLMApi to start or not the api(get it from the config)
   - [X] change 30 to something bigger in sleep at line 201 in chat_api.py 
-- [ ] Finish testing the batch requests with openai
+- [X] Finish testing the batch requests with openai
 - [ ] Change Model class by agent, remove VLM/OPENAI parameter in run_generation and run_evaluation, instantiate api depending on the api_url provided, add in documentation that the api used depends on the url(and that VLLM is launched in the case of a VLLM api)(maybe add a parameter to prevent vllm from being launched or maybe the opposite)
 - [ ] Add level of difficulty in the datasets
-- [ ] Fix patches in the synthetic data generation
-- [ ] Add backup at each step for synthetic data generation
-- [ ] Add backup at each step for benchmark
+- [ ] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches)
+- [ ] Check patches in the synthetic data generation
 - [ ] Create synthetic data and then verify
 - [ ] Make another submodel called multimodal that can take images, and allow for parametrization in the command line
 - [ ] Make another submodel called multimodal-loop that can take images and loops until a satisfying image is created, and allow for parametrization in the command line.

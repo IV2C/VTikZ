@@ -14,3 +14,4 @@ open_clip_torch==2.29.0
 tenacity==9.0.0
 parameterized==0.9.0
 instructor==1.6.4
+groq==0.11.0
