@@ -7,8 +7,8 @@ from loguru import logger
 from varbench.api.chat_api import VLLMApi, VLLMApi, VLLMApi, ChatApi
 
 from varbench.utils.model_launch import launch_model
-
-
+import os
+@unittest.skipIf(os.environ.get("CI"), "Api tests skipped for CI")
 class TestApiCompletionVLLM(unittest.TestCase):
 
     def __init__(self, methodName: str = "runTest") -> None:

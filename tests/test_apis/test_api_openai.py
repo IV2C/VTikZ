@@ -5,9 +5,9 @@ from pydantic import BaseModel
 from varbench.api import ChatApi
 from loguru import logger
 from varbench.api.chat_api import OpenAIApi, ChatApi
+import os
 
-
-
+@unittest.skipIf(os.environ.get("CI"), "Api tests skipped for CI")
 class TestApiCompletionOpenai(unittest.TestCase):
 
     def __init__(self, methodName: str = "runTest") -> None:
