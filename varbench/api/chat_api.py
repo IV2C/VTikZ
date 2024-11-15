@@ -23,7 +23,9 @@ class ChatApi(ABC):
         super().__init__()
 
     @abstractmethod
-    def chat_request(self, messages: Iterable[ChatCompletionMessageParam]) -> Iterable[str]:
+    def chat_request(
+        self, messages: Iterable[ChatCompletionMessageParam]
+    ) -> Iterable[str]:
         pass
 
     @abstractmethod
@@ -31,7 +33,7 @@ class ChatApi(ABC):
         self,
         messages: Iterable[ChatCompletionMessageParam],
         response_format: BaseModel,
-    )-> Iterable[BaseModel]:
+    ) -> Iterable[BaseModel]:
         pass
 
     @abstractmethod
@@ -203,7 +205,10 @@ class OpenAIApi(ChatApi):
                     if response_format == None:
                         return ordered_responses
                     return [
-                        [response_format.model_validate_json(res) for res in cur_responses]
+                        [
+                            response_format.model_validate_json(res)
+                            for res in cur_responses
+                        ]
                         for cur_responses in ordered_responses
                     ]
                 case "expired":
@@ -222,7 +227,9 @@ class OpenAIApi(ChatApi):
     ) -> Iterable[Iterable[str]]:
         return self.batch_structured_request(messages, ids, None, **kwargs)
 
+
 from varbench.utils.model_launch import launch_model
+
 
 class VLLMApi(OpenAIApi):
     def __init__(
@@ -232,8 +239,10 @@ class VLLMApi(OpenAIApi):
         model_name: str,
         api_url: str = "http://localhost:8056/v1",
         api_key: str = None,
+        no_launch: bool = False,
     ) -> None:
-        launch_model(model_name)
+        if not no_launch:
+            launch_model(model_name)
         super().__init__(temperature, n, model_name, api_url, api_key)
 
     def structured_request(
@@ -241,12 +250,15 @@ class VLLMApi(OpenAIApi):
     ):
         completion = self.client.chat.completions.create(
             messages=messages,
-            response_format=response_format,
+            extra_body=dict(
+                guided_json=response_format.model_json_schema(),
+                guided_decoding_backend="outlines",
+            ),
             n=self.n,
             temperature=self.temperature,
             model=self.model_name,
         )
-        return [choice.message.content for choice in completion.choices]
+        return [  response_format.model_validate_json(choice.message.content) for choice in completion.choices]
 
     def batch_chat_request(
         self,

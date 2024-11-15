@@ -1,0 +1,48 @@
+INFO 11-15 11:04:27 api_server.py:528] vLLM API server version 0.6.3.post1
+INFO 11-15 11:04:27 api_server.py:529] args: Namespace(subparser='serve', model_tag='meta-llama/Llama-3.2-1B-Instruct', config='', host=None, port=8056, uvicorn_log_level='info', allow_credentials=False, allowed_origins=['*'], allowed_methods=['*'], allowed_headers=['*'], api_key=None, lora_modules=None, prompt_adapters=None, chat_template=None, response_role='assistant', ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_cert_reqs=0, root_path=None, middleware=[], return_tokens_as_token_ids=False, disable_frontend_multiprocessing=False, enable_auto_tool_choice=False, tool_call_parser=None, tool_parser_plugin='', model='meta-llama/Llama-3.2-1B-Instruct', tokenizer=None, skip_tokenizer_init=False, revision=None, code_revision=None, tokenizer_revision=None, tokenizer_mode='auto', trust_remote_code=True, download_dir=None, load_format='auto', config_format=<ConfigFormat.AUTO: 'auto'>, dtype='float16', kv_cache_dtype='auto', quantization_param_path=None, max_model_len=4096, guided_decoding_backend='outlines', distributed_executor_backend=None, worker_use_ray=False, pipeline_parallel_size=1, tensor_parallel_size=1, max_parallel_loading_workers=None, ray_workers_use_nsight=False, block_size=16, enable_prefix_caching=False, disable_sliding_window=False, use_v2_block_manager=False, num_lookahead_slots=0, seed=0, swap_space=4, cpu_offload_gb=15.0, gpu_memory_utilization=0.95, num_gpu_blocks_override=None, max_num_batched_tokens=None, max_num_seqs=256, max_logprobs=20, disable_log_stats=False, quantization=None, rope_scaling=None, rope_theta=None, enforce_eager=False, max_context_len_to_capture=None, max_seq_len_to_capture=8192, disable_custom_all_reduce=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config=None, limit_mm_per_prompt=None, mm_processor_kwargs=None, enable_lora=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=False, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', num_scheduler_steps=1, multi_step_stream_outputs=True, scheduler_delay_factor=0.0, enable_chunked_prefill=None, speculative_model=None, speculative_model_quantization=None, num_speculative_tokens=None, speculative_disable_mqa_scorer=False, speculative_draft_tensor_parallel_size=None, speculative_max_model_len=None, speculative_disable_by_batch_size=None, ngram_prompt_lookup_max=None, ngram_prompt_lookup_min=None, spec_decoding_acceptance_method='rejection_sampler', typical_acceptance_sampler_posterior_threshold=None, typical_acceptance_sampler_posterior_alpha=None, disable_logprobs_during_spec_decoding=None, model_loader_extra_config=None, ignore_patterns=[], preemption_mode=None, served_model_name=None, qlora_adapter_name_or_path=None, otlp_traces_endpoint=None, collect_detailed_traces=None, disable_async_output_proc=False, override_neuron_config=None, scheduling_policy='fcfs', disable_log_requests=False, max_log_len=None, disable_fastapi_docs=False, dispatch_function=<function serve at 0x7ca8ca6bdc60>)
+INFO 11-15 11:04:27 api_server.py:166] Multiprocessing frontend to use ipc:///tmp/9aa8a1a6-1256-4cd7-a3f0-a71c32ff037b for IPC Path.
+INFO 11-15 11:04:27 api_server.py:179] Started engine process with PID 88429
+WARNING 11-15 11:04:27 config.py:1668] Casting torch.bfloat16 to torch.float16.
+WARNING 11-15 11:04:30 config.py:1668] Casting torch.bfloat16 to torch.float16.
+WARNING 11-15 11:04:30 arg_utils.py:1019] [DEPRECATED] Block manager v1 has been removed, and setting --use-v2-block-manager to True or False has no effect on vLLM behavior. Please remove --use-v2-block-manager in your engine argument. If your use case is not supported by SelfAttnBlockSpaceManager (i.e. block manager v2), please file an issue with detailed information.
+WARNING 11-15 11:04:34 arg_utils.py:1019] [DEPRECATED] Block manager v1 has been removed, and setting --use-v2-block-manager to True or False has no effect on vLLM behavior. Please remove --use-v2-block-manager in your engine argument. If your use case is not supported by SelfAttnBlockSpaceManager (i.e. block manager v2), please file an issue with detailed information.
+INFO 11-15 11:04:34 llm_engine.py:237] Initializing an LLM engine (v0.6.3.post1) with config: model='meta-llama/Llama-3.2-1B-Instruct', speculative_config=None, tokenizer='meta-llama/Llama-3.2-1B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config=None, rope_scaling=None, rope_theta=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=4096, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto, quantization_param_path=None, device_config=cuda, decoding_config=DecodingConfig(guided_decoding_backend='outlines'), observability_config=ObservabilityConfig(otlp_traces_endpoint=None, collect_model_forward_time=False, collect_model_execute_time=False), seed=0, served_model_name=meta-llama/Llama-3.2-1B-Instruct, num_scheduler_steps=1, chunked_prefill_enabled=False multi_step_stream_outputs=True, enable_prefix_caching=False, use_async_output_proc=True, use_cached_outputs=True, mm_processor_kwargs=None)
+INFO 11-15 11:04:34 selector.py:224] Cannot use FlashAttention-2 backend for Volta and Turing GPUs.
+INFO 11-15 11:04:34 selector.py:115] Using XFormers backend.
+INFO 11-15 11:04:35 model_runner.py:1056] Starting to load model meta-llama/Llama-3.2-1B-Instruct...
+INFO 11-15 11:04:35 selector.py:224] Cannot use FlashAttention-2 backend for Volta and Turing GPUs.
+INFO 11-15 11:04:35 selector.py:115] Using XFormers backend.
+INFO 11-15 11:04:36 weight_utils.py:243] Using model weights format ['*.safetensors']
+INFO 11-15 11:04:36 weight_utils.py:288] No model.safetensors.index.json found in remote.
+INFO 11-15 11:04:37 model_runner.py:1067] Loading model weights took 0.5059 GB
+INFO 11-15 11:05:06 gpu_executor.py:122] # GPU blocks: 2172, # CPU blocks: 8192
+INFO 11-15 11:05:06 gpu_executor.py:126] Maximum concurrency for 4096 tokens per request: 8.48x
+INFO 11-15 11:05:07 model_runner.py:1395] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+INFO 11-15 11:05:07 model_runner.py:1399] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+INFO 11-15 11:06:50 model_runner.py:1523] Graph capturing finished in 103 secs.
+INFO 11-15 11:06:51 api_server.py:232] vLLM to use /tmp/tmpfx_6qxnd as PROMETHEUS_MULTIPROC_DIR
+WARNING 11-15 11:06:51 serving_embedding.py:199] embedding_mode is False. Embedding API will not work.
+INFO 11-15 11:06:51 launcher.py:19] Available routes are:
+INFO 11-15 11:06:51 launcher.py:27] Route: /openapi.json, Methods: GET, HEAD
+INFO 11-15 11:06:51 launcher.py:27] Route: /docs, Methods: GET, HEAD
+INFO 11-15 11:06:51 launcher.py:27] Route: /docs/oauth2-redirect, Methods: GET, HEAD
+INFO 11-15 11:06:51 launcher.py:27] Route: /redoc, Methods: GET, HEAD
+INFO 11-15 11:06:51 launcher.py:27] Route: /health, Methods: GET
+INFO 11-15 11:06:51 launcher.py:27] Route: /tokenize, Methods: POST
+INFO 11-15 11:06:51 launcher.py:27] Route: /detokenize, Methods: POST
+INFO 11-15 11:06:51 launcher.py:27] Route: /v1/models, Methods: GET
+INFO 11-15 11:06:51 launcher.py:27] Route: /version, Methods: GET
+INFO 11-15 11:06:51 launcher.py:27] Route: /v1/chat/completions, Methods: POST
+INFO 11-15 11:06:51 launcher.py:27] Route: /v1/completions, Methods: POST
+INFO 11-15 11:06:51 launcher.py:27] Route: /v1/embeddings, Methods: POST
+/home/creux/miniconda3/envs/varbench/lib/python3.12/site-packages/xformers/ops/fmha/flash.py:211: FutureWarning: `torch.library.impl_abstract` was renamed to `torch.library.register_fake`. Please use that instead; we will remove `torch.library.impl_abstract` in a future version of PyTorch.
+  @torch.library.impl_abstract("xformers_flash::flash_fwd")
+/home/creux/miniconda3/envs/varbench/lib/python3.12/site-packages/xformers/ops/fmha/flash.py:344: FutureWarning: `torch.library.impl_abstract` was renamed to `torch.library.register_fake`. Please use that instead; we will remove `torch.library.impl_abstract` in a future version of PyTorch.
+  @torch.library.impl_abstract("xformers_flash::flash_bwd")
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:00<00:00,  2.08it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:00<00:00,  2.08it/s]
+INFO:     Started server process [88359]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO 11-15 11:06:51 launcher.py:57] Shutting down FastAPI HTTP server.
