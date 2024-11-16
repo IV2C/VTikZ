@@ -1,110 +1,60 @@
-from io import BufferedReader, BytesIO
+from abc import ABC, abstractmethod
 from typing import Iterable
 from openai.types.chat import ChatCompletionMessageParam
-from loguru import logger
-from pydantic import BaseModel
-from tenacity import retry, wait_exponential
 
-from varbench.utils.parsing import get_config, parse_openai_jsonl
-from enum import Enum
+from varbench.api.chat_api import ChatApi
 
 
-class ApiType(Enum):
-    Groq = "Groq"
-    VLLM = "VLLM"
-    OpenAI = "OpenAI"
+class Agent(ABC):
+    def __init__(self,api:ChatApi,**kwargs) -> None:
+        self.api = api
+        pass
 
-
-def get_api_type(api_string):
-    if "groq" in api_string.lower():
-        return ApiType.Groq
-    elif "localhost" in api_string.lower():
-        return ApiType.VLLM
-    elif "openai" in api_string.lower():
-        return ApiType.OpenAI
-    else:
-        raise Exception("unsupport API with url " + api_string)
-
-
-class Agent:
-    def __init__(self, model_name, temperature, n=1, **kwargs) -> None:
-        self.model_name = model_name
-        self.temperature = temperature
-        self.n = n
-
-    def request(
+    @abstractmethod
+    def compute(
         self, messages: Iterable[ChatCompletionMessageParam], **kwargs
     ) -> Iterable[str]:
         pass
-
-    def batchRequest(
+    
+    @abstractmethod
+    def batchCompute(
         self,
         messages: Iterable[Iterable[ChatCompletionMessageParam]],
         ids: Iterable[str],
         **kwargs,
     ) -> Iterable[Iterable[str]]:
+        """Computes a list of responses from a list of messages, with the number of responses depending on the passk value set.
+
+        Args:
+            messages (Iterable[Iterable[ChatCompletionMessageParam]]): The list of messages
+            ids (Iterable[str]): The list of associated Ids (usefull in case of openai batch api that put results unorderly)
+
+        Returns:
+            Iterable[Iterable[str]]: the list of list of messages
+        """
         pass
 
 
-from openai import OpenAI
-import os
-from varbench.utils.chat_models import ChatCompletionRequest
-from time import sleep
-from typing import Any
-import instructor
-from groq import Groq
 
 
-class SimpleLLMAgent(Agent):
-    def __init__(
-        self,
-        model_name,
-        temperature,
-        n=1,
-        api_url=None,
-        api_key=None,
-        no_batch=False,
-        **kwargs,
-    ) -> None:
-        super().__init__(model_name, temperature, n)
-        self.no_batch = no_batch
-        if not api_key:
-            api_key = os.environ.get("OPENAI_API_KEY")
+class SimpleLLMAgent(Agent):        
+    """Simple LLM agent that uses only the "reading" capabilities of the models tested
 
-        # in the case of groq api, we use instructor for structured outputs
-        self.apitype = get_api_type(api_url)
-        match self.apitype:
-            case ApiType.Groq:
-                self.structured_client = instructor.from_groq(
-                    Groq(api_key=api_key),
-                    mode=instructor.Mode.JSON,
-                )
-                self.client = OpenAI(
-                    base_url=api_url,
-                    api_key=api_key,
-                )
-            case ApiType.VLLM | ApiType.OpenAI:
-                self.structured_client = self.client = OpenAI(
-                    base_url=api_url,
-                    api_key=api_key,
-                )
+    Args:
+        Agent (_type_): _description_
+    """
 
-    # @retry(wait=wait_exponential(multiplier=1, min=4))
-    def request(
-        self,
-        messages: Iterable[ChatCompletionMessageParam],
-        response_format: BaseModel = None,
-        **kwargs,
-    ) -> Iterable[str] :
-       pass
-    def batchRequest(
+    def compute(
+        self, messages: Iterable[ChatCompletionMessageParam], **kwargs
+    ) -> Iterable[str]:
+        return self.api.chat_request(messages)
+    
+    def batchCompute(
         self,
         messages: Iterable[Iterable[ChatCompletionMessageParam]],
         ids: Iterable[str],
-        response_format: BaseModel = None,
         **kwargs,
     ) -> Iterable[Iterable[str]]:
-        pass
-
+        return self.api.batch_chat_request(messages,ids)
 
 

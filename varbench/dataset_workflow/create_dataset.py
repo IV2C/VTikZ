@@ -73,6 +73,7 @@ for subset in os.listdir(dataset_path):
                 "code": input_code,
                 "instruction": data["instruction"],
                 "result_description": data["result_description"],
+                "difficulty":data["difficulty"],
                 "patches": patches,
                 "image_solution": image_solution,
             }
@@ -83,6 +84,7 @@ for subset in os.listdir(dataset_path):
 
 features = Features(
     {
+        "difficulty": Value("string"),
         "id": Value("string"),
         "code": Value("string"),
         "instruction": Value("string"),
@@ -95,4 +97,4 @@ features = Features(
 for subset in dataset_dict:
     current_subset = pd.DataFrame(dataset_dict[subset])
     dataset = Dataset.from_dict(pd.DataFrame(current_subset), features=features)
-    dataset.push_to_hub("CharlyR/varbench", config_name=subset)
+    dataset.push_to_hub("CharlyR/varbench", config_name=subset, split="test")

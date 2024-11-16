@@ -30,7 +30,7 @@ class TestApiCompletionVLLM(unittest.TestCase):
         return super().setUpClass()
 
     def test_api_batch(self):
-        api: ChatApi = VLLMApi(0, 1, "meta-llama/Llama-3.2-1B-Instruct", no_launch=True)
+        api: ChatApi = VLLMApi(0, 1, "meta-llama/Llama-3.2-1B-Instruct")
 
         ids = ["helpful_request", "unhelpful_request"]
 
@@ -40,7 +40,7 @@ class TestApiCompletionVLLM(unittest.TestCase):
 
     def test_api_batch_n2(self):
         api: ChatApi = VLLMApi(
-            0.8, 2, "meta-llama/Llama-3.2-1B-Instruct", no_launch=True
+            0.8, 2, "meta-llama/Llama-3.2-1B-Instruct"
         )
         ids = ["helpful_request", "unhelpful_request"]
 
@@ -50,7 +50,7 @@ class TestApiCompletionVLLM(unittest.TestCase):
         self.assertTrue(len(response) == len(response[0]) == len(response[1]) == 2)
 
     def test_structured_batch(self):
-        api: ChatApi = VLLMApi(0, 1, "meta-llama/Llama-3.2-1B-Instruct", no_launch=True)
+        api: ChatApi = VLLMApi(0, 1, "meta-llama/Llama-3.2-1B-Instruct")
 
         class Operation(BaseModel):
             operation: str
@@ -68,7 +68,7 @@ class TestApiCompletionVLLM(unittest.TestCase):
 
     def test_structured_batch_n2(self):
         api: ChatApi = VLLMApi(
-            0.8, 2, "meta-llama/Llama-3.2-1B-Instruct", no_launch=True
+            0.8, 2, "meta-llama/Llama-3.2-1B-Instruct"
         )
 
         class Operation(BaseModel):
@@ -86,7 +86,7 @@ class TestApiCompletionVLLM(unittest.TestCase):
         self.assertTrue(len(response) == len(response[0]) == len(response[1]) == 2)
 
     def test_request_n1(self):
-        api: ChatApi = VLLMApi(0, 1, "meta-llama/Llama-3.2-1B-Instruct", no_launch=True)
+        api: ChatApi = VLLMApi(0, 1, "meta-llama/Llama-3.2-1B-Instruct")
 
         response = api.chat_request(messages=self.chat_messages[0])
         logger.info(response)
@@ -95,7 +95,7 @@ class TestApiCompletionVLLM(unittest.TestCase):
 
     def test_request_n2(self):
         api: ChatApi = VLLMApi(
-            0.8, 2, "meta-llama/Llama-3.2-1B-Instruct", no_launch=True
+            0.8, 2, "meta-llama/Llama-3.2-1B-Instruct"
         )
 
         response = api.chat_request(messages=self.chat_messages[0])
@@ -104,7 +104,7 @@ class TestApiCompletionVLLM(unittest.TestCase):
         self.assertTrue(response[0] != None and response[1] != None)
 
     def test_structured_request_n1(self):
-        api: ChatApi = VLLMApi(0, 1, "meta-llama/Llama-3.2-1B-Instruct", no_launch=True)
+        api: ChatApi = VLLMApi(0, 1, "meta-llama/Llama-3.2-1B-Instruct")
 
         class Operation(BaseModel):
             operation: str
@@ -120,7 +120,7 @@ class TestApiCompletionVLLM(unittest.TestCase):
 
     def test_structured_request_n2(self):
         api: ChatApi = VLLMApi(
-            0.8, 2, "meta-llama/Llama-3.2-1B-Instruct", no_launch=True
+            0.8, 2, "meta-llama/Llama-3.2-1B-Instruct"
         )
 
         class Operation(BaseModel):

@@ -6,7 +6,7 @@ from typing import Callable
 
 from varbench.utils.parsing import get_config
 import os
-
+from loguru import logger
 class ClipComparer:
     """
     Class to compute similarity scores between images and text descriptions or between pairs of images
@@ -31,7 +31,6 @@ class ClipComparer:
         clip_config = get_config("CLIP")
         self.model_name = clip_config["model_name"]
         self.pretrained_name = clip_config["pretrained_name"]
-        
         if os.environ.get("CI"):#fix for github CI
             self.clip_scores = lambda x,y: [100]*len(x)
             self.image_similarities = lambda x,y: [100]*len(x)

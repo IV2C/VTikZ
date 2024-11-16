@@ -18,18 +18,17 @@ from ..utils.patches import patches
 
 
 
-def evaluate(subset: Dataset, model: Agent, renderer: Renderer):
+def evaluate(subset: Dataset, agent: Agent, renderer: Renderer):
 
     subset_processed = subset.map(create_message_row)
 
-    predictions = model.batchRequest(
+    predictions = agent.batchCompute(
         subset_processed["messages"], subset_processed["id"]
     )
 
     subset_processed: Dataset = subset_processed.add_column("predictions", predictions)
     logger.info(subset_processed["messages"])
     logger.info(subset_processed["predictions"])
-    subset_processed.save_to_disk(".tmp/computed_dataset_" + model.model_name)
 
     return _compute(
         renderer,
@@ -98,7 +97,7 @@ def _compute(
         return output_images
 
     pass_size = len(predictions[0])  # getting the number of k for the pass@k
-    dataset_lenght = len(image_solutions)
+    dataset_length = len(image_solutions)
     # getting the code from the predictions
     predictions = [
         [
@@ -133,7 +132,6 @@ def _compute(
     ]
 
     clip_comparer: ClipComparer = ClipComparer(force_cpu=True)
-    # TODO:Add a command line parameter for the clip parameters?
 
     individual_text_scores = clip_comparer.clip_scores(
         images_lists, result_descriptions
@@ -144,12 +142,12 @@ def _compute(
 
     # individual_patches_scores = {id: result for id, result in zip(ids, result_list)}
 
-    patch_score = sum(individual_patches_scores) / dataset_lenght
-    text_score = sum(individual_text_scores) / dataset_lenght
-    image_score = sum(individual_image_scores) / dataset_lenght
-    compiling_score = sum(individual_compiling_scores) / dataset_lenght
-    parsing_score = sum(individual_parsing_scores) / dataset_lenght
-    line_score = sum(individual_lines_scores) / dataset_lenght
+    patch_score = sum(individual_patches_scores) / dataset_length
+    text_score = sum(individual_text_scores) / dataset_length
+    image_score = sum(individual_image_scores) / dataset_length
+    compiling_score = sum(individual_compiling_scores) / dataset_length
+    parsing_score = sum(individual_parsing_scores) / dataset_length
+    line_score = sum(individual_lines_scores) / dataset_length
 
     varscores = [
         d if d else (t + i) / 2

@@ -1,27 +1,17 @@
-from huggingface_hub import login
 from datasets import load_dataset
-from transformers import pipeline, GenerationConfig, AutoModelForCausalLM, AutoTokenizer
 import os
 import argparse
-from transformers.pipelines.pt_utils import KeyDataset
 
+from varbench.api.chat_api import ChatApi
 from varbench.renderers import Renderer, SvgRenderer, TexRenderer
 from varbench.utils.model_launch import launch_model
 from .evaluation.evaluator import evaluate
-from .agent import Agent, VLLM_model, SimpleLLMAgent, ModelType
+from .agent import SimpleLLMAgent
 import json
 
 from loguru import logger
 
 # login(token=os.environ.get("HF_TOKEN"))
-
-
-def model_type_mapper(value):
-    api_map = {"API": ModelType.API, "VLLM": ModelType.VLLM}
-    if value.upper() not in api_map:
-        raise argparse.ArgumentTypeError(f"Invalid API type: {value}")
-    return api_map[value.upper()]
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -33,12 +23,10 @@ parser.add_argument(
     default=["tikz", "svg"],
 )
 parser.add_argument(
-    "--model_type",
-    "-t",
-    type=model_type_mapper,
-    required=True,
-    help="type of the model to evaluate",
-    default=ModelType.VLLM,
+    "--run-model",
+    "-r",
+    action="store_true",
+    help="Name ",
 )
 parser.add_argument(
     "--model",
@@ -71,38 +59,35 @@ parser.add_argument(
 parser.add_argument(
     "--passk", type=int, default=1, help="Number of generations per prompt"
 )
-parser.add_argument(
-    "--no_batch",
-    default=False,
-    action="store_true",
-    help="whether or not to use batch requests, relevant when the api provider does not provide an equivalent",
-)
 
 args = parser.parse_args()
 
 subsets = args.subsets
-model_type = args.model_type
 
 key_args: dict = {}
 key_args["model_name"] = args.model
 key_args["api_url"] = args.api_url
 key_args["api_key"] = args.api_key
 key_args["temperature"] = args.temperature
-key_args["no_batch"] = args.no_batch
+key_args["run_model"] = args.run_model
 key_args["n"] = args.passk
 
 
-llm_model: Agent = None
 # loading model
-match model_type:
-    case ModelType.VLLM:
-        launch_model(**key_args)
-    case ModelType.API:
-        if not args.api_url:
-            logger.exception("api_url argument not specified")
-        
+if key_args["run_model"]:
+    if key_args["api_url"]:
+        logger.warning("found run-model and api_url parameters, api_url will be ignored")
+    key_args["api_url"] = launch_model(key_args["model_name"])
+    
+if not key_args["api_key"]:
+    key_args["api_key"] = os.environ.get("OPENAI_API_KEY")
 
-llm_model = SimpleLLMAgent(**key_args)
+#instantiating api
+api:ChatApi = ChatApi.from_url(**key_args)
+
+
+agent = SimpleLLMAgent(api)
+
 
 if not os.path.exists("./results"):
     os.mkdir("./results")
@@ -114,19 +99,21 @@ if not os.path.exists(result_path):
 
 
 for subset in subsets:
-    dataset = load_dataset("CharlyR/varbench", subset, split="train")
+    dataset = load_dataset("CharlyR/varbench", subset, split="test")
 
     # creating compiler
-    renderer: Renderer = None
     match subset:
         case "tikz":
             renderer = TexRenderer()
         case "svg":
             renderer = SvgRenderer()
+        case _:
+            logger.warning("unsupported subset "+ subset+", skipping")
+            continue
 
     # evaluating
-    result_scores, score_dataset = evaluate(dataset, llm_model, renderer)
+    result_scores, score_dataset = evaluate(dataset, agent, renderer)
     logger.info(result_scores)
-    score_dataset.to_csv(os.path.join(result_path, subset+".csv"))
-    with open(os.path.join(result_path, subset+".json"), "w") as subset_result:
+    score_dataset.to_csv(os.path.join(result_path, subset + ".csv"))
+    with open(os.path.join(result_path, subset + ".json"), "w") as subset_result:
         subset_result.write(json.dumps(result_scores))

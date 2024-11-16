@@ -14,24 +14,17 @@ def _stop_process(process:subprocess.Popen):
             process.kill()
     logger.info("Vllm subprocess finished")
             
-def launch_model(model_name: str, **kwargs) -> subprocess.Popen[str]:
+def launch_model(model_name: str, **kwargs) -> str:
     """Launches the provided model with the parameters in config-varbench
 
     Args:
         model_name (str): Name of the launched model
 
     Returns:
-        subprocess.Popen[str]: The python vllm subprocess
+        str: The url of the openai compaptible server
     """
     llm_args = {**get_config("VLLM")}
-    try :
-        do_run = llm_args.pop("do-run")
-    except KeyError:
-        logger.info("parameter do-run not set in config file, not launching LLM via VLM")
-        return
-    if not do_run:
-        logger.info("parameter do-run set to false in config file, not launching LLM via VLM")
-        return
+    logger.info("parameter do-run set to false in config file, not launching LLM via VLM")
     args = [
         f"--{arg} {value}" if not isinstance(value, bool) else f"--{arg}"
         for arg, value in llm_args.items()
@@ -54,5 +47,6 @@ def launch_model(model_name: str, **kwargs) -> subprocess.Popen[str]:
             logfile.write(line)
         if "Application startup complete" in line:
             break
-    logger.info("Vllm server running")
-    return process
+    url:str = f"http://localhost:{llm_args["port"]}/v1"
+    logger.info("Vllm server running at address "+url)
+    return url

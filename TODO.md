@@ -45,8 +45,9 @@
 - [ ] Implement LLM+something solution and test it
 - [ ] Explore which other things can be tested(tikz, svg, ascii, what else?)
 Eventually
+- [ ] Create a SimpleOpenAi API, in the case of an api compatible with openai, but that does not support anything but simple requests
 - [ ] ascii art "renderer"
 - [X] github action
-  - [ ] Tests
+  - [X] Tests
   - [ ] creates and publishes the dataset
 

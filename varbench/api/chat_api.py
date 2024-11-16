@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from io import BytesIO
 from time import sleep
-from typing import Iterable
+from typing import Iterable, Self
 from groq import Groq
 import instructor
 from openai.types.chat import ChatCompletionMessageParam
@@ -21,6 +21,21 @@ class ChatApi(ABC):
         self.model_name = model_name
         self.stop = ["\n```\n"]
         super().__init__()
+
+    def from_url(
+        temperature: float, n: int, model_name: str, api_url: str, api_key: str,*args, **kwargs
+    ) -> Self:
+        if "groq" in api_url:
+            logger.info("groq api setup")
+            return GroqApi(temperature, n, model_name, api_url, api_key)
+        elif "openai" in api_url:
+            logger.info("openai api setup")
+            return OpenAIApi(temperature, n, model_name, api_url, api_key)
+        elif "localhost" in api_url:
+            logger.info("vllm api setup")
+            return VLLMApi(temperature, n, model_name, api_url, api_key)
+        else:
+            raise AttributeError(api_url,"Unsupported api, supported ones are vllm, groq, and openai")#TODO add "simple" openai chat api for compatible ones
 
     @abstractmethod
     def chat_request(
@@ -228,9 +243,6 @@ class OpenAIApi(ChatApi):
         return self.batch_structured_request(messages, ids, None, **kwargs)
 
 
-from varbench.utils.model_launch import launch_model
-
-
 class VLLMApi(OpenAIApi):
     def __init__(
         self,
@@ -239,10 +251,7 @@ class VLLMApi(OpenAIApi):
         model_name: str,
         api_url: str = "http://localhost:8056/v1",
         api_key: str = None,
-        no_launch: bool = False,
     ) -> None:
-        if not no_launch:
-            launch_model(model_name)
         super().__init__(temperature, n, model_name, api_url, api_key)
 
     def structured_request(
@@ -258,7 +267,10 @@ class VLLMApi(OpenAIApi):
             temperature=self.temperature,
             model=self.model_name,
         )
-        return [  response_format.model_validate_json(choice.message.content) for choice in completion.choices]
+        return [
+            response_format.model_validate_json(choice.message.content)
+            for choice in completion.choices
+        ]
 
     def batch_chat_request(
         self,
@@ -278,14 +290,3 @@ class VLLMApi(OpenAIApi):
         return [
             self.structured_request(message, response_format) for message in messages
         ]
-
-
-def from_url(
-    temperature: float, n: int, model_name: str, api_url: str, api_key: str
-) -> ChatApi:
-    if "groq" in api_url:
-        return GroqApi(temperature, n, model_name, api_url, api_key)
-    elif "openai" in api_url:
-        return OpenAIApi(temperature, n, model_name, api_url, api_key)
-    elif "localhost" in api_url:
-        return VLLMApi(temperature, n, model_name, api_url, api_key)
