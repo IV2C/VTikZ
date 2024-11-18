@@ -71,8 +71,16 @@ jobs:
           name: coverage-badge
           path: DOC/images/
 
-      - name: Add coverage badge to main branch
+
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: DOC/
+  
+      - name: Update coverage artifacts
         run: |
-          git add DOC/images/coverage.svg
-          git commit -m "Update coverage badge"
+          git add DOC/images/coverage.svg DOC/htmlcov
+          git commit -m "Update coverage artifacts"
           git push origin main
+
