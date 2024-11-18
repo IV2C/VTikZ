@@ -24,7 +24,6 @@ def launch_model(model_name: str, **kwargs) -> str:
         str: The url of the openai compaptible server
     """
     llm_args = {**get_config("VLLM")}
-    logger.info("parameter do-run set to false in config file, not launching LLM via VLM")
     args = [
         f"--{arg} {value}" if not isinstance(value, bool) else f"--{arg}"
         for arg, value in llm_args.items()

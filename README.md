@@ -9,7 +9,6 @@
 
 ## Evaluation
 
-```md
 ### Running the Evaluation
 The evaluation can be executed for any subset using the following script.
 

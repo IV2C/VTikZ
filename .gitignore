@@ -6,3 +6,4 @@ varbench_metric/
 .tmp/
 htmlcov/
 .coverage
+.log/

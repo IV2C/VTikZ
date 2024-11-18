@@ -20,15 +20,13 @@ from ..utils.patches import patches
 
 def evaluate(subset: Dataset, agent: Agent, renderer: Renderer):
 
-    subset_processed = subset.map(create_message_row)
 
     predictions = agent.batchCompute(
-        subset_processed["messages"], subset_processed["id"]
+        subset["instruction"], subset["code"],subset["id"]
     )
 
-    subset_processed: Dataset = subset_processed.add_column("predictions", predictions)
-    logger.info(subset_processed["messages"])
-    logger.info(subset_processed["predictions"])
+    subset_processed: Dataset = subset.add_column("predictions", predictions)
+ 
 
     return _compute(
         renderer,
@@ -40,23 +38,6 @@ def evaluate(subset: Dataset, agent: Agent, renderer: Renderer):
         subset_processed["image_solution"],
     )
 
-
-def create_message_row(row):
-    """Add a row that contains the prompt"""
-    user_instruction = IT_PROMPT.format(
-        instruction=row["instruction"], content=row["code"]
-    )
-
-    messages = [
-        {
-            "role": "system",
-            "content": SYSTEM_PROMPT_GENERATION,
-        },
-        {"role": "user", "content": user_instruction},
-    ]
-
-    row["messages"] = messages
-    return row
 
 
 def _compute(

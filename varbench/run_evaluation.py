@@ -75,7 +75,7 @@ key_args["n"] = args.passk
 
 # loading model
 if key_args["run_model"]:
-    if key_args["api_url"]:
+    if key_args["api_url"] != "":
         logger.warning("found run-model and api_url parameters, api_url will be ignored")
     key_args["api_url"] = launch_model(key_args["model_name"])
     
