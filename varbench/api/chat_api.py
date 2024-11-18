@@ -10,7 +10,7 @@ from openai import OpenAI
 from loguru import logger
 
 from varbench.utils.chat_models import ChatCompletionRequest
-from varbench.utils.parsing import parse_openai_jsonl
+from varbench.utils.parsing import get_config, parse_openai_jsonl
 import os
 
 
@@ -252,6 +252,8 @@ class VLLMApi(OpenAIApi):
         api_url: str = "http://localhost:8056/v1",
         api_key: str = None,
     ) -> None:
+        self.api_key = api_key or get_config("VLLM").get("api-key", "vllm_key_not_set")
+
         super().__init__(temperature, n, model_name, api_url, api_key)
 
     def structured_request(
