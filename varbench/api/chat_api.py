@@ -252,7 +252,7 @@ class VLLMApi(OpenAIApi):
         api_url: str = "http://localhost:8056/v1",
         api_key: str = None,
     ) -> None:
-        self.api_key = api_key or get_config("VLLM").get("api-key", "vllm_key_not_set")
+        api_key = api_key or get_config("VLLM").get("api-key", "vllm_key_not_set")
 
         super().__init__(temperature, n, model_name, api_url, api_key)
 
