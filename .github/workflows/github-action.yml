@@ -80,7 +80,7 @@ jobs:
   
       - name: Update coverage artifacts
         run: |
-          git add DOC/images/coverage.svg DOC/htmlcov
+          git add DOC/images/coverage.svg DOC/htmlcov/
           git commit -m "Update coverage artifacts"
           git push origin main
 
