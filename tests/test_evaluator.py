@@ -1,6 +1,7 @@
 import unittest
 import os
 import timeout_decorator
+from varbench.api.chat_api import ChatApi, VLLMApi
 from varbench.renderers import Renderer, TexRenderer
 from varbench.evaluation.evaluator import evaluate
 from varbench.agent import Agent
@@ -10,7 +11,7 @@ from PIL import Image
 import difflib
 import re
 
-#@@ -7 +7 @@\n-\begin{tikzpicture} \draw (0,0) -- (1,1); \end{tikzpicture}+\begin{tikzpicture} \draw (0,1) -- (1,0); \end{tikzpicture}
+# @@ -7 +7 @@\n-\begin{tikzpicture} \draw (0,0) -- (1,1); \end{tikzpicture}+\begin{tikzpicture} \draw (0,1) -- (1,0); \end{tikzpicture}
 
 
 class TestEvaluator(unittest.TestCase):
@@ -19,28 +20,35 @@ class TestEvaluator(unittest.TestCase):
         def _patches(input, predictions: list) -> list:
             predictions = [prediction.split("\n") for prediction in predictions]
             return [
-                "".join(list(difflib.unified_diff(input.split("\n"), prediction, n=0))[2:])
+                "".join(
+                    list(difflib.unified_diff(input.split("\n"), prediction, n=0))[2:]
+                )
                 for prediction in predictions
             ]
+
         def _get_first_code_block(text):
             # Regular expression to find the first code block, ignoring the language specifier
             match = re.search(r"```[a-zA-Z]*\n(.*?)```", text, re.DOTALL)
             return match.group(1).strip() if match else None
+
         with open("tests/resources/tikz/input.md") as in_text:
             self.input_tex = _get_first_code_block(in_text.read())
         with open("tests/resources/tikz/reference.md") as in_text:
             self.ref_tex = in_text.read()
-        self.ref_patch = _patches(self.input_tex,[_get_first_code_block(self.ref_tex)])[0]
+        self.ref_patch = _patches(
+            self.input_tex, [_get_first_code_block(self.ref_tex)]
+        )[0]
         self.wrong_patch = "@@ -375 +375 @@"
         print(self.ref_patch)
         self.renderer: TexRenderer = TexRenderer()
         self.renderer.from_string_to_image = MagicMock(
             return_value=Image.open("tests/resources/images/reference.jpeg")
         )
-
-        self.model: Agent = Agent("model-name", 0)
+        dummyApi: ChatApi = VLLMApi(0,1,"none")#setting up a vllm api will not launch anything
+        self.model: Agent = Agent(dummyApi)
 
         return super().setUp()
+
     def test_evaluator_metric_exists(self):
 
         # dataset
@@ -58,7 +66,7 @@ class TestEvaluator(unittest.TestCase):
         )
 
         # mock llm_model
-        self.model.batchRequest = MagicMock(return_value=[[self.ref_tex]])
+        self.model.batchCompute = MagicMock(return_value=[[self.ref_tex]])
 
         # expected result
         expected = {"patches_score": 1.0}
@@ -85,7 +93,7 @@ class TestEvaluator(unittest.TestCase):
         )
 
         # mock llm_model
-        self.model.batchRequest = MagicMock(return_value=[["wrong_return_value"]])
+        self.model.batchCompute = MagicMock(return_value=[["wrong_return_value"]])
 
         # expected result
         expected = {"patches_score": 0.0}
@@ -112,14 +120,17 @@ class TestEvaluator(unittest.TestCase):
                 ],
                 "result_description": [
                     "a line going from the top left to the bottom right",
-                    "a line going from the top left to the bottom right"
+                    "a line going from the top left to the bottom right",
                 ],
-                "image_solution": [Image.open("tests/resources/images/reference.jpeg"),Image.open("tests/resources/images/reference.jpeg")],
+                "image_solution": [
+                    Image.open("tests/resources/images/reference.jpeg"),
+                    Image.open("tests/resources/images/reference.jpeg"),
+                ],
             }
         )
 
         # mock llm_model
-        self.model.batchRequest = MagicMock(
+        self.model.batchCompute = MagicMock(
             return_value=[
                 [self.ref_tex],
                 ["wrong_return_value"],
@@ -153,14 +164,17 @@ class TestEvaluator(unittest.TestCase):
                 ],
                 "result_description": [
                     "a line going from the top left to the bottom right",
-                    "a line going from the top left to the bottom right"
+                    "a line going from the top left to the bottom right",
                 ],
-                "image_solution": [Image.open("tests/resources/images/reference.jpeg"),Image.open("tests/resources/images/reference.jpeg")],
+                "image_solution": [
+                    Image.open("tests/resources/images/reference.jpeg"),
+                    Image.open("tests/resources/images/reference.jpeg"),
+                ],
             }
         )
 
         # mock llm_model
-        self.model.batchRequest = MagicMock(
+        self.model.batchCompute = MagicMock(
             return_value=[
                 [self.ref_tex],
                 [self.ref_tex],
