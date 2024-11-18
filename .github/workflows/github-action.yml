@@ -76,7 +76,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage-report
-          path: DOC/
+          path: DOC/htmlcov/
   
       - name: Update coverage artifacts
         run: |
