@@ -1,5 +1,5 @@
 {
-  "instruction": "Make the squid yellow.",
-  "result_description": "A drawing of a yellow squid",
+  "instruction": "Change the color of the squid to yellow",
+  "result_description": "A yellow squid",
   "difficulty": "easy"
 }

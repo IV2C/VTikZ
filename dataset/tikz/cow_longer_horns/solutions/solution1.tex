@@ -1,0 +1,73 @@
+\documentclass[tikz,border=5]{standalone}
+\usepackage[prefix=]{xcolor-material}
+
+\tikzset{
+  half clip/.code={
+    \clip (0, -256) rectangle (256, 256);
+  },
+  color/.code=\colorlet{fill color}{#1},
+  color alias/.code args={#1 as #2}{\colorlet{#1}{#2}},
+  on left/.style={.. on left/.style={#1}},
+  on right/.style={.. on right/.style={#1}},
+  split/.style args={#1 and #2}{
+    on left ={color alias=fill color as #1},
+    on right={color alias=fill color as #2, half clip}
+  }
+}
+\newcommand\reflect[2][]{
+\begin{scope}[#1]\foreach \side in {-1, 1}{\begin{scope}
+\ifnum\side=-1 \tikzset{.. on left/.try}\else\tikzset{.. on right/.try}\fi
+\begin{scope}[xscale=\side]#2\end{scope}
+\end{scope}}\end{scope}}
+
+\tikzset{
+cow/.pic={
+\begin{scope}[x=3cm/480,y=3cm/480]
+\reflect[]{
+\tikzset{shift={(32,140)}, rotate=-40}
+  \fill [BlueGrey100] (0,0) arc (0:90:40 and 130) arc (90:0:96);
+  \fill [BlueGrey200] (32,0) arc (0:90:64 and 130) arc (90:0:96);
+}
+\foreach \i in {-1, 1}\foreach \j in {0, 1}
+\fill \ifnum\j=0 \ifnum \i=-1 [BlueGrey700] \else [BlueGrey800] \fi\else [BlueGrey900] \fi
+  [xscale=\i, shift={(128,88)}, rotate=10, scale=1-\j/3]
+  (-72,0)
+  .. controls ++( 90: 8) and ++(180:16) .. ( 0, 48)
+  .. controls ++(  0:16) and ++( 90:12) .. (88,  0)
+  .. controls ++(270:12) and ++(  0: 8) .. ( 0,-48)
+  .. controls ++(180: 8) and ++(270: 8) .. cycle;
+\reflect[split={BlueGrey700 and BlueGrey800}]{%
+  \fill [fill color] (-64,-160)
+  .. controls ++( 90:144) and ++(270: 64) .. (-120,  64)
+  arc (180:0: 120 and 112)
+  .. controls ++(270: 64) and ++( 90:144) .. (  64,-160) -- cycle;
+}
+\reflect[split=Grey50 and Grey200]{%
+  \fill [fill color](-64,-160)
+    .. controls ++( 75:144) and ++(270: 64) .. (-16,  64)
+    .. controls ++( 90: 32) and ++(180: 72) .. (  0, 168)
+    .. controls ++(  0: 72) and ++( 90: 32) .. ( 16,  64)
+    .. controls ++(270: 64) and ++(105:144) .. ( 64,-160) -- cycle;
+}
+\reflect[split=Pink100 and Pink200]{
+  \fill [fill color] (0,-160) ellipse [x radius=64, y radius=56];
+}
+\fill [Pink300] (0, -160) ellipse [x radius=48, y radius=40];
+\reflect[split=Pink100 and Pink200]{
+  \fill [fill color] (0,-128) ellipse [x radius=80, y radius=56];
+}
+\fill [Pink300]
+  (-32, -128) ellipse [radius=16]
+  ( 32, -128) ellipse [radius=16];
+\fill [BlueGrey900]
+  (-64, 64) ellipse [radius=24]
+  ( 64, 64) ellipse [radius=24];
+\end{scope}
+}
+}
+\begin{document}
+\begin{tikzpicture}
+\fill [fill=LightBlue300] circle [radius=2];
+\pic {cow};
+\end{tikzpicture}
+\end{document}

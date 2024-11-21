@@ -1,0 +1,61 @@
+\documentclass[tikz,border=5]{standalone}
+\usepackage[prefix=]{xcolor-material}
+
+\tikzset{%
+  half clip/.code={
+    \clip (0, -256) rectangle (256, 256);
+  },
+  color alias/.code args={#1 as #2}{\colorlet{#1}{#2}},
+  colors alias/.style={color alias/.list/.expanded={#1}},
+  execute/.code={#1},
+  on left/.style={.. on left/.style={#1}},
+  on right/.style={.. on right/.style={#1}},
+}
+\newcommand\reflect[2][]{%
+\begin{scope}[#1]\foreach \side in {-1, 1}{\begin{scope}
+\ifnum\side=-1 \tikzset{.. on left/.try}\else\tikzset{.. on right/.try}\fi
+\begin{scope}[xscale=\side]#2\end{scope}
+\end{scope}}\end{scope}}
+
+
+\tikzset{
+bee/.pic={
+\begin{scope}[x=3cm/480,y=3cm/480, rotate=-45, shift=(270:48)]
+\reflect[
+  on left= {colors alias={body as BlueGrey800, stripes as Red500}},
+  on right={colors alias={body as BlueGrey900, stripes as Red700}, half clip},
+  lower wing/.style={fill=BlueGrey100}, upper wing/.style={fill=BlueGrey50}]{
+  \fill [body] (0,-160)
+    .. controls ++(120:64) and ++(270:64) .. (-88, -16)
+    .. controls ++( 90:64) and ++(225:64) .. (  0, 128)
+    .. controls ++(315:64) and ++( 90:64) .. ( 88, -16)
+    .. controls ++(270:64) and ++( 60:64) .. cycle;
+  \fill [body] (0,128) ellipse [x radius=80, y radius=56];
+  \fill [body]
+    (32,160) arc (180:90:64) -- ++(6,-6) coordinate [midway] (@)
+    arc (90:180:64) -- cycle;
+  \fill [body] (@) circle [radius=12];
+  \begin{scope}
+    \clip (0,-160)
+      .. controls ++(120:64) and ++(270:64) .. (-88, -16)
+      .. controls ++( 90:64) and ++(225:64) .. (  0, 128)
+      .. controls ++(315:64) and ++( 90:64) .. ( 88, -16)
+      .. controls ++(270:64) and ++( 60:64) .. cycle;
+    \foreach \i in {0,...,2}
+      \fill [stripes] (-256, -160 + \i*80) rectangle ++(512, 40);
+  \end{scope}
+  \foreach \s [count=\i from -1] in {lower wing, upper wing}
+    \fill [style=\s, shift={(16,56)}, rotate=\i*32]
+      (0,0)
+      .. controls ++( 30:64) and ++(180:32) .. (128,56)
+      arc (90:-90:56)
+      .. controls ++(180:32) and ++(330:64) .. cycle;
+}
+\end{scope}}
+}
+\begin{document}
+\begin{tikzpicture}
+\fill [fill=LightBlue300] circle [radius=2];
+\pic {bee};
+\end{tikzpicture}
+\end{document}
