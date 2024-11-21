@@ -38,7 +38,9 @@ for subset in os.listdir(dataset_path):
             renderer: Renderer = SvgRenderer()
     for entry in os.listdir(os.path.join(dataset_path, subset)):
 
+
         entry_path = os.path.join(dataset_path, subset, entry)
+        #getting input code
         input_code = open(
             os.path.join(
                 dataset_path,
@@ -52,11 +54,16 @@ for subset in os.listdir(dataset_path):
             )
         ).read()
 
+        #computing image input
+        image_input = renderer.from_string_to_image(input_code)
+
+        #getting the annotations of the current row 
         data = open(os.path.join(entry_path, "data.json")).read()
         data = json.loads(data)
 
-        patches = patch_compute(entry_path)
+        patches,solutions = patch_compute(entry_path)
 
+        #Computing image solution
         solution_path = os.path.join(
             entry_path,
             "solutions",
@@ -66,6 +73,8 @@ for subset in os.listdir(dataset_path):
             image_solution: PIL.Image.Image = renderer.from_string_to_image(
                 solution_image_text.read()
             )
+        
+
 
         current_subset.append(
             {
@@ -75,7 +84,9 @@ for subset in os.listdir(dataset_path):
                 "result_description": data["result_description"],
                 "difficulty":data["difficulty"],
                 "patches": patches,
+                "code_solutions":solutions,
                 "image_solution": image_solution,
+                "image_input":image_input
             }
         )
     if len(current_subset) > 0:
@@ -90,7 +101,9 @@ features = Features(
         "instruction": Value("string"),
         "result_description": Value("string"),
         "patches": Sequence(Value("string")),
+        "code_solutions": Sequence(Value("string")),
         "image_solution": Image(),
+        "image_input": Image()
     }
 )
 

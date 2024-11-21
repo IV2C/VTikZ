@@ -28,14 +28,18 @@ def patch_compute(folder:str)-> list[str]:
     
     input_path = os.path.join(folder,[filename for filename in os.listdir(folder) if "input" in filename][0])#getting the input.? file
     
+    solutions = []
+    
     with open(input_path) as input_file:
         input = input_file.read().splitlines()
         diffs:set = set()
         for solution in os.listdir(solution_folder):
             with open(os.path.join(solution_folder,solution)) as solution_file:
                 
-                solution = solution_file.read().splitlines()
+                solution = solution_file.read()
+                solutions.append(solution)
+                solution = solution.splitlines()
                 current_diff = "".join(list(difflib.unified_diff(input, solution, n=0))[2:])#getting the current diff without context
                 diffs.add(current_diff)
                 
-    return list(diffs)
+    return list(diffs),solutions

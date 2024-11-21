@@ -130,16 +130,6 @@ def _compute(
     parsing_score = sum(individual_parsing_scores) / dataset_length
     line_score = sum(individual_lines_scores) / dataset_length
 
-    varscores = [
-        d if d else (t + i) / 2
-        for d, t, i in zip(
-            individual_patches_scores,
-            individual_text_scores,
-            individual_image_scores,
-        )
-    ]
-    varscore = sum(varscores) / len(varscores)
-
     # logger.info(individual_patches_scores)
     # logger.info(individual_text_scores)
     # logger.info(individual_image_scores)
@@ -162,7 +152,6 @@ def _compute(
     return {
         "line_score": line_score,
         "patches_score": patch_score,
-        "varscore": varscore,
         "text_scores": text_score,
         "image_score": image_score,
         "compiling_score": compiling_score,
