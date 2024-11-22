@@ -3,6 +3,7 @@ import os
 import argparse
 
 from varbench.api.chat_api import ChatApi
+from varbench.evaluation.metrics import instantiate_metrics
 from varbench.renderers import Renderer, SvgRenderer, TexRenderer
 from varbench.utils.model_launch import launch_model
 from .evaluation.evaluator import evaluate
@@ -21,6 +22,14 @@ parser.add_argument(
     type=str,
     help="Name of the subset(s) to evaluate the model on",
     default=["tikz", "svg"],
+)
+parser.add_argument(
+    "--metrics",
+    "-me",
+    nargs="+",
+    type=str,
+    help="Name of the metric(s) to evaluate on the output of the model",
+    default=["patch", "line","clipImage","ClipText"],
 )
 parser.add_argument(
     "--run-model",
@@ -85,10 +94,13 @@ if not key_args["api_key"]:
 #instantiating api
 api:ChatApi = ChatApi.from_url(**key_args)
 
-
+#instantiating agent TODO make a parameter to specify the agent
 agent = SimpleLLMAgent(api)
 
+#instantiating metrics
+metrics = instantiate_metrics(args.metrics)
 
+#result path creation
 if not os.path.exists("./results"):
     os.mkdir("./results")
 
@@ -97,7 +109,7 @@ result_path = os.path.join("./results", args.model.replace("/", "_"))
 if not os.path.exists(result_path):
     os.mkdir(result_path)
 
-
+#evaluation
 for subset in subsets:
     dataset = load_dataset("CharlyR/varbench", subset, split="test")
 
@@ -112,7 +124,7 @@ for subset in subsets:
             continue
 
     # evaluating
-    result_scores, score_dataset = evaluate(dataset, agent, renderer)
+    result_scores, score_dataset = evaluate(dataset, agent, renderer,metrics)
     logger.info(result_scores)
     score_dataset.to_csv(os.path.join(result_path, subset + ".csv"))
     with open(os.path.join(result_path, subset + ".json"), "w") as subset_result:

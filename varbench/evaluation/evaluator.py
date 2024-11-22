@@ -4,6 +4,7 @@ import subprocess
 import os
 
 from varbench.evaluation.clip_comparer import ClipComparer
+from varbench.evaluation.metrics import Metric
 from ..prompt_templates import *
 from ..agent import Agent
 from loguru import logger
@@ -17,27 +18,80 @@ from ..utils.parsing import get_first_code_block
 from ..utils.patches import patches
 
 
+def evaluate(subset: Dataset, agent: Agent, renderer: Renderer, metrics: list[Metric]):
 
-def evaluate(subset: Dataset, agent: Agent, renderer: Renderer):
-
-
+    # computing the results
     predictions = agent.batchCompute(
-        subset["instruction"], subset["code"],subset["id"]
+        subset["instruction"], subset["code"], subset["id"]
     )
+    pass_size = len(predictions[0])  # getting the number of k for the pass@k
+
+    # getting the code from the result predictions
+    predictions = [
+        [
+            get_first_code_block(prediction)
+            for prediction in row_predictions
+            if get_first_code_block(prediction)
+        ]
+        for row_predictions in predictions
+    ]
+
+    # computing the images out of the results
+    images_lists = _images(predictions)
 
     subset_processed: Dataset = subset.add_column("predictions", predictions)
- 
-
-    return _compute(
-        renderer,
-        subset_processed["id"],
-        subset_processed["code"],
-        subset_processed["predictions"],
-        subset_processed["patches"],
-        subset_processed["result_description"],
-        subset_processed["image_solution"],
+    subset_processed: Dataset = subset_processed.add_column(
+        "image_result", images_lists
     )
 
+    # default metrics computation(parsing and compiling)
+    individual_parsing_scores = [
+        len(prediction_n) / pass_size for prediction_n in predictions
+    ]
+    prediction_pass_len = len(predictions[0])
+    individual_compiling_scores = [
+        (len(image_list) / prediction_pass_len) if prediction_pass_len != 0 else 0
+        for image_list in images_lists
+    ]
+
+    subset_processed: Dataset = subset.add_column(
+        "parsing_score", individual_parsing_scores
+    )
+    subset_processed: Dataset = subset.add_column(
+        "compiling_score", individual_compiling_scores
+    )
+
+    # computing metrics
+    metric_results = [metric.compute(subset_processed) for metric in metrics]
+
+    for metric, metric_result in zip(metrics, metric_results):
+        subset_processed: Dataset = subset.add_column(
+            type(metric).__name__, metric_result
+        )
+
+    scores = {
+        type(metric).__name__: sum(metric_result) / len(subset_processed)
+        for metric, metric_result in zip(
+            metrics,
+            metric_results + individual_parsing_scores + individual_compiling_scores,
+        )
+    }
+
+    return subset_processed
+
+
+def _images(predictions: list[list[str]], renderer: Renderer) -> list[list[Image]]:
+    output_images: list[list[Image]] = []
+    for row_predictions in predictions:
+        row_output_images = []
+        for prediction in row_predictions:
+            try:
+                result_image = renderer.from_string_to_image(prediction)
+                row_output_images.append(result_image)
+            except RendererException:
+                pass
+        output_images.append(row_output_images)
+    return output_images
 
 
 def _compute(
@@ -62,32 +116,8 @@ def _compute(
         image_solutions (list[PIL.Image.Image]): List of solution images.
     """
 
-    
-
-    def _images(predictions: list[list[str]]) -> list[list[Image]]:
-        output_images: list[list[Image]] = []
-        for row_predictions in predictions:
-            row_output_images = []
-            for prediction in row_predictions:
-                try:
-                    result_image = renderer.from_string_to_image(prediction)
-                    row_output_images.append(result_image)
-                except RendererException:
-                    pass
-            output_images.append(row_output_images)
-        return output_images
-
     pass_size = len(predictions[0])  # getting the number of k for the pass@k
     dataset_length = len(image_solutions)
-    # getting the code from the predictions
-    predictions = [
-        [
-            get_first_code_block(prediction)
-            for prediction in row_predictions
-            if get_first_code_block(prediction)
-        ]
-        for row_predictions in predictions
-    ]
 
     # computing parsing score
     individual_parsing_scores = [
@@ -114,7 +144,7 @@ def _compute(
 
     clip_comparer: ClipComparer = ClipComparer(force_cpu=True)
 
-    individual_text_scores = clip_comparer.clip_scores(
+    individual_text_scores = clip_comparer.text_similarities(
         images_lists, result_descriptions
     )
     individual_image_scores = clip_comparer.image_similarities(
@@ -143,7 +173,7 @@ def _compute(
             "individual_parsing_scores": individual_parsing_scores,
             "individual_lines_scores": individual_lines_scores,
             "result_description": result_descriptions,
-            "individual_patches":individual_patches,
+            "individual_patches": individual_patches,
             "id": ids,
             "predictions": predictions,
         }

@@ -18,7 +18,7 @@ class TestClipComparer(unittest.TestCase):
             ]
         ]
         result_descriptions = ["a drawing of a dog with red eyes"]
-        results = clip_comparer.clip_scores(images, result_descriptions)
+        results = clip_comparer.text_similarities(images, result_descriptions)
         self.assertTrue(results[0] == max(results))
         
     @unittest.skipIf(os.environ.get("CI"), "Too much storage needed for running in CI")

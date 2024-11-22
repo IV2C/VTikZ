@@ -33,17 +33,20 @@
   - [X] Add Parameter in VLMApi to start or not the api(get it from the config)
   - [X] change 30 to something bigger in sleep at line 201 in chat_api.py 
 - [X] Finish testing the batch requests with openai
-- [ ] Change Model class by agent, remove VLM/OPENAI parameter in run_generation and run_evaluation, instantiate api depending on the api_url provided, add in documentation that the api used depends on the url(and that VLLM is launched in the case of a VLLM api)(maybe add a parameter to prevent vllm from being launched or maybe the opposite)
-- [ ] Add level of difficulty in the datasets
+- [X] Change Model class by agent, remove VLM/OPENAI parameter in run_generation and run_evaluation, instantiate api depending on the api_url provided, add in documentation that the api used depends on the url(and that VLLM is launched in the case of a VLLM api)(maybe add a parameter to prevent vllm from being launched or maybe the opposite)
+- [X] Add level of difficulty in the datasets
+- [X] Explore which other things can be tested(tikz, svg, ascii, what else?)
+- [ ] Add sacrebleu metric
+- [ ] refactor evaluator(list of parametrable computed metrics)
+- [ ] Add DINO(after testing) 
 - [ ] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches)
-- [ ] Check patches in the synthetic data generation
 - [ ] Create synthetic data and then verify
 - [ ] Make another submodel called multimodal that can take images, and allow for parametrization in the command line
 - [ ] Make another submodel called multimodal-loop that can take images and loops until a satisfying image is created, and allow for parametrization in the command line.
 - [ ] Assessment of vlm on checking 
 - [ ] Test LLM-only models then compare with Multimodal with image in input
 - [ ] Implement LLM+something solution and test it
-- [ ] Explore which other things can be tested(tikz, svg, ascii, what else?)
+
 Eventually
 - [ ] Create a SimpleOpenAi API, in the case of an api compatible with openai, but that does not support anything but simple requests
 - [ ] ascii art "renderer"

@@ -29,10 +29,11 @@ class ClipComparer:
             policy (Callable[[list[float]],float]): policy for the computation of score from the pass@
         """
         clip_config = get_config("CLIP")
-        self.model_name = clip_config["model_name"]
-        self.pretrained_name = clip_config["pretrained_name"]
+        self.model_name = clip_config["model_name"] or model_name
+        self.pretrained_name = clip_config["pretrained_name"] or pretrained_name
+        force_cpu = force_cpu or clip_config["force_cpu"]
         if os.environ.get("CI"):#fix for github CI
-            self.clip_scores = lambda x,y: [100]*len(x)
+            self.text_similarities = lambda x,y: [100]*len(x)
             self.image_similarities = lambda x,y: [100]*len(x)
             return
         
@@ -44,7 +45,7 @@ class ClipComparer:
         self.policy = policy
         self.model.eval()
 
-    def clip_scores(
+    def text_similarities(
         self, images: list[list[Image.Image]], result_descriptions: list[str]
     ) -> list[float]:
         """
