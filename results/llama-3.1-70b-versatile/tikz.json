@@ -1,1 +1,1 @@
-{"line_score": 1.0, "patches_score": 0.0, "varscore": 63.237993240356445, "text_scores": 28.24034881591797, "image_score": 98.23563766479492, "compiling_score": 1.0, "parsing_score": 1.0}
+{"LineMetric": 1.0, "PatchMetric": 0.5, "ClipTextMetric": 26.400954246520996, "ClipImageMetric": 99.9999885559082}

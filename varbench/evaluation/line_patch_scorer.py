@@ -4,13 +4,16 @@ import re
 
 def compute_line_score(
     prediction_diffs: List[List[str]], reference_diffs: List[List[str]]
-) -> list[float]:
+) -> list[list[float]]:
     def _extract_modified_lines(diff_text: str) -> list[int]:
         # Regular expression to match the diff header for line numbers
-        pattern = r"@@ -(\d+) \+\d+ @@"
+        pattern = r"@@ -(\d+(?:,\d+)?) \+\d+(?:,\d+)? @@"
         matches = re.findall(pattern, diff_text)
-        # Convert matches to integers (line numbers)
-        modified_lines = [int(line) for line in matches]
+        # Convert matches to integers (line numbers), considering possible ranges
+        modified_lines = []
+        for match in matches:
+            # Split by comma and take the first number in the range
+            modified_lines.append(int(match.split(',')[0]))
         return modified_lines
 
     def _max_overlap(prediction: set[int], references: List[set[int]]) -> float:
@@ -39,4 +42,4 @@ def compute_line_score(
     ]
 
     # getting the max score that the predictions achieved
-    return [max(pass_score) if pass_score else 0.0 for pass_score in all_pass_scores]
+    return [pass_score if pass_score else 0.0 for pass_score in all_pass_scores]

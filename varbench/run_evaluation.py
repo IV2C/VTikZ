@@ -29,7 +29,7 @@ parser.add_argument(
     nargs="+",
     type=str,
     help="Name of the metric(s) to evaluate on the output of the model",
-    default=["patch", "line","clipImage","ClipText"],
+    default=["patch", "line","clipImage","clipText"],
 )
 parser.add_argument(
     "--run-model",
@@ -94,7 +94,7 @@ if not key_args["api_key"]:
 #instantiating api
 api:ChatApi = ChatApi.from_url(**key_args)
 
-#instantiating agent TODO make a parameter to specify the agent
+#instantiating agent TODO add a parameter to specify the agent
 agent = SimpleLLMAgent(api)
 
 #instantiating metrics
@@ -125,7 +125,13 @@ for subset in subsets:
 
     # evaluating
     result_scores, score_dataset = evaluate(dataset, agent, renderer,metrics)
+    score_dataset.save_to_disk(result_path,storage_options={})
     logger.info(result_scores)
-    score_dataset.to_csv(os.path.join(result_path, subset + ".csv"))
     with open(os.path.join(result_path, subset + ".json"), "w") as subset_result:
         subset_result.write(json.dumps(result_scores))
+    score_dataset.push_to_hub("CharlyR/varbench-evaluation", config_name=subset, split=args.model.replace("/", "_").replace("-",""))
+        
+        
+    
+        
+        

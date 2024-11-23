@@ -36,9 +36,10 @@
 - [X] Change Model class by agent, remove VLM/OPENAI parameter in run_generation and run_evaluation, instantiate api depending on the api_url provided, add in documentation that the api used depends on the url(and that VLLM is launched in the case of a VLLM api)(maybe add a parameter to prevent vllm from being launched or maybe the opposite)
 - [X] Add level of difficulty in the datasets
 - [X] Explore which other things can be tested(tikz, svg, ascii, what else?)
-- [ ] Add sacrebleu metric
-- [ ] refactor evaluator(list of parametrable computed metrics)
-- [ ] Add DINO(after testing) 
+- [ ] Add sacrebleu metrics(bleu, chrf, TER)
+- [ ] Add feature matching metrics(brut and randsac)
+- [ ] Add mask matching metric
+- [X] refactor evaluator(list of parametrable computed metrics) 
 - [ ] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches)
 - [ ] Create synthetic data and then verify
 - [ ] Make another submodel called multimodal that can take images, and allow for parametrization in the command line

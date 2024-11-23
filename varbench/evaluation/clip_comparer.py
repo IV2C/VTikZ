@@ -18,7 +18,6 @@ class ClipComparer:
         model_name: str = "ViT-bigG-14-quickgelu",
         pretrained_name: str = "metaclip_fullcc",
         force_cpu: bool = False,
-        policy: Callable[[list[float]], float] = lambda l: max(l) if len(l)>0 else 0,
     ) -> None:
         """
         Initializes the ClipComparer with a specified model and pretrained weights.
@@ -26,7 +25,6 @@ class ClipComparer:
         Args:
             model_name (str): The name of the CLIP model variant. Defaults to "ViT-bigG-14-quickgelu".
             pretrained_name (str): The pretrained weights to load. Defaults to "metaclip_fullcc".
-            policy (Callable[[list[float]],float]): policy for the computation of score from the pass@
         """
         clip_config = get_config("CLIP")
         self.model_name = clip_config["model_name"] or model_name
@@ -42,7 +40,6 @@ class ClipComparer:
             self.model_name, pretrained=self.pretrained_name, device=device
         )
         self.tokenizer = open_clip.get_tokenizer(self.model_name)
-        self.policy = policy
         self.model.eval()
 
     def text_similarities(
@@ -57,7 +54,7 @@ class ClipComparer:
 
         Returns:
             list[float]:  A list of similarity scores, containing
-                               scores between each image in `images` and its corresponding description, computed according to the policy.
+                               scores between each image in `images` and its corresponding description.
         """
         results: list[float] = []
 
@@ -76,7 +73,7 @@ class ClipComparer:
                     (100.0 * image_feature @ text_features.T).tolist()[0][0]
                     for image_feature in images_features
                 ]
-                results.append(self.policy(cos_similarities))
+                results.append(cos_similarities)
         return results
 
     def image_similarities(
@@ -90,8 +87,8 @@ class ClipComparer:
             references (list[Image.Image]): A list of reference images.
 
         Returns:
-            list[float]: A list of similarity scores, containing
-                               scores between each image in `images` and its corresponding reference image, computed according to the policy.
+            list[list[float]]: A list of similarity scores, containing
+                               scores between each image in `images` and its corresponding reference image.
         """
         results: list[float] = []
 
@@ -107,7 +104,7 @@ class ClipComparer:
                     (100.0 * image_feature @ ref_features.T).tolist()[0][0]
                     for image_feature in images_features
                 ]
-                results.append(self.policy(cos_similarities))
+                results.append(cos_similarities)
         return results
 
     def _encode_images(self, image_list: list[Image.Image]) -> list[torch.Tensor]:

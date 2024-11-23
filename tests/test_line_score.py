@@ -10,7 +10,7 @@ class TestLineScore(unittest.TestCase):
     def test_line_score_simple(self):
         predictions = [[self.patch_from_number([5, 10, 15])]]
         references = [[self.patch_from_number([5, 10, 15])]]
-        expected = [1.0]
+        expected = [[1.0]]
 
         self.assertEqual(compute_line_score(predictions, references), expected)
 
@@ -19,14 +19,14 @@ class TestLineScore(unittest.TestCase):
         references = [
             [self.patch_from_number([5, 10, 15]), self.patch_from_number([5, 20, 25])]
         ]
-        expected = [1.0]
+        expected = [[1.0]]
 
         self.assertEqual(compute_line_score(predictions, references), expected)
 
     def test_line_score_not_max(self):
         predictions = [[self.patch_from_number([5, 10, 15])]]
         references = [[self.patch_from_number([5, 10, 20])]]
-        expected = [2 / 3]
+        expected = [[2 / 3]]
         self.assertAlmostEqual(
             compute_line_score(predictions, references), expected, delta=0.01
         )
@@ -36,7 +36,7 @@ class TestLineScore(unittest.TestCase):
         references = [
             [self.patch_from_number([5, 10, 20]), self.patch_from_number([5, 10, 20])]
         ]
-        expected = [2 / 3]
+        expected = [[2 / 3]]
         self.assertAlmostEqual(
             compute_line_score(predictions, references), expected, delta=0.01
         )
@@ -48,7 +48,7 @@ class TestLineScore(unittest.TestCase):
         references = [
             [self.patch_from_number([5, 10, 20]), self.patch_from_number([5, 20, 15])]
         ]
-        expected = [1]
+        expected = [[2 / 3, 1]]
         self.assertAlmostEqual(
             compute_line_score(predictions, references), expected, delta=0.01
         )
@@ -66,7 +66,7 @@ class TestLineScore(unittest.TestCase):
                 self.patch_from_number([5, 20, 15, 25]),
             ]
         ]
-        expected = [3/4]
+        expected = [[2 / 4, 3 / 4]]
         self.assertAlmostEqual(
             compute_line_score(predictions, references), expected, delta=0.01
         )
@@ -77,10 +77,10 @@ class TestLineScore(unittest.TestCase):
                 self.patch_from_number([5, 10, 15, 22]),
                 self.patch_from_number([5, 20, 15, 30]),
             ],
-                     [
+            [
                 self.patch_from_number([5, 10, 15, 22]),
                 self.patch_from_number([5, 20, 15, 30]),
-            ]
+            ],
         ]
         references = [
             [
@@ -90,9 +90,9 @@ class TestLineScore(unittest.TestCase):
             [
                 self.patch_from_number([5, 10, 12, 25]),
                 self.patch_from_number([5, 20, 15, 30]),
-            ]
+            ],
         ]
-        expected = [3/4,1]
+        expected = [[2 / 4, 3 / 4], [2 / 4, 1]]
         self.assertAlmostEqual(
             compute_line_score(predictions, references), expected, delta=0.01
         )

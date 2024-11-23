@@ -1,0 +1,121 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "id": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "code": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "instruction": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "result_description": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "difficulty": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "patches": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "code_solutions": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "image_solution": {
+      "_type": "Image"
+    },
+    "image_input": {
+      "_type": "Image"
+    },
+    "predictions": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "images_result": {
+      "feature": {
+        "_type": "Image"
+      },
+      "_type": "Sequence"
+    },
+    "parsing_score": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "compiling_score": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "LineMetric": {
+      "feature": {
+        "dtype": "float64",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "PatchMetric": {
+      "feature": {
+        "dtype": "bool",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "ClipTextMetric": {
+      "feature": {
+        "dtype": "float64",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "ClipImageMetric": {
+      "feature": {
+        "dtype": "float64",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "var_score": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "index_best_prediction": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "best_LineMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_PatchMetric": {
+      "dtype": "bool",
+      "_type": "Value"
+    },
+    "best_ClipTextMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_ClipImageMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": ""
+}

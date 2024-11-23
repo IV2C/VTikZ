@@ -2,6 +2,7 @@ import unittest
 import os
 import timeout_decorator
 from varbench.api.chat_api import ChatApi, VLLMApi
+from varbench.evaluation.metrics import Metric, PatchMetric
 from varbench.renderers import Renderer, TexRenderer
 from varbench.evaluation.evaluator import evaluate
 from varbench.agent import Agent
@@ -44,7 +45,11 @@ class TestEvaluator(unittest.TestCase):
         self.renderer.from_string_to_image = MagicMock(
             return_value=Image.open("tests/resources/images/reference.jpeg")
         )
-        dummyApi: ChatApi = VLLMApi(0,1,"none")#setting up a vllm api will not launch anything
+        self.dummyMetric: Metric = [PatchMetric()]
+
+        dummyApi: ChatApi = VLLMApi(
+            0, 1, "none"
+        )  # setting up a vllm api will not launch anything
         self.model: Agent = Agent(dummyApi)
 
         return super().setUp()
@@ -69,11 +74,11 @@ class TestEvaluator(unittest.TestCase):
         self.model.batchCompute = MagicMock(return_value=[[self.ref_tex]])
 
         # expected result
-        expected = {"patches_score": 1.0}
-        actual = evaluate(dummy_dataset, self.model, self.renderer)
+        expected = {"PatchMetric": 1.0}
+        actual = evaluate(dummy_dataset, self.model, self.renderer, self.dummyMetric)
         self.assertEqual(
-            actual[0].get("patches_score"),
-            expected["patches_score"],
+            actual[0].get("PatchMetric"),
+            expected["PatchMetric"],
         )
 
     def test_evaluator_metric_not_exists(self):
@@ -96,11 +101,13 @@ class TestEvaluator(unittest.TestCase):
         self.model.batchCompute = MagicMock(return_value=[["wrong_return_value"]])
 
         # expected result
-        expected = {"patches_score": 0.0}
+        expected = {"PatchMetric": 0.0}
 
         self.assertEqual(
-            evaluate(dummy_dataset, self.model, self.renderer)[0].get("patches_score"),
-            expected["patches_score"],
+            evaluate(dummy_dataset, self.model, self.renderer, self.dummyMetric)[0].get(
+                "PatchMetric"
+            ),
+            expected["PatchMetric"],
         )
 
     def test_evaluator_metric_exists_multiple(self):
@@ -139,12 +146,14 @@ class TestEvaluator(unittest.TestCase):
 
         # expected result
         expected = {
-            "patches_score": 0.5,
+            "PatchMetric": 0.5,
         }
 
         self.assertEqual(
-            evaluate(dummy_dataset, self.model, self.renderer)[0].get("patches_score"),
-            expected["patches_score"],
+            evaluate(dummy_dataset, self.model, self.renderer, self.dummyMetric)[0].get(
+                "PatchMetric"
+            ),
+            expected["PatchMetric"],
         )
 
     def test_evaluator_metric_exists_complex(self):
@@ -183,12 +192,14 @@ class TestEvaluator(unittest.TestCase):
 
         # expected result
         expected = {
-            "patches_score": 1.0,
+            "PatchMetric": 1.0,
         }
 
         self.assertEqual(
-            evaluate(dummy_dataset, self.model, self.renderer)[0].get("patches_score"),
-            expected["patches_score"],
+            evaluate(dummy_dataset, self.model, self.renderer, self.dummyMetric)[0].get(
+                "PatchMetric"
+            ),
+            expected["PatchMetric"],
         )
 
 
