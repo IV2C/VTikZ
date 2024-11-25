@@ -29,7 +29,7 @@ parser.add_argument(
     nargs="+",
     type=str,
     help="Name of the metric(s) to evaluate on the output of the model",
-    default=["patch", "line","clipImage","clipText"],
+    default=["patch", "line", "clipImage", "clipText", "bleu", "chrf", "TER"],
 )
 parser.add_argument(
     "--run-model",
@@ -85,22 +85,24 @@ key_args["n"] = args.passk
 # loading model
 if key_args["run_model"]:
     if key_args["api_url"] != "":
-        logger.warning("found run-model and api_url parameters, api_url will be ignored")
+        logger.warning(
+            "found run-model and api_url parameters, api_url will be ignored"
+        )
     key_args["api_url"] = launch_model(key_args["model_name"])
-    
+
 if not key_args["api_key"]:
     key_args["api_key"] = os.environ.get("OPENAI_API_KEY")
 
-#instantiating api
-api:ChatApi = ChatApi.from_url(**key_args)
+# instantiating api
+api: ChatApi = ChatApi.from_url(**key_args)
 
-#instantiating agent TODO add a parameter to specify the agent
+# instantiating agent TODO add a parameter to specify the agent
 agent = SimpleLLMAgent(api)
 
-#instantiating metrics
+# instantiating metrics
 metrics = instantiate_metrics(args.metrics)
 
-#result path creation
+# result path creation
 if not os.path.exists("./results"):
     os.mkdir("./results")
 
@@ -109,7 +111,7 @@ result_path = os.path.join("./results", args.model.replace("/", "_"))
 if not os.path.exists(result_path):
     os.mkdir(result_path)
 
-#evaluation
+# evaluation
 for subset in subsets:
     dataset = load_dataset("CharlyR/varbench", subset, split="test")
 
@@ -120,18 +122,17 @@ for subset in subsets:
         case "svg":
             renderer = SvgRenderer()
         case _:
-            logger.warning("unsupported subset "+ subset+", skipping")
+            logger.warning("unsupported subset " + subset + ", skipping")
             continue
 
     # evaluating
-    result_scores, score_dataset = evaluate(dataset, agent, renderer,metrics)
-    score_dataset.save_to_disk(result_path,storage_options={})
+    result_scores, score_dataset = evaluate(dataset, agent, renderer, metrics)
+    score_dataset.save_to_disk(result_path, storage_options={})
     logger.info(result_scores)
     with open(os.path.join(result_path, subset + ".json"), "w") as subset_result:
         subset_result.write(json.dumps(result_scores))
-    score_dataset.push_to_hub("CharlyR/varbench-evaluation", config_name=subset, split=args.model.replace("/", "_").replace("-",""))
-        
-        
-    
-        
-        
+    score_dataset.push_to_hub(
+        "CharlyR/varbench-evaluation",
+        config_name=subset,
+        split=args.model.replace("/", "_").replace("-", ""),
+    )

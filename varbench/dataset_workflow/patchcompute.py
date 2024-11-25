@@ -3,12 +3,14 @@
 
 the folder contains the subsets, each subsets contains the entries
 """
+
 import os
 import argparse
 
 import difflib
 
-def patch_compute(folder:str)-> list[str]:
+
+def patch_compute(folder: str) -> list[str]:
     """
     Compute the differences between the 'input' and 'solutions' for each subset in the given folder.
 
@@ -23,23 +25,24 @@ def patch_compute(folder:str)-> list[str]:
     Example usage:
         diffcompute('/path/to/folder')
     """
-    
-    solution_folder = os.path.join(folder,"solutions")
-    
-    input_path = os.path.join(folder,[filename for filename in os.listdir(folder) if "input" in filename][0])#getting the input.? file
-    
-    solutions = []
-    
+
+    solution_folder = os.path.join(folder, "solutions")
+    solution_path = os.listdir(solution_folder)[0]
+    input_path = os.path.join(
+        folder, [filename for filename in os.listdir(folder) if "input" in filename][0]
+    )  # getting the input.? file
+
+
     with open(input_path) as input_file:
         input = input_file.read().splitlines()
-        diffs:set = set()
-        for solution in os.listdir(solution_folder):
-            with open(os.path.join(solution_folder,solution)) as solution_file:
-                
-                solution = solution_file.read()
-                solutions.append(solution)
-                solution = solution.splitlines()
-                current_diff = "".join(list(difflib.unified_diff(input, solution, n=0))[2:])#getting the current diff without context
-                diffs.add(current_diff)
-                
-    return list(diffs),solutions
+
+        with open(os.path.join(solution_folder, solution_path)) as solution_file:
+
+            solution = solution_file.read()
+            
+            solution_dif = solution.splitlines()
+            current_diff = "".join(
+                list(difflib.unified_diff(input, solution_dif, n=0))[2:]
+            )  # getting the current diff without context
+
+    return current_diff, solution

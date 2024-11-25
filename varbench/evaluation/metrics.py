@@ -8,13 +8,12 @@ from varbench.utils.patches import patches
 
 class Metric:
     def __init__(self, *args, **kwargs) -> None:
-        """instantiates a metric
-        """
+        """instantiates a metric"""
         pass
 
     def compute(self, dataset: Dataset) -> list[list]:
         """computes the metric using the dataset
-        The dataset should have columns: id,code,predictions,patches,result_description,image_solution,image_input,images_result
+        The dataset should have columns: id,code,code_solution,predictions,patches,result_description,image_solution,image_input,images_result
 
         Args:
             dataset (Dataset): The dataset used to copute the metric on
@@ -30,11 +29,11 @@ class PatchMetric(Metric):
         logger.info("Computing patch_score")
         inputs = dataset["code"]
         predictions = dataset["predictions"]
-        patch_list = dataset["patches"]
+        patch = dataset["patch"]
         individual_patches = [patches(i, p) for i, p in zip(inputs, predictions)]
         individual_patches_scores = [
-            [int(computed_patch in d) for computed_patch in i]
-            for i, d in zip(individual_patches, patch_list)
+            [int(computed_patch == patch) for computed_patch in i]
+            for i in individual_patches
         ]
         return individual_patches_scores
 
@@ -44,9 +43,9 @@ class LineMetric(Metric):
         logger.info("Computing line_score")
         inputs = dataset["code"]
         predictions = dataset["predictions"]
-        patch_list = dataset["patches"]
+        patch = dataset["patch"]
         individual_patches = [patches(i, p) for i, p in zip(inputs, predictions)]
-        individual_lines_scores = compute_line_score(individual_patches, patch_list)
+        individual_lines_scores = compute_line_score(individual_patches, patch)
 
         return individual_lines_scores
 
@@ -59,9 +58,7 @@ class ClipImageMetric(Metric):
     def compute(self, dataset: Dataset) -> list[list]:
         logger.info("Computing clip image to image similarity scores")
         logger.info(dataset["images_result"])
-        image_result = dataset[
-            "images_result"
-        ]
+        image_result = dataset["images_result"]
         image_solution = dataset["image_solution"]
         individual_image_scores = self.clip_comparer.image_similarities(
             image_result, image_solution
@@ -84,19 +81,92 @@ class ClipTextMetric(Metric):
         return individual_text_scores
 
 
+class BleuMetric(Metric):
+    def __init__(self, *args, **kwargs) -> None:
+        from sacrebleu import BLEU
+
+        self.bleu = BLEU()
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list]:
+        logger.info("Computing bleu_score")
+        all_predictions = dataset["predictions"]
+        solutions = dataset["code_solution"]
+
+        bleu_scores = [
+            [
+                self.bleu.sentence_score(row_prediction, [solution]).score
+                for row_prediction in predictions
+            ]
+            for predictions,solution in zip(all_predictions,solutions)
+        ]
+
+        return bleu_scores
+
+class ChrfMetric(Metric):
+    def __init__(self, *args, **kwargs) -> None:
+        from sacrebleu import CHRF
+
+        self.chrf = CHRF()
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list]:
+        logger.info("Computing bleu_score")
+        all_predictions = dataset["predictions"]
+        solutions = dataset["code_solution"]
+
+        chrf_scores = [
+            [
+                self.chrf.sentence_score(row_prediction, [solution]).score
+                for row_prediction in predictions
+            ]
+            for predictions,solution in zip(all_predictions,solutions)
+        ]
+
+        return chrf_scores
+    
+class TERMetric(Metric):
+    def __init__(self, *args, **kwargs) -> None:
+        from sacrebleu import TER
+
+        self.ter = TER()
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list]:
+        logger.info("Computing bleu_score")
+        all_predictions = dataset["predictions"]
+        solutions = dataset["code_solution"]
+
+        ter_inverted_scores = [
+            [
+                100 - self.ter.sentence_score(row_prediction, [solution]).score
+                for row_prediction in predictions
+            ]
+            for predictions,solution in zip(all_predictions,solutions)
+        ]
+
+        return ter_inverted_scores
+    
+    
 def instantiate_metrics(metric_names: list[str]) -> list[Metric]:
     metric_map = {
         "patch": PatchMetric,
         "line": LineMetric,
         "clipImage": ClipImageMetric,
         "clipText": ClipTextMetric,
+        "bleu":BleuMetric,
+        "chrf":ChrfMetric,
+        "TER":TERMetric
     }
     metrics: set[Metric] = set([metric_map[m_name] for m_name in set(metric_names)])
     if set([ClipImageMetric, ClipTextMetric]) & metrics:
         clip_comparer = ClipComparer()
     return [metric(clip_comparer) for metric in metrics]
 
+
 import math
+
+
 class MetricPolicy:
     @staticmethod
     def mathematical_average(values: list[float], weights: list[float] = None) -> float:

@@ -61,7 +61,7 @@ for subset in os.listdir(dataset_path):
         data = open(os.path.join(entry_path, "data.json")).read()
         data = json.loads(data)
 
-        patches,solutions = patch_compute(entry_path)
+        patch,solution = patch_compute(entry_path)
 
         #Computing image solution
         solution_path = os.path.join(
@@ -83,8 +83,8 @@ for subset in os.listdir(dataset_path):
                 "instruction": data["instruction"],
                 "result_description": data["result_description"],
                 "difficulty":data["difficulty"],
-                "patches": patches,
-                "code_solutions":solutions,
+                "patch": patch,
+                "code_solution":solution,
                 "image_solution": image_solution,
                 "image_input":image_input
             }
@@ -100,8 +100,8 @@ features = Features(
         "code": Value("string"),
         "instruction": Value("string"),
         "result_description": Value("string"),
-        "patches": Sequence(Value("string")),
-        "code_solutions": Sequence(Value("string")),
+        "patch": Value("string"),
+        "code_solution": Value("string"),
         "image_solution": Image(),
         "image_input": Image()
     }

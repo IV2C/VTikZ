@@ -22,19 +22,13 @@
       "dtype": "string",
       "_type": "Value"
     },
-    "patches": {
-      "feature": {
-        "dtype": "string",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
+    "patch": {
+      "dtype": "string",
+      "_type": "Value"
     },
-    "code_solutions": {
-      "feature": {
-        "dtype": "string",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
+    "code_solution": {
+      "dtype": "string",
+      "_type": "Value"
     },
     "image_solution": {
       "_type": "Image"
@@ -63,7 +57,28 @@
       "dtype": "float64",
       "_type": "Value"
     },
+    "ChrfMetric": {
+      "feature": {
+        "dtype": "float64",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "ClipTextMetric": {
+      "feature": {
+        "dtype": "float64",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
     "LineMetric": {
+      "feature": {
+        "dtype": "float64",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "TERMetric": {
       "feature": {
         "dtype": "float64",
         "_type": "Value"
@@ -72,12 +87,12 @@
     },
     "PatchMetric": {
       "feature": {
-        "dtype": "bool",
+        "dtype": "int64",
         "_type": "Value"
       },
       "_type": "Sequence"
     },
-    "ClipTextMetric": {
+    "BleuMetric": {
       "feature": {
         "dtype": "float64",
         "_type": "Value"
@@ -99,15 +114,27 @@
       "dtype": "int64",
       "_type": "Value"
     },
+    "best_ChrfMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_ClipTextMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
     "best_LineMetric": {
       "dtype": "float64",
       "_type": "Value"
     },
-    "best_PatchMetric": {
-      "dtype": "bool",
+    "best_TERMetric": {
+      "dtype": "float64",
       "_type": "Value"
     },
-    "best_ClipTextMetric": {
+    "best_PatchMetric": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "best_BleuMetric": {
       "dtype": "float64",
       "_type": "Value"
     },
