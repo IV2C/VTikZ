@@ -31,9 +31,11 @@ class PatchMetric(Metric):
         predictions = dataset["predictions"]
         patch = dataset["patch"]
         individual_patches = [patches(i, p) for i, p in zip(inputs, predictions)]
+        print(individual_patches[0])
+        print(patch)
         individual_patches_scores = [
-            [int(computed_patch == patch) for computed_patch in i]
-            for i in individual_patches
+            [int(computed_patch == p)*100.0 for computed_patch in i]
+            for i,p in zip(individual_patches,patch)
         ]
         return individual_patches_scores
 

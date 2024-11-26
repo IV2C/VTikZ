@@ -62,7 +62,7 @@ class TestEvaluator(unittest.TestCase):
                 "id": ["example1"],
                 "code": [self.input_tex],
                 "instruction": ["Rotate the line"],
-                "patches": [[self.ref_patch]],
+                "patch": [self.ref_patch],
                 "result_description": [
                     "a line going from the top left to the bottom right"
                 ],
@@ -74,7 +74,7 @@ class TestEvaluator(unittest.TestCase):
         self.model.batchCompute = MagicMock(return_value=[[self.ref_tex]])
 
         # expected result
-        expected = {"PatchMetric": 1.0}
+        expected = {"PatchMetric": 100.0}
         actual = evaluate(dummy_dataset, self.model, self.renderer, self.dummyMetric)
         self.assertEqual(
             actual[0].get("PatchMetric"),
@@ -89,7 +89,7 @@ class TestEvaluator(unittest.TestCase):
                 "id": ["example1"],
                 "code": [self.input_tex],
                 "instruction": ["Rotate the line"],
-                "patches": [[self.ref_patch]],
+                "patch": [self.ref_patch],
                 "result_description": [
                     "a line going from the top left to the bottom right"
                 ],
@@ -121,9 +121,9 @@ class TestEvaluator(unittest.TestCase):
                     self.input_tex,
                 ],
                 "instruction": ["Rotate the line", "Rotate the line"],
-                "patches": [
-                    [self.ref_patch],
-                    [self.ref_patch],
+                "patch": [
+                    self.ref_patch,
+                    self.ref_patch,
                 ],
                 "result_description": [
                     "a line going from the top left to the bottom right",
@@ -146,7 +146,7 @@ class TestEvaluator(unittest.TestCase):
 
         # expected result
         expected = {
-            "PatchMetric": 0.5,
+            "PatchMetric": 50,
         }
 
         self.assertEqual(
@@ -156,52 +156,7 @@ class TestEvaluator(unittest.TestCase):
             expected["PatchMetric"],
         )
 
-    def test_evaluator_metric_exists_complex(self):
-
-        # dataset
-        dummy_dataset: Dataset = Dataset.from_dict(
-            {
-                "id": ["example1", "example2"],
-                "code": [
-                    self.input_tex,
-                    self.input_tex,
-                ],
-                "instruction": ["Rotate the line", "Rotate the line"],
-                "patches": [
-                    [self.wrong_patch, self.wrong_patch, self.ref_patch],
-                    [self.wrong_patch, self.ref_patch, self.wrong_patch],
-                ],
-                "result_description": [
-                    "a line going from the top left to the bottom right",
-                    "a line going from the top left to the bottom right",
-                ],
-                "image_solution": [
-                    Image.open("tests/resources/images/reference.jpeg"),
-                    Image.open("tests/resources/images/reference.jpeg"),
-                ],
-            }
-        )
-
-        # mock llm_model
-        self.model.batchCompute = MagicMock(
-            return_value=[
-                [self.ref_tex],
-                [self.ref_tex],
-            ]
-        )
-
-        # expected result
-        expected = {
-            "PatchMetric": 1.0,
-        }
-
-        self.assertEqual(
-            evaluate(dummy_dataset, self.model, self.renderer, self.dummyMetric)[0].get(
-                "PatchMetric"
-            ),
-            expected["PatchMetric"],
-        )
-
+   
 
 if __name__ == "__main__":
     unittest.main()
