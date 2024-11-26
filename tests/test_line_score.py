@@ -28,8 +28,12 @@ class TestLineScore(unittest.TestCase):
             [self.patch_from_number([5, 10, 15]), self.patch_from_number([5, 20, 10])]
         ]
         references = [self.patch_from_number([5, 10, 20])]
-        expected = [[200 / 3, 1]]
-        self.assertAlmostEqual(compute_line_score(predictions, references), expected)
+        full_expected = [[200 / 3, 100]]
+        full_computed = compute_line_score(predictions, references)
+        
+        for expected,computed in zip(full_expected,full_computed):
+            for single_expected,single_computed in zip(expected,computed):
+                self.assertAlmostEqual(single_computed, single_expected)
 
     def test_line_score_not_max_two_two(self):
         predictions = [
