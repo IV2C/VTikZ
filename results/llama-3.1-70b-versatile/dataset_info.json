@@ -57,21 +57,14 @@
       "dtype": "float64",
       "_type": "Value"
     },
-    "ChrfMetric": {
+    "LPIPSMetric": {
       "feature": {
         "dtype": "float64",
         "_type": "Value"
       },
       "_type": "Sequence"
     },
-    "ClipTextMetric": {
-      "feature": {
-        "dtype": "float64",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "LineMetric": {
+    "FeatureMatchMetric": {
       "feature": {
         "dtype": "float64",
         "_type": "Value"
@@ -81,13 +74,6 @@
     "TERMetric": {
       "feature": {
         "dtype": "float64",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "PatchMetric": {
-      "feature": {
-        "dtype": "int64",
         "_type": "Value"
       },
       "_type": "Sequence"
@@ -106,6 +92,41 @@
       },
       "_type": "Sequence"
     },
+    "MSSSIMMetric": {
+      "feature": {
+        "dtype": "float64",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "PSNRMetric": {
+      "feature": {
+        "dtype": "float64",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "LineMetric": {
+      "feature": {
+        "dtype": "float64",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "ChrfMetric": {
+      "feature": {
+        "dtype": "float64",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "ClipTextMetric": {
+      "feature": {
+        "dtype": "float64",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
     "var_score": {
       "dtype": "float64",
       "_type": "Value"
@@ -114,15 +135,11 @@
       "dtype": "int64",
       "_type": "Value"
     },
-    "best_ChrfMetric": {
+    "best_LPIPSMetric": {
       "dtype": "float64",
       "_type": "Value"
     },
-    "best_ClipTextMetric": {
-      "dtype": "float64",
-      "_type": "Value"
-    },
-    "best_LineMetric": {
+    "best_FeatureMatchMetric": {
       "dtype": "float64",
       "_type": "Value"
     },
@@ -130,15 +147,31 @@
       "dtype": "float64",
       "_type": "Value"
     },
-    "best_PatchMetric": {
-      "dtype": "int64",
-      "_type": "Value"
-    },
     "best_BleuMetric": {
       "dtype": "float64",
       "_type": "Value"
     },
     "best_ClipImageMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_MSSSIMMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_PSNRMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_LineMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_ChrfMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_ClipTextMetric": {
       "dtype": "float64",
       "_type": "Value"
     }

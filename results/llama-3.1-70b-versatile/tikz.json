@@ -1,1 +1,1 @@
-{"ChrfMetric": 99.09738260247644, "ClipTextMetric": 26.54604434967041, "LineMetric": 50.0, "TERMetric": 95.24793388429752, "PatchMetric": 0.0, "BleuMetric": 94.86588444714296, "ClipImageMetric": 99.95647811889648}
+{"LPIPSMetric": 100.0, "FeatureMatchMetric": 100.0, "TERMetric": 100.0, "BleuMetric": 100.00000000000004, "ClipImageMetric": 99.9999885559082, "MSSSIMMetric": 100.0, "PSNRMetric": 100.0, "LineMetric": 100.0, "ChrfMetric": 100.0, "ClipTextMetric": 26.400954246520996}
