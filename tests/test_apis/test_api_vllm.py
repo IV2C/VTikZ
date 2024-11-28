@@ -134,7 +134,7 @@ class TestApiCompletionVLLM(unittest.TestCase):
         self.assertTrue(len(response) == 2)
         self.assertTrue(response[0] != None and response[1] != None)
         self.assertTrue(isinstance(response[0], Operation))
-
-
+        
+  
 if __name__ == "__main__":
     unittest.main()

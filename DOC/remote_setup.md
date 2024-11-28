@@ -6,7 +6,7 @@
 
 1. Reserve a node
 ```sh
-oarsub -I -i ~/.ssh/id_rsa -q production -p "gpu_mem>=24000" -l host=1,walltime=1 -t deploy 
+oarsub -I -i ~/.ssh/id_rsa -q production -p "gpu_mem>=24000" -l host=1,walltime=3 -t deploy -r '2024-11-29 9:00:00'
 ```
 1. Deploy the node
 ```sh

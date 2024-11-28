@@ -243,10 +243,10 @@ class OpenAIApi(ChatApi):
                         for cur_responses in ordered_responses
                     ]
                 case "expired":
-                    logger.error("OpenAI batch expired: " + batch_status)
+                    logger.error("OpenAI batch expired: " + str(batch_status))
                     return
                 case "failed":
-                    logger.error("Openai batched failed: " + batch_status)
+                    logger.error("Openai batched failed: " + str(batch_status))
                 case _:
                     sleep(500)
 

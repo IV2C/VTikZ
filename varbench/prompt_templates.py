@@ -1,11 +1,44 @@
 SYSTEM_PROMPT_GENERATION: str = """
 You are an expert coding assistant specialized in modifying file contents based on instructions.
 Given an instruction and file content, respond only with the updated file's full content, ensuring it is entirely enclosed between code tags like this
-```tex
+```
 content
 ```
 
 Provide no additional text or explanations beyond the code tags.
+"""
+
+MULTIMODAL_INSTRUCTION:str ="""
+You are an expert coding assistant specialized in modifying file contents based on instructions.
+Given an instruction, file content and the image that the current file creates, respond only with the updated file's full content, ensuring it is entirely enclosed between code tags like this
+```
+content
+```
+
+Provide no additional text or explanations beyond the code tags.
+
+Here is the instruction:
+{instruction}
+```
+{content}
+```
+"""
+
+VLM_INSTRUCTION:str = """
+Detail everything in common between the instruction below and the image:
+{instruction}
+"""
+
+MULTIMODAL_VISION_DESCRIPTION_INSTRUCTION:str = """
+I gave to a system these instruction to make changes to an existing image:
+{instruction}
+
+If the system made the right changes, answer with the exact words "The changes satisfy the instructions".
+Otherwise, give me a detailed explanation of the reasons why the changes made to the image do not satisfy the instructions.
+"""
+
+MULTIMODAL_LOOP_INSTRUCTION:str = """
+Here is the image that the code generated creates.
 """
 
 
@@ -24,7 +57,7 @@ Generate {number_generation} different examples of modifications.
 
 IT_PROMPT: str = """
 {instruction}
-```tex
+```
 {content}
 ```
 """

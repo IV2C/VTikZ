@@ -24,7 +24,7 @@ def evaluate(
 
     # computing the results
     predictions = agent.batchCompute(
-        subset["instruction"], subset["code"], subset["id"]
+        subset["instruction"], subset["code"], subset["id"], subset["image_input"]
     )
     pass_size = len(predictions[0])  # getting the number of k for the pass@k
 

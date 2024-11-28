@@ -1,9 +1,20 @@
 from abc import ABC, abstractmethod
+import base64
+from io import BytesIO
 from typing import Iterable
 from openai.types.chat import ChatCompletionMessageParam
 
 from varbench.api.chat_api import ChatApi
-from varbench.prompt_templates import IT_PROMPT, SYSTEM_PROMPT_GENERATION
+from varbench.prompt_templates import (
+    IT_PROMPT,
+    MULTIMODAL_INSTRUCTION,
+    SYSTEM_PROMPT_GENERATION,
+    VLM_INSTRUCTION,
+)
+from PIL import Image
+
+from varbench.renderers.renderer import Renderer
+from varbench.utils.parsing import get_first_code_block
 
 
 class Agent:
@@ -11,7 +22,9 @@ class Agent:
         self.api = api
         pass
 
-    def compute(self, instruction: str, code: str, **kwargs) -> Iterable[str]:
+    def compute(
+        self, instruction: str, code: str, image: Image.Image = None, **kwargs
+    ) -> Iterable[str]:
         """
         Computes a response based on the given instruction and code.
 
@@ -30,6 +43,7 @@ class Agent:
         instructions: Iterable[str],
         codes: Iterable[str],
         ids: Iterable[str],
+        image_input: Iterable[Image.Image] = None,
         **kwargs,
     ) -> Iterable[Iterable[str]]:
         """
@@ -39,6 +53,7 @@ class Agent:
             instructions (Iterable[str]): A collection of instructions for batch processing.
             codes (Iterable[str]): Corresponding code snippets or content to process with the instructions.
             ids (Iterable[str]): Unique identifiers to ensure correct alignment of results in the output.
+            image_input (Iterable[str]): The image computed from the input code.
             **kwargs: Additional optional parameters for extended agent configurations.
 
         Returns:
@@ -52,13 +67,11 @@ class Agent:
 
 
 class SimpleLLMAgent(Agent):
-    """Simple LLM agent that uses only the "reading" capabilities of the models tested
+    """Simple LLM agent that uses only the "reading" capabilities of the models tested"""
 
-    Args:
-        Agent (_type_): _description_
-    """
-
-    def compute(self, instruction: str, code: str, **kwargs) -> Iterable[str]:
+    def compute(
+        self, instruction: str, code: str, image: Image.Image = None, **kwargs
+    ) -> Iterable[str]:
         messages = self._create_message(instruction, code)
 
         return self.api.chat_request(messages)
@@ -68,6 +81,7 @@ class SimpleLLMAgent(Agent):
         instructions: Iterable[str],
         codes: Iterable[str],
         ids: Iterable[str],
+        image_input: Iterable[Image.Image] = None,
         **kwargs,
     ) -> Iterable[Iterable[str]]:
         messages = [
@@ -89,6 +103,171 @@ class SimpleLLMAgent(Agent):
                 "content": SYSTEM_PROMPT_GENERATION,
             },
             {"role": "user", "content": user_instruction},
+        ]
+
+        return messages
+
+
+class LMMAgent(Agent):
+    """LMM(Large Multimodal Model) agent that uses both the "reading" and "vision" capabilities of the models tested"""
+
+    def compute(
+        self, instruction: str, code: str, image: Image.Image = None, **kwargs
+    ) -> Iterable[str]:
+        messages = self._create_message(instruction, code, image)
+
+        return self.api.chat_request(messages)
+
+    def batchCompute(
+        self,
+        instructions: Iterable[str],
+        codes: Iterable[str],
+        ids: Iterable[str],
+        images_input: Iterable[Image.Image] = None,
+        **kwargs,
+    ) -> Iterable[Iterable[str]]:
+        messages = [
+            self._create_message(instruction, code, image)
+            for instruction, code, image in zip(instructions, codes, images_input)
+        ]
+
+        return self.api.batch_chat_request(messages, ids)
+
+    def _create_message(
+        self, instruction: str, code: str, image: Image.Image
+    ) -> Iterable[ChatCompletionMessageParam]:
+        """Add a row that contains the prompt"""
+
+        # Some multimodal models do not support system prompts, so we only use the user prompt as input
+
+        user_instruction = MULTIMODAL_INSTRUCTION.format(
+            instruction=instruction, content=code
+        )
+
+        buffered = BytesIO()
+        image.save(buffered, format="JPEG")
+        img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": user_instruction,
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{img_str}"},
+                    },
+                ],
+            },
+        ]
+
+        return messages
+
+
+class VLLMLoopAgent(Agent):
+    """A LLM and a VLM agent interacting until the VLM is satisfied"""
+
+    def __init__(
+        self,
+        api: ChatApi,
+        vlm_api: ChatApi,
+        renderer: Renderer,
+        interaction_nb=3,
+        **kwargs,
+    ) -> None:
+        self.renderer = renderer
+        self.vlm_api = vlm_api
+        self.interation_nb = interaction_nb
+        super().__init__(api, **kwargs)
+
+    def compute(
+        self, instruction: str, code: str, image: Image.Image = None, **kwargs
+    ) -> Iterable[str]:
+
+        # getting the n and overriding it to handle single requests manually
+        request_n = self.api.n
+        self.api.n = 1
+        self.vlm_api.n = 1
+        results = [self.single_loop(instruction, code)]
+        self.api.n = request_n
+        self.vlm_api.n = request_n
+        return results
+
+    def single_loop(self, instruction: str, code: str) -> str:
+        # generating results
+        messages: list = self._create_message_llm(instruction, code)
+
+        # making m VLM/LLM interactions
+        for i in range(self.interation_nb):
+            response = self.api.chat_request(messages)[0]
+            # adding the code response to the conversation
+            messages.append({"role": "assistant", "content": response})
+            code_response = get_first_code_block(response)
+            computed_image = self.renderer.from_string_to_image(code_response)
+            vlm_message = self._create_message_vlm(instruction, computed_image)
+            vlm_remark = self.vlm_api.chat_request(vlm_message)[0]
+            messages.append({"role": "user", "content": vlm_remark})
+        return code_response
+
+    def batchCompute(
+        self,
+        instructions: Iterable[str],
+        codes: Iterable[str],
+        ids: Iterable[str],
+        images_input: Iterable[Image.Image] = None,
+        **kwargs,
+    ) -> Iterable[Iterable[str]]:
+        return [
+            self.compute(instruction, code, image)
+            for instruction, code, image in zip(instructions, codes, images_input)
+        ]
+
+    def _create_message_llm(
+        self, instruction: str, code: str
+    ) -> Iterable[ChatCompletionMessageParam]:
+        """Add a row that contains the prompt"""
+        user_instruction = IT_PROMPT.format(instruction=instruction, content=code)
+
+        messages = [
+            {
+                "role": "system",
+                "content": SYSTEM_PROMPT_GENERATION,
+            },
+            {"role": "user", "content": user_instruction},
+        ]
+
+        return messages
+
+    def _create_message_vlm(
+        self, instruction: str, image: Image.Image
+    ) -> Iterable[ChatCompletionMessageParam]:
+        """Add a row that contains the prompt"""
+
+        # Some multimodal models do not support system prompts, so we only use the user prompt as input
+
+        user_instruction = VLM_INSTRUCTION.format(instruction=instruction)
+
+        buffered = BytesIO()
+        image.save(buffered, format="JPEG")
+        img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": user_instruction,
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{img_str}"},
+                    },
+                ],
+            },
         ]
 
         return messages

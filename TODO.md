@@ -41,8 +41,12 @@
 - [X] refactor evaluator(list of parametrable computed metrics) 
 - [X] add lpips, msssim, and psnr
 - [X] Add tqdm
-- [ ] Make another submodel called multimodal that can take images, and allow for parametrization in the command line
-- [ ] Make another submodel called multimodal-loop that can take images and loops until a satisfying image is created, and allow for parametrization in the command line.
+- [X] Make another submodel called multimodal that can take images, 
+- [X] Make another submodel called multimodal-loop that can take images and loops until a satisfying image is created
+- [ ] allow for parametrization of the agent in the command line
+- [ ] create a multimodal loop model(give the model the image he generated and iterate)
+- [ ] create a multimodal vision loop agent that is similar to the LLM+VLM but that has a more complex vision instruction(see the prompt templates)
+
 - [ ] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches)
 - [ ] Create synthetic data and then verify
 - [ ] Assessment of vlm on checking 
