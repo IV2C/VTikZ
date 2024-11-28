@@ -66,6 +66,7 @@ class TestEvaluator(unittest.TestCase):
                 "result_description": [
                     "a line going from the top left to the bottom right"
                 ],
+                "image_input": [Image.open("tests/resources/images/reference.jpeg")],
                 "image_solution": [Image.open("tests/resources/images/reference.jpeg")],
             }
         )
@@ -93,6 +94,7 @@ class TestEvaluator(unittest.TestCase):
                 "result_description": [
                     "a line going from the top left to the bottom right"
                 ],
+                "image_input": [Image.open("tests/resources/images/reference.jpeg")],
                 "image_solution": [Image.open("tests/resources/images/reference.jpeg")],
             }
         )
@@ -133,6 +135,10 @@ class TestEvaluator(unittest.TestCase):
                     Image.open("tests/resources/images/reference.jpeg"),
                     Image.open("tests/resources/images/reference.jpeg"),
                 ],
+                "image_input": [
+                    Image.open("tests/resources/images/reference.jpeg"),
+                    Image.open("tests/resources/images/reference.jpeg"),
+                ],
             }
         )
 
@@ -156,7 +162,6 @@ class TestEvaluator(unittest.TestCase):
             expected["PatchMetric"],
         )
 
-   
 
 if __name__ == "__main__":
     unittest.main()
