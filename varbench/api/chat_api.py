@@ -8,6 +8,7 @@ from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 from openai import OpenAI
 from loguru import logger
+import tqdm
 
 from varbench.utils.chat_models import ChatCompletionRequest
 from varbench.utils.parsing import get_config, parse_openai_jsonl
@@ -23,7 +24,13 @@ class ChatApi(ABC):
         super().__init__()
 
     def from_url(
-        temperature: float, n: int, model_name: str, api_url: str, api_key: str,*args, **kwargs
+        temperature: float,
+        n: int,
+        model_name: str,
+        api_url: str,
+        api_key: str,
+        *args,
+        **kwargs,
     ) -> Self:
         if "groq" in api_url:
             logger.info("groq api setup")
@@ -35,7 +42,9 @@ class ChatApi(ABC):
             logger.info("vllm api setup")
             return VLLMApi(temperature, n, model_name, api_url, api_key)
         else:
-            raise AttributeError(api_url,"Unsupported api, supported ones are vllm, groq, and openai")#TODO add "simple" openai chat api for compatible ones
+            raise AttributeError(
+                api_url, "Unsupported api, supported ones are vllm, groq, and openai"
+            )  # TODO add "simple" openai chat api for compatible ones
 
     @abstractmethod
     def chat_request(
@@ -69,6 +78,9 @@ class ChatApi(ABC):
         **kwargs,
     ) -> Iterable[Iterable[BaseModel]]:
         pass
+
+
+from tqdm import tqdm
 
 
 class GroqApi(ChatApi):
@@ -121,7 +133,10 @@ class GroqApi(ChatApi):
         ids: Iterable[str],
         **kwargs,
     ) -> Iterable[Iterable[str]]:
-        return [self.chat_request(message) for message in messages]
+        return [
+            self.chat_request(message)
+            for message in tqdm(messages, desc="Request batch with groq api")
+        ]
 
     def batch_structured_request(
         self,
@@ -131,7 +146,8 @@ class GroqApi(ChatApi):
         **kwargs,
     ) -> Iterable[Iterable[BaseModel]]:
         return [
-            self.structured_request(message, response_format) for message in messages
+            self.structured_request(message, response_format)
+            for message in tqdm(messages, desc="Structured request batch with groq api")
         ]
 
 
@@ -280,7 +296,10 @@ class VLLMApi(OpenAIApi):
         ids: Iterable[str],
         **kwargs,
     ) -> Iterable[Iterable[str]]:
-        return [self.chat_request(message) for message in messages]
+        return [
+            self.chat_request(message)
+            for message in tqdm(messages, desc="Request batch with vllm api")
+        ]
 
     def batch_structured_request(
         self,
@@ -290,5 +309,6 @@ class VLLMApi(OpenAIApi):
         **kwargs,
     ) -> Iterable[Iterable[BaseModel]]:
         return [
-            self.structured_request(message, response_format) for message in messages
+            self.structured_request(message, response_format)
+            for message in tqdm(messages, desc="Structured request batch with vllm api")
         ]

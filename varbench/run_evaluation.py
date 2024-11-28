@@ -59,7 +59,6 @@ parser.add_argument(
 parser.add_argument(
     "--api_url",
     type=str,
-    default="https://api.openai.com/v1",
     help="URL of the openai completion compatible API",
 )
 
@@ -95,7 +94,7 @@ key_args["n"] = args.passk
 
 # loading model
 if key_args["run_model"]:
-    if key_args["api_url"] != "":
+    if key_args["api_url"] and key_args["api_url"] != "":
         logger.warning(
             "found run-model and api_url parameters, api_url will be ignored"
         )
@@ -124,7 +123,7 @@ if not os.path.exists(result_path):
 
 # evaluation
 for subset in subsets:
-    dataset = load_dataset("CharlyR/varbench", subset, split="test")
+    dataset = load_dataset("CharlyR/varbench", subset, split="benchmark")
 
     # creating compiler
     match subset:

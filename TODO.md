@@ -36,14 +36,15 @@
 - [X] Change Model class by agent, remove VLM/OPENAI parameter in run_generation and run_evaluation, instantiate api depending on the api_url provided, add in documentation that the api used depends on the url(and that VLLM is launched in the case of a VLLM api)(maybe add a parameter to prevent vllm from being launched or maybe the opposite)
 - [X] Add level of difficulty in the datasets
 - [X] Explore which other things can be tested(tikz, svg, ascii, what else?)
-- [ ] Add sacrebleu metrics(bleu, chrf, TER)
-- [ ] Add feature matching metrics(brut and randsac)
-- [ ] Add mask matching metric
+- [X] Add sacrebleu metrics(bleu, chrf, TER)
+- [X] Add feature matching metrics(brut and randsac)
 - [X] refactor evaluator(list of parametrable computed metrics) 
-- [ ] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches)
-- [ ] Create synthetic data and then verify
+- [X] add lpips, msssim, and psnr
+- [X] Add tqdm
 - [ ] Make another submodel called multimodal that can take images, and allow for parametrization in the command line
 - [ ] Make another submodel called multimodal-loop that can take images and loops until a satisfying image is created, and allow for parametrization in the command line.
+- [ ] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches)
+- [ ] Create synthetic data and then verify
 - [ ] Assessment of vlm on checking 
 - [ ] Test LLM-only models then compare with Multimodal with image in input
 - [ ] Implement LLM+something solution and test it
@@ -54,4 +55,6 @@ Eventually
 - [X] github action
   - [X] Tests
   - [ ] creates and publishes the dataset
+- [ ] Add mask matching metric
+
 
