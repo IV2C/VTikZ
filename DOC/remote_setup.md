@@ -6,7 +6,7 @@
 
 1. Reserve a node
 ```sh
-oarsub -I -i ~/.ssh/id_rsa -q production -p "gpu_mem>=24000" -l host=1,walltime=3 -t deploy -r '2024-11-29 9:00:00'
+oarsub -I -i ~/.ssh/id_rsa -q production -p "gpu_mem>=24000" -l host=1,walltime=3 -t deploy
 ```
 1. Deploy the node
 ```sh
@@ -35,6 +35,8 @@ sh NVIDIA-Linux-x86_64-470.82.01.run -s --no-install-compat32-libs
 
 
 git clone git@github.com:VarBench-SE/VarBench.git
+#TODO verify
+cd VarBench
 git checkout dev
 
 #conda installation

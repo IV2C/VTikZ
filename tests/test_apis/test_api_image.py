@@ -248,3 +248,48 @@ class TestApiCompletionImageOpenAI(unittest.TestCase):
         self.assertTrue(len(response) == 2)
         self.assertTrue(response[0] != None)
         self.assertTrue("dog" in response[0] and "dog" in response[1])
+        
+        
+    def test_structured_request_batch_n1_image(self):
+        import base64
+        from io import BytesIO
+        from PIL import Image
+
+        class Feature(BaseModel):
+            name: str
+            description: str
+
+        class Details(BaseModel):
+            features: list[Feature] = Field(description="a list of all the features in the image, with details about each feature")
+
+
+
+        dog_image = Image.open("tests/resources/images/dog.jpeg")
+
+        buffered = BytesIO()
+        dog_image.save(buffered, format="JPEG")
+        img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Detail the features of this image.",
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{img_str}"},
+                    },
+                ],
+            },
+        ]
+
+        api: ChatApi = OpenAIApi(1, 1, "gpt-4o-mini")
+
+        response = api.batch_structured_request(messages=[messages,messages],ids=["first","second"],response_format=Details)
+        logger.info(response)
+        self.assertTrue(len(response) == 2)
+        self.assertTrue(response[0] != None)
+        self.assertTrue(isinstance(response[0][0], Details))

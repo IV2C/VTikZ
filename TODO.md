@@ -43,15 +43,17 @@
 - [X] Add tqdm
 - [X] Make another submodel called multimodal that can take images, 
 - [X] Make another submodel called multimodal-loop that can take images and loops until a satisfying image is created
-- [ ] allow for parametrization of the agent in the command line
+- [X] allow for parametrization of the agent in the command line
+- [X] Implement LLM+something solution and test it
+- [ ] test llama1B on the full dataset
+- [ ] test llm-vlm loop on the test dataset
+- [ ] Test LLM-only models then compare with Multimodal with image in input
 - [ ] create a multimodal loop model(give the model the image he generated and iterate)
 - [ ] create a multimodal vision loop agent that is similar to the LLM+VLM but that has a more complex vision instruction(see the prompt templates)
 
 - [ ] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches)
 - [ ] Create synthetic data and then verify
 - [ ] Assessment of vlm on checking 
-- [ ] Test LLM-only models then compare with Multimodal with image in input
-- [ ] Implement LLM+something solution and test it
 
 Eventually
 - [ ] Create a SimpleOpenAi API, in the case of an api compatible with openai, but that does not support anything but simple requests

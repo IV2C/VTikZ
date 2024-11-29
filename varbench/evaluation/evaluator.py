@@ -41,7 +41,9 @@ def evaluate(
     # computing the images out of the results
     images_lists = _images(predictions, renderer)
 
-    subset_processed: datasets.Dataset = subset.add_column("predictions", predictions)
+    subset_processed: datasets.Dataset = subset.add_column(
+        "predictions", predictions, feature=datasets.Sequence(datasets.Value("string"))
+    )
     subset_processed: datasets.Dataset = datasets.concatenate_datasets(
         [
             subset_processed,
@@ -77,7 +79,9 @@ def evaluate(
 
     for metric, metric_result in zip(metrics, metric_results):
         subset_processed: datasets.Dataset = subset_processed.add_column(
-            type(metric).__name__, metric_result
+            type(metric).__name__,
+            metric_result,
+            feature=datasets.Sequence(datasets.Value("float")),
         )
 
     computed_metrics_names = [type(metric).__name__ for metric in metrics]
@@ -85,7 +89,8 @@ def evaluate(
     # each metric is computed on list of predictions of length pass@k, and yields a list of list of result of the same length.
     # from that list[list[float]](the results), we get the best result according to a certain policy(here the arithmetic mean)
     subset_processed = subset_processed.map(
-        compute_best_prediction, fn_kwargs={"computed_metrics_names": computed_metrics_names}
+        compute_best_prediction,
+        fn_kwargs={"computed_metrics_names": computed_metrics_names},
     )
 
     scores = {
@@ -132,15 +137,15 @@ def compute_best_prediction(row, computed_metrics_names: list[str]):
         MetricPolicy.mathematical_average(current_scores)
         for current_scores in scores_predictions_array
     ]
-    
-    if len(policy_applied_array)== 0:
-        #nothing was able to be computed from the predictions
+
+    if len(policy_applied_array) == 0:
+        # nothing was able to be computed from the predictions
         row["var_score"] = 0
         row["index_best_prediction"] = -1
         for metric_name in computed_metrics_names:
             row[f"best_{metric_name}"] = 0
         return row
-    
+
     max_value = max(policy_applied_array)
     index_max_value = policy_applied_array.index(max_value)
     row["var_score"] = max_value

@@ -2,8 +2,9 @@ import argparse
 from enum import Enum
 import pandas as pd
 from tqdm import tqdm
+from varbench.api.chat_api import ChatApi
 from varbench.renderers import Renderer, TexRenderer, SvgRenderer, RendererException
-from varbench.agent import SimpleLLMAgent, Agent, ModelType
+from varbench.agent import LMMLoopAgent, SimpleLLMAgent, Agent, LMMAgent
 from varbench.utils.patches import patches
 from varbench.utils.parsing import get_config, get_first_code_block
 from .api_generation import (
@@ -24,22 +25,8 @@ class ApiType(Enum):
     GROQ = 1
 
 
-def model_type_mapper(value):
-    api_map = {"API": ModelType.API, "VLLM": ModelType.VLLM}
-    if value.upper() not in api_map:
-        raise argparse.ArgumentTypeError(f"Invalid API type: {value}")
-    return api_map[value.upper()]
-
-
 parser = argparse.ArgumentParser()
 
-parser.add_argument(
-    "--model_type",
-    "-t",
-    type=model_type_mapper,
-    help="type of the model",
-    default=ModelType.VLLM,
-)
 parser.add_argument(
     "--model",
     "-mg",
@@ -105,12 +92,9 @@ key_args["temperature"] = args.temperature
 key_args["no_batch"] = True
 key_args["n"] = args.passk
 
-llm_model: Agent = None
 # loading model
-
-key_args["api_url"] = f"http://localhost:{get_config("VLLM")["port"]}/v1"
-
-llm_model = SimpleLLMAgent(**key_args)
+#TODO add api and use it to generate instructions
+agent = LMMLoopAgent(**key_args)
 
 unfiltered_dataset = {}
 for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subsets"):
@@ -144,7 +128,7 @@ for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subse
                 {"role": "user", "content": content},
             ]
             # generating responses
-            var_reponse_instructions = llm_model.request(
+            var_reponse_instructions = agent.(
                 messages=messages,
                 temperature=temperature,
                 response_format=VarbenchResponses,
@@ -172,7 +156,7 @@ for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subse
                 ]
 
                 # generating
-                possible_codes = llm_model.request(messages=messages)
+                possible_codes = agent.request(messages=messages)
                 possible_codes = [
                     get_first_code_block(possible_code)
                     for possible_code in possible_codes

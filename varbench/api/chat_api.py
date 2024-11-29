@@ -38,7 +38,7 @@ class ChatApi(ABC):
         elif "openai" in api_url:
             logger.info("openai api setup")
             return OpenAIApi(temperature, n, model_name, api_url, api_key)
-        elif "localhost" in api_url:
+        elif "localhost" in api_url or "runpod" in api_url:
             logger.info("vllm api setup")
             return VLLMApi(temperature, n, model_name, api_url, api_key)
         else:

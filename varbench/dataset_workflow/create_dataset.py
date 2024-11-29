@@ -112,6 +112,6 @@ for subset in dataset_dict:
     dataset = Dataset.from_dict(pd.DataFrame(current_subset), features=features)
     dataset.push_to_hub("CharlyR/varbench", config_name=subset, split="benchmark")
     
-    dataset_test = dataset.filter(lambda row: row["difficulty"] == "easy").select([0,1])
+    dataset_test = dataset.filter(lambda row: row["difficulty"] == "hard").select([6,7])
     dataset_test.push_to_hub("CharlyR/varbench", config_name=subset, split="test")
 

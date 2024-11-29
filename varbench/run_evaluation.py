@@ -7,7 +7,7 @@ from varbench.evaluation.metrics import instantiate_metrics
 from varbench.renderers import Renderer, SvgRenderer, TexRenderer
 from varbench.utils.model_launch import launch_model
 from .evaluation.evaluator import evaluate
-from .agent import SimpleLLMAgent
+from .agent import SimpleLLMAgent, instantiate_agent
 import json
 
 from loguru import logger
@@ -42,6 +42,50 @@ parser.add_argument(
         "msssim",
     ],
 )
+
+
+parser.add_argument(
+    "--agent",
+    "-a",
+    type=str,
+    help="Name of the agent to use",
+    choices=["simpleLLM", "simpleLMM", "loopVLMLLM"],
+    default="simpleLLM",
+    required=True,
+)
+### vlm and llm/vlm loop settings ##
+parser.add_argument(
+    "--vlm",
+    "-v",
+    type=str,
+    help="vlm to use in the case of a loopVLMLLM",
+    default=None,
+)
+parser.add_argument(
+    "--vlm_api_url",
+    type=str,
+    help="URL of the openai completion compatible API",
+)
+
+parser.add_argument(
+    "--vlm_api_key",
+    type=str,
+    default=None,
+    help="API key for authentication, will default to the ENV variable OPENAI_API_KEY",
+)
+parser.add_argument(
+    "--vlm-temperature",
+    type=float,
+    default=0,
+    help="Temperature setting for vlm model sampling",
+)
+parser.add_argument(
+    "--interaction-amount",
+    type=int,
+    default=2,
+    help="number of interactions between the llm and the vlm",
+)
+#################
 parser.add_argument(
     "--run-model",
     "-r",
@@ -106,9 +150,18 @@ if not key_args["api_key"]:
 # instantiating api
 api: ChatApi = ChatApi.from_url(**key_args)
 
-# instantiating agent TODO add a parameter to specify the agent
-agent = SimpleLLMAgent(api)
-
+# Instantiating vlm api(if provided)
+vlm_model: str = args.vlm
+vlm_api_url: str = args.vlm_api_url
+vlm_api_key: str = args.vlm_api_key
+vlm_temperature: float = args.vlm_temperature
+if vlm_model and vlm_model != "":
+    vlm_api: ChatApi = ChatApi.from_url(
+        vlm_temperature, 1, vlm_model, vlm_api_url, vlm_api_key
+    )
+else:
+    vlm_api = None
+interaction_amount: int = args.interaction_amount
 # instantiating metrics
 metrics = instantiate_metrics(args.metrics)
 
@@ -116,14 +169,24 @@ metrics = instantiate_metrics(args.metrics)
 if not os.path.exists("./results"):
     os.mkdir("./results")
 
-result_path = os.path.join("./results", args.model.replace("/", "_"))
+full_config_name = (
+    args.agent
+    + "_"
+    + key_args["model_name"].replace("/", "_").replace("-","")
+    + "_t_"
+    + str(key_args["temperature"])
+    + ("_" + vlm_model.replace("/", "_").replace("-","") + "_t_" + str(vlm_temperature))
+    if vlm_model
+    else ""
+)
+result_path = os.path.join("./results", full_config_name)
 
 if not os.path.exists(result_path):
     os.mkdir(result_path)
 
 # evaluation
 for subset in subsets:
-    dataset = load_dataset("CharlyR/varbench", subset, split="benchmark")
+    dataset = load_dataset("CharlyR/varbench", subset, split="test")
 
     # creating compiler
     match subset:
@@ -135,6 +198,9 @@ for subset in subsets:
             logger.warning("unsupported subset " + subset + ", skipping")
             continue
 
+    # instantiate the agent
+    agent = instantiate_agent(args.agent, api, vlm_api, renderer, interaction_amount)
+
     # evaluating
     result_scores, score_dataset = evaluate(dataset, agent, renderer, metrics)
     score_dataset.save_to_disk(result_path, storage_options={})
@@ -144,5 +210,5 @@ for subset in subsets:
     score_dataset.push_to_hub(
         "CharlyR/varbench-evaluation",
         config_name=subset,
-        split=args.model.replace("/", "_").replace("-", ""),
+        split=full_config_name,
     )

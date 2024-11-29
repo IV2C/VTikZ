@@ -1,0 +1,203 @@
+[{'role': 'system', 'content': "
+You are an expert coding assistant specialized in modifying file contents based on instructions.
+First, given an instruction and file content, respond with the updated full file content.
+Then, you will be given a description of the image you have created, and it is up to you to decide wether or not you have made the right changes, and apply new ones or not otherwise.
+For each response, respond only with the file's full content, ensuring it is entirely enclosed between code tags like this.
+```
+content
+```
+
+Provide no additional text or explanations beyond the code tags.
+"}
+ {'role': 'user', 'content': '
+Add a torso to the chimpanzee, in the shape of an ellipse
+```
+\documentclass[tikz,border=5]{standalone}
+\usepackage[prefix=]{xcolor-material}
+
+\tikzset{
+chimpanzee/.pic={
+\tikzset{x=3cm/3.5,y=3cm/3.5, shift={(0,1/4)}}
+\fill [BlueGrey700] (165:5/4 and 1) ellipse [radius=1/2];
+\fill [Pink100]     (165:5/4 and 1) ellipse [radius=1/3];
+\fill [BlueGrey700]
+  (0,-1/2) ellipse [x radius=1, y radius=4/3]
+  (0,   0) ellipse [x radius=4/3, y radius=1];
+\scoped{
+  \clip(0,-2) rectangle(9/5,1);
+  \fill [BlueGrey900] (15:5/4 and 1) ellipse [radius=1/2];
+  \fill [Pink200]     (15:5/4 and 1) ellipse [radius=1/3];
+  \fill [BlueGrey900]
+    (0,-1/2) ellipse [x radius=1, y radius=4/3]
+    (0,   0) ellipse [x radius=4/3, y radius=1];
+}
+\fill [Pink100]            (  0,-2/3) ellipse [x radius=5/6, y radius=  1];
+\fill [Pink100, xscale=-1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+\fill [Pink100, xscale= 1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+\scoped{
+  \clip(0,-2) rectangle(9/5,1);
+  \fill [Pink200]            (  0,-2/3) ellipse [x radius=5/6, y radius=  1];
+  \fill [Pink200, xscale=-1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+  \fill [Pink200, xscale= 1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+}
+\foreach \i in {-1,1}
+  \fill [BlueGrey900, xscale=\i] (1/2,0) ellipse [radius=1/4];
+\fill [Pink300]
+  (-1/7,-2/3) ellipse [radius=1/9]
+  ( 1/7,-2/3) ellipse [radius=1/9];
+\fill [Pink300]
+  (-1/2,-1) arc (180:360:1/2 and 1/8) arc (360:180:1/2 and 1/4);
+}
+}
+\begin{document}
+\begin{tikzpicture}
+\fill [fill=LightBlue300] circle [radius=2];
+\pic {chimpanzee};
+\end{tikzpicture}
+\end{document}
+```
+'}
+ {'role': 'assistant', 'content': '```
+\documentclass[tikz,border=5]{standalone}
+\usepackage[prefix=]{xcolor-material}
+
+\tikzset{
+chimpanzee/.pic={
+\tikzset{x=3cm/3.5,y=3cm/3.5, shift={(0,1/4)}}
+\fill [BlueGrey700] (165:5/4 and 1) ellipse [radius=1/2];
+\fill [Pink100]     (165:5/4 and 1) ellipse [radius=1/3];
+\fill [BlueGrey700]
+  (0,-1/2) ellipse [x radius=1, y radius=4/3]
+  (0,   0) ellipse [x radius=4/3, y radius=1];
+\scoped{
+  \clip(0,-2) rectangle(9/5,1);
+  \fill [BlueGrey900] (15:5/4 and 1) ellipse [radius=1/2];
+  \fill [Pink200]     (15:5/4 and 1) ellipse [radius=1/3];
+  \fill [BlueGrey900]
+    (0,-1/2) ellipse [x radius=1, y radius=4/3]
+    (0,   0) ellipse [x radius=4/3, y radius=1];
+}
+\fill [Pink100]            (  0,-2/3) ellipse [x radius=5/6, y radius=  1];
+\fill [Pink100, xscale=-1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+\fill [Pink100, xscale= 1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+\scoped{
+  \clip(0,-2) rectangle(9/5,1);
+  \fill [Pink200]            (  0,-2/3) ellipse [x radius=5/6, y radius=  1];
+  \fill [Pink200, xscale=-1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+  \fill [Pink200, xscale= 1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+}
+\fill [BlueGrey900, yshift=-7/6] (0,0) ellipse [x radius=4/3, y radius=2/3];
+\foreach \i in {-1,1}
+  \fill [BlueGrey900, xscale=\i] (1/2,0) ellipse [radius=1/4];
+\fill [Pink300]
+  (-1/7,-2/3) ellipse [radius=1/9]
+  ( 1/7,-2/3) ellipse [radius=1/9];
+\fill [Pink300]
+  (-1/2,-1) arc (180:360:1/2 and 1/8) arc (360:180:1/2 and 1/4);
+}
+}
+\begin{document}
+\begin{tikzpicture}
+\fill [fill=LightBlue300] circle [radius=2];
+\pic {chimpanzee};
+\end{tikzpicture}
+\end{document}
+```'}
+ {'role': 'user', 'content': "The image features a cartoon monkey with a big smile on its face. The monkey is wearing a pair of glasses, giving it a quirky and playful appearance. The monkey's eyes are closed, adding to its cheerful demeanor. The monkey's mouth is open, further emphasizing its happy expression. The overall scene is a lighthearted and fun representation of a monkey."}
+ {'role': 'assistant', 'content': '```
+\documentclass[tikz,border=5]{standalone}
+\usepackage[prefix=]{xcolor-material}
+
+\tikzset{
+chimpanzee/.pic={
+\tikzset{x=3cm/3.5,y=3cm/3.5, shift={(0,1/4)}}
+\fill [BlueGrey700] (165:5/4 and 1) ellipse [radius=1/2];
+\fill [Pink100]     (165:5/4 and 1) ellipse [radius=1/3];
+\fill [BlueGrey700]
+  (0,-1/2) ellipse [x radius=1, y radius=4/3]
+  (0,   0) ellipse [x radius=4/3, y radius=1];
+\scoped{
+  \clip(0,-2) rectangle(9/5,1);
+  \fill [BlueGrey900] (15:5/4 and 1) ellipse [radius=1/2];
+  \fill [Pink200]     (15:5/4 and 1) ellipse [radius=1/3];
+  \fill [BlueGrey900]
+    (0,-1/2) ellipse [x radius=1, y radius=4/3]
+    (0,   0) ellipse [x radius=4/3, y radius=1];
+}
+\fill [Pink100]            (  0,-2/3) ellipse [x radius=5/6, y radius=  1];
+\fill [Pink100, xscale=-1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+\fill [Pink100, xscale= 1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+\scoped{
+  \clip(0,-2) rectangle(9/5,1);
+  \fill [Pink200]            (  0,-2/3) ellipse [x radius=5/6, y radius=  1];
+  \fill [Pink200, xscale=-1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+  \fill [Pink200, xscale= 1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+}
+\fill [BlueGrey900, yshift=-7/6] (0,0) ellipse [x radius=4/3, y radius=2/3];
+\draw (-1/7, -1/6) -- (-1/7, 1/4) -- (1/7, 1/4) -- (1/7, -1/6) -- cycle;
+\fill [Black]            (-3/7,0) ellipse [radius=1/14]
+  ( 3/7,0) ellipse [radius=1/14];
+\fill [Pink300]
+  (-1/7,-2/3) ellipse [radius=1/9]
+  ( 1/7,-2/3) ellipse [radius=1/9];
+\fill [Pink300]
+  (-1/2,-1) arc (180:360:1/2 and 1/8) arc (360:180:1/2 and 1/4);
+}
+}
+\begin{document}
+\begin{tikzpicture}
+\fill [fill=LightBlue300] circle [radius=2];
+\pic {chimpanzee};
+\end{tikzpicture}
+\end{document}
+```'}
+ {'role': 'user', 'content': "The image features a cartoon monkey wearing a pair of goggles. The monkey is smiling and appears to be enjoying the goggles. The goggles are placed on the monkey's face, covering its eyes. The monkey's facial expression and the goggles create a playful and fun atmosphere."}
+ {'role': 'assistant', 'content': '```
+\documentclass[tikz,border=5]{standalone}
+\usepackage[prefix=]{xcolor-material}
+
+\tikzset{
+chimpanzee/.pic={
+\tikzset{x=3cm/3.5,y=3cm/3.5, shift={(0,1/4)}}
+\fill [BlueGrey700] (165:5/4 and 1) ellipse [radius=1/2];
+\fill [Pink100]     (165:5/4 and 1) ellipse [radius=1/3];
+\fill [BlueGrey700]
+  (0,-1/2) ellipse [x radius=1, y radius=4/3]
+  (0,   0) ellipse [x radius=4/3, y radius=1];
+\scoped{
+  \clip(0,-2) rectangle(9/5,1);
+  \fill [BlueGrey900] (15:5/4 and 1) ellipse [radius=1/2];
+  \fill [Pink200]     (15:5/4 and 1) ellipse [radius=1/3];
+  \fill [BlueGrey900]
+    (0,-1/2) ellipse [x radius=1, y radius=4/3]
+    (0,   0) ellipse [x radius=4/3, y radius=1];
+}
+\fill [Pink100]            (  0,-2/3) ellipse [x radius=5/6, y radius=  1];
+\fill [Pink100, xscale=-1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+\fill [Pink100, xscale= 1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+\scoped{
+  \clip(0,-2) rectangle(9/5,1);
+  \fill [Pink200]            (  0,-2/3) ellipse [x radius=5/6, y radius=  1];
+  \fill [Pink200, xscale=-1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+  \fill [Pink200, xscale= 1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
+}
+\fill [BlueGrey900, yshift=-7/6] (0,0) ellipse [x radius=4/3, y radius=2/3];
+\draw (-1/4, 1/3) -- (-1/4, 1/2) -- (1/4, 1/2) -- (1/4, 1/3) -- cycle;
+\fill [Black] (-1/7, 3/8) ellipse [radius=1/14]
+  ( 1/7, 3/8) ellipse [radius=1/14];
+\fill [BlueGrey700] (-1/7, 3/8) circle [radius=1/7]
+  ( 1/7, 3/8) circle [radius=1/7];
+\fill [Pink300]
+  (-1/7,-2/3) ellipse [radius=1/9]
+  ( 1/7,-2/3) ellipse [radius=1/9];
+\fill [Pink300]
+  (-1/2,-1) arc (180:360:1/2 and 1/8) arc (360:180:1/2 and 1/4);
+}
+}
+\begin{document}
+\begin{tikzpicture}
+\fill [fill=LightBlue300] circle [radius=2];
+\pic {chimpanzee};
+\end{tikzpicture}
+\end{document}
+```'}]
