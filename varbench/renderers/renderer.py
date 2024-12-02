@@ -15,13 +15,16 @@ class Renderer(ABC):
         pass
 
     @abstractmethod
-    def from_string_to_image(self, input_string) -> PIL.Image:
+    def from_string_to_image(self, input_string) -> PIL.Image.Image:
         pass
-
 
 class RendererException(Exception):
     def __init__(self, message:str, *args: object) -> None:
         self.message = message
         super().__init__(*args)
     def __str__(self) -> str:
-        return f"[CompilerExceptionself:{self.message}]"
+        return f"[RendererException:{self.message}]"
+    def extract_error(self):
+        """extracts the meaningful error from the error message 
+        """
+        pass

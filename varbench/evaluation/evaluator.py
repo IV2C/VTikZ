@@ -6,7 +6,7 @@ import os
 from varbench.evaluation.clip_comparer import ClipComparer
 from varbench.evaluation.metrics import Metric, MetricPolicy
 from ..prompt_templates import *
-from ..agent import Agent
+from ..agents.agent import Agent
 from loguru import logger
 from ..renderers import Renderer, RendererException
 from PIL.Image import Image

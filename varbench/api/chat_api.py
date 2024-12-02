@@ -20,7 +20,6 @@ class ChatApi(ABC):
         self.temperature = temperature
         self.n = n
         self.model_name = model_name
-        self.stop = ["\n```\n"]
         super().__init__()
 
     def from_url(
@@ -104,7 +103,6 @@ class GroqApi(ChatApi):
         return [
             self.client.chat.completions.create(
                 messages=messages,
-                stop=self.stop,
                 model=self.model_name,
                 temperature=self.temperature,
                 n=1,
@@ -169,7 +167,6 @@ class OpenAIApi(ChatApi):
     ) -> Iterable[str]:
         completion = self.client.chat.completions.create(
             messages=messages,
-            stop=self.stop,
             model=self.model_name,
             temperature=self.temperature,
             n=self.n,

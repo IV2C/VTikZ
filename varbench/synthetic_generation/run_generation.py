@@ -4,7 +4,7 @@ import pandas as pd
 from tqdm import tqdm
 from varbench.api.chat_api import ChatApi
 from varbench.renderers import Renderer, TexRenderer, SvgRenderer, RendererException
-from varbench.agent import LMMLoopAgent, SimpleLLMAgent, Agent, LMMAgent
+from varbench.agents import LMMLoopAgent, SimpleLLMAgent, Agent, LMMAgent
 from varbench.utils.patches import patches
 from varbench.utils.parsing import get_config, get_first_code_block
 from .api_generation import (
@@ -15,7 +15,7 @@ from datasets import Dataset, Features, Sequence, Value, Image
 from loguru import logger
 from ..prompt_templates import (
     SYSTEM_PROMPT_GENERATION,
-    SYSTEM_PROMPT_INSTRUCTIONS,
+    SYSTEM_PROMPT_INSTRUCTIONS_SYNTHETIC,
     IT_PROMPT,
 )
 
@@ -123,12 +123,12 @@ for subset in tqdm(os.listdir(folder_path), position=0, desc="Treating the subse
             messages = [
                 {
                     "role": "system",
-                    "content": SYSTEM_PROMPT_INSTRUCTIONS,
+                    "content": SYSTEM_PROMPT_INSTRUCTIONS_SYNTHETIC,
                 },
                 {"role": "user", "content": content},
             ]
             # generating responses
-            var_reponse_instructions = agent.(
+            var_reponse_instructions = agent.compute(
                 messages=messages,
                 temperature=temperature,
                 response_format=VarbenchResponses,

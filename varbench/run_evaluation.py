@@ -7,7 +7,7 @@ from varbench.evaluation.metrics import instantiate_metrics
 from varbench.renderers import Renderer, SvgRenderer, TexRenderer
 from varbench.utils.model_launch import launch_model
 from .evaluation.evaluator import evaluate
-from .agent import SimpleLLMAgent, instantiate_agent
+from .agents.agent import SimpleLLMAgent, instantiate_agent
 import json
 
 from loguru import logger
@@ -49,7 +49,7 @@ parser.add_argument(
     "-a",
     type=str,
     help="Name of the agent to use",
-    choices=["simpleLLM", "simpleLMM", "loopVLMLLM"],
+    choices=["simpleLLM", "simpleLMM", "loopVLMLLM","loopLMM"],
     default="simpleLLM",
     required=True,
 )

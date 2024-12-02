@@ -5,7 +5,7 @@ from varbench.api.chat_api import ChatApi, VLLMApi
 from varbench.evaluation.metrics import Metric, PatchMetric
 from varbench.renderers import Renderer, TexRenderer
 from varbench.evaluation.evaluator import evaluate
-from varbench.agent import Agent
+from varbench.agents import Agent
 from unittest.mock import MagicMock
 from datasets import Dataset
 from PIL import Image

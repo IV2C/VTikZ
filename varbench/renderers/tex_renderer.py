@@ -46,7 +46,7 @@ class TexRenderer(Renderer):
             capture_output=True,
         )
         if output.returncode != 0:
-            raise RendererException(
+            raise TexRendererException(
                 output.stderr.decode() + "|" + output.stdout.decode()
             )
 
@@ -56,3 +56,28 @@ class TexRenderer(Renderer):
 
         logger.debug("converting to png")
         return convert_from_path(pdf_path=output_file_name)[0]
+
+
+class TexRendererException(RendererException):
+    def __init__(self, message: str, *args: object) -> None:
+        super().__init__(message, *args)
+
+    def __str__(self) -> str:
+        return f"[TexRendererException:{self.message}]"
+
+    def extract_error(self):
+        error_lines = []
+        start_saving = False
+        exception_message = self.message.split("\n")
+        for line in exception_message:
+            if line.startswith("! "):  # start of error message
+                start_saving = True
+
+            if start_saving:
+                if line.startswith(
+                    "!  ==> Fatal error occurred"
+                ):  # end of error message
+                    start_saving = False
+                    continue
+                error_lines.append(line.strip())
+        return "\n".join(error_lines)

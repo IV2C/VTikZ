@@ -10,7 +10,7 @@ class TestRenderers(unittest.TestCase):
 
     @timeout_decorator.timeout(600)
     def test_tex(self):
-        from varbench.renderers import TexRenderer,RendererException
+        from varbench.renderers import TexRenderer, RendererException
 
         compiler = TexRenderer()
         tikzfile = os.path.join("tests/resources/tikz", "dog.tex")
@@ -64,7 +64,18 @@ class TestRenderers(unittest.TestCase):
         with open(tikzfile, "r") as f:
             tikzstring = f.read()
 
-        self.assertRaises(RendererException, compiler.from_string_to_image, tikzstring)
+        with self.assertRaises(RendererException) as context:
+            compiler.from_string_to_image(tikzstring)
+
+        # Access the exception message
+        self.assertEqual(
+            context.exception.extract_error(),
+            """! Extra }, or forgotten \\endgroup.
+\\tikz@subpicture@handle@ ...interruptpath \\egroup
+\\egroup \\egroup \\fi \\pgfke...
+l.60 \\pic {squid}
+;""",
+        )  # Or use assert to verify the message
 
     @timeout_decorator.timeout(600)
     def test_svg_from_string_exception(self):

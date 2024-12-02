@@ -18,4 +18,15 @@ class SvgRenderer(Renderer):
             io.BytesIO(cairosvg.svg2png(bytestring=input_string.encode()))
         )
         except ParseError as pe:
-            raise RendererException(pe.msg)
+            raise SvgRendererException(pe.msg)
+        
+class SvgRendererException(RendererException):
+    def __init__(self, message:str, *args: object) -> None:
+        super().__init__(message,*args)
+    def __str__(self) -> str:
+        return f"[SvgRendererException:{self.message}]"
+    def extract_error(self):
+        """extracts the meaningful error from the error message 
+        """
+        #TODO
+        pass

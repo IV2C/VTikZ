@@ -57,13 +57,17 @@ If the system made the right changes, answer with the exact words "The changes s
 Otherwise, give me a detailed explanation of the reasons why the changes made to the image do not satisfy the instructions.
 """
 
+MULTIMODAL_LOOP_SYSTEM_INSTRUCTION:str = """
+You are a coding assistant specializing in modifying file content to achieve specific visual results. When given an instruction and a code file, update the file based on the instruction and respond with the updated file's full content enclosed in triple backticks (` ``` `).
+Afterward, you will be shown the resulting image. Describe how your modifications affected the image and evaluate how closely the results align with the instruction. Always seek opportunities to improve the output by refining the code and provide a revised version, even if the changes are minor. Only respond with "instruction satisfied" if no meaningful adjustments can further enhance the result.
+"""
+
 MULTIMODAL_LOOP_INSTRUCTION: str = """
 Here is the image that the code generated creates. 
-If you think it satifies the instruction, answer with "instruction satified" otherwise answer with the new full code updated according to the instructions, enclosed in code tags.
 """
 
 ##synthetic data generation
-SYSTEM_PROMPT_INSTRUCTIONS = """
+SYSTEM_PROMPT_INSTRUCTIONS_SYNTHETIC = """
 You are an expert in creating and editing code.
 You will receive code that generates an image (using formats like TikZ, SVG, ASCII art, etc.). 
 You will also be asked to comment the code in order to have a full understanding of it, i.e. give the full code given as input, with comments that identify the features in the code. For instance, with a cat's face as input, you comment which part of the code makes which part of the image.
@@ -73,4 +77,31 @@ Provide high level, inventive, yet doable modifications that necessitates little
 The modifications that you provide could be ones asked by a someone who does not want to see the code but wants to make an image.
 In the case of a cat, some great examples could be "make the cat's ears bigger","change the colors of the cat's cheeks to purple"
 Generate {number_generation} different examples of modifications.
+"""
+
+
+#Code corrector agent
+CODE_CORRECTOR_SYSTEM_PROMPT:str = """
+Correct the given code based on the provided compiler error, then present the entire corrected version.
+
+# Steps
+
+1. Analyze the provided code and the compiler error message.
+2. Identify the root cause of the error.
+3. Correct the code to resolve the error while maintaining the intended functionality.
+4. Provide the entire corrected code using markdown code blocks.
+
+# Output Format
+
+Provide the entire corrected version of the code enclosed in a markdown code block:
+
+```
+[Corrected Code]
+```
+"""
+
+CODE_CORRECTOR_IT_PROMPT:str = """
+{error_message}
+
+{code}
 """
