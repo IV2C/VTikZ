@@ -12,6 +12,8 @@ from PIL import Image
 import difflib
 import re
 
+from varbench.utils.parsing import get_first_code_block
+
 # @@ -7 +7 @@\n-\begin{tikzpicture} \draw (0,0) -- (1,1); \end{tikzpicture}+\begin{tikzpicture} \draw (0,1) -- (1,0); \end{tikzpicture}
 
 
@@ -41,16 +43,7 @@ class TestEvaluator(unittest.TestCase):
         )[0]
         self.wrong_patch = "@@ -375 +375 @@"
         print(self.ref_patch)
-        self.renderer: TexRenderer = TexRenderer()
-        self.renderer.from_string_to_image = MagicMock(
-            return_value=Image.open("tests/resources/images/reference.jpeg")
-        )
         self.dummyMetric: Metric = [PatchMetric()]
-
-        dummyApi: ChatApi = VLLMApi(
-            0, 1, "none"
-        )  # setting up a vllm api will not launch anything
-        self.model: Agent = Agent(dummyApi)
 
         return super().setUp()
 
@@ -66,17 +59,16 @@ class TestEvaluator(unittest.TestCase):
                 "result_description": [
                     "a line going from the top left to the bottom right"
                 ],
+                "predictions":[[get_first_code_block(self.ref_tex)]],
+                "images_result": [[Image.open("tests/resources/images/reference.jpeg")]],
                 "image_input": [Image.open("tests/resources/images/reference.jpeg")],
                 "image_solution": [Image.open("tests/resources/images/reference.jpeg")],
             }
         )
 
-        # mock llm_model
-        self.model.batchCompute = MagicMock(return_value=[[self.ref_tex]])
-
         # expected result
         expected = {"PatchMetric": 100.0}
-        actual = evaluate(dummy_dataset, self.model, self.renderer, self.dummyMetric)
+        actual = evaluate(dummy_dataset, self.dummyMetric)
         self.assertEqual(
             actual[0].get("PatchMetric"),
             expected["PatchMetric"],
@@ -94,19 +86,20 @@ class TestEvaluator(unittest.TestCase):
                 "result_description": [
                     "a line going from the top left to the bottom right"
                 ],
+                
+                "predictions":[["wrong patch"]],
+                "images_result": [[Image.open("tests/resources/images/reference.jpeg")]],
                 "image_input": [Image.open("tests/resources/images/reference.jpeg")],
                 "image_solution": [Image.open("tests/resources/images/reference.jpeg")],
             }
         )
 
-        # mock llm_model
-        self.model.batchCompute = MagicMock(return_value=[["wrong_return_value"]])
 
         # expected result
         expected = {"PatchMetric": 0.0}
 
         self.assertEqual(
-            evaluate(dummy_dataset, self.model, self.renderer, self.dummyMetric)[0].get(
+            evaluate(dummy_dataset, self.dummyMetric)[0].get(
                 "PatchMetric"
             ),
             expected["PatchMetric"],
@@ -139,16 +132,13 @@ class TestEvaluator(unittest.TestCase):
                     Image.open("tests/resources/images/reference.jpeg"),
                     Image.open("tests/resources/images/reference.jpeg"),
                 ],
+                
+                "predictions":[[get_first_code_block(self.ref_tex)],["wrong patch"]],
+                "images_result": [[Image.open("tests/resources/images/reference.jpeg")],[Image.open("tests/resources/images/reference.jpeg")]],
             }
         )
 
-        # mock llm_model
-        self.model.batchCompute = MagicMock(
-            return_value=[
-                [self.ref_tex],
-                ["wrong_return_value"],
-            ]
-        )
+
 
         # expected result
         expected = {
@@ -156,7 +146,7 @@ class TestEvaluator(unittest.TestCase):
         }
 
         self.assertEqual(
-            evaluate(dummy_dataset, self.model, self.renderer, self.dummyMetric)[0].get(
+            evaluate(dummy_dataset, self.dummyMetric)[0].get(
                 "PatchMetric"
             ),
             expected["PatchMetric"],
