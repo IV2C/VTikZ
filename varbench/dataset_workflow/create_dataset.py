@@ -57,6 +57,8 @@ for subset in os.listdir(dataset_path):
         #computing image input
         image_input = renderer.from_string_to_image(input_code)
 
+        image_input = image_input.resize((300,300))#TODO make a parameter
+        
         #getting the annotations of the current row 
         data = open(os.path.join(entry_path, "data.json")).read()
         data = json.loads(data)
@@ -73,7 +75,7 @@ for subset in os.listdir(dataset_path):
             image_solution: PIL.Image.Image = renderer.from_string_to_image(
                 solution_image_text.read()
             )
-        
+            image_solution = image_solution.resize((300,300))#TODO make parameter
 
 
         current_subset.append(

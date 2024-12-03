@@ -57,7 +57,35 @@
       "dtype": "float64",
       "_type": "Value"
     },
-    "ChrfMetric": {
+    "MSSSIMMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "TERMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "BleuMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "PSNRMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "ClipImageMetric": {
       "feature": {
         "dtype": "float32",
         "_type": "Value"
@@ -71,7 +99,7 @@
       },
       "_type": "Sequence"
     },
-    "FeatureMatchMetric": {
+    "ChrfMetric": {
       "feature": {
         "dtype": "float32",
         "_type": "Value"
@@ -92,35 +120,7 @@
       },
       "_type": "Sequence"
     },
-    "MSSSIMMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "TERMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "PSNRMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "BleuMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "ClipImageMetric": {
+    "FeatureMatchMetric": {
       "feature": {
         "dtype": "float32",
         "_type": "Value"
@@ -135,7 +135,23 @@
       "dtype": "int64",
       "_type": "Value"
     },
-    "best_ChrfMetric": {
+    "best_MSSSIMMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_TERMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_BleuMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_PSNRMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_ClipImageMetric": {
       "dtype": "float64",
       "_type": "Value"
     },
@@ -143,7 +159,7 @@
       "dtype": "float64",
       "_type": "Value"
     },
-    "best_FeatureMatchMetric": {
+    "best_ChrfMetric": {
       "dtype": "float64",
       "_type": "Value"
     },
@@ -155,23 +171,7 @@
       "dtype": "float64",
       "_type": "Value"
     },
-    "best_MSSSIMMetric": {
-      "dtype": "float64",
-      "_type": "Value"
-    },
-    "best_TERMetric": {
-      "dtype": "float64",
-      "_type": "Value"
-    },
-    "best_PSNRMetric": {
-      "dtype": "float64",
-      "_type": "Value"
-    },
-    "best_BleuMetric": {
-      "dtype": "float64",
-      "_type": "Value"
-    },
-    "best_ClipImageMetric": {
+    "best_FeatureMatchMetric": {
       "dtype": "float64",
       "_type": "Value"
     }

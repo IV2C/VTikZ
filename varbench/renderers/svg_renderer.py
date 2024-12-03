@@ -12,7 +12,7 @@ class SvgRenderer(Renderer):
     def from_to_file(self, input: str, output: str):
         cairosvg.svg2png(url=input, write_to=output)
 
-    def from_string_to_image(self, input_string: str) -> PIL.Image:
+    def from_string_to_image(self, input_string: str) -> PIL.Image.Image:
         try:
             return PIL.Image.open(
             io.BytesIO(cairosvg.svg2png(bytestring=input_string.encode()))

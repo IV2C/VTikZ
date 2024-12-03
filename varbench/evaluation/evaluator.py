@@ -9,7 +9,7 @@ from ..prompt_templates import *
 from ..agents.agent import Agent
 from loguru import logger
 from ..renderers import Renderer, RendererException
-from PIL.Image import Image
+from PIL import Image
 import torch
 import pandas as pd
 import re
@@ -18,15 +18,13 @@ from ..utils.parsing import get_first_code_block
 from ..utils.patches import patches
 
 
-def evaluate(
-    subset: datasets.Dataset, agent: Agent, renderer: Renderer, metrics: list[Metric]
-):
-
+def generate(
+    subset: datasets.Dataset, agent: Agent, renderer: Renderer
+) -> datasets.Dataset:
     # computing the results
     predictions = agent.batchCompute(
         subset["instruction"], subset["code"], subset["id"], subset["image_input"]
     )
-    pass_size = len(predictions[0])  # getting the number of k for the pass@k
 
     # getting the code from the result predictions
     predictions = [
@@ -55,7 +53,17 @@ def evaluate(
             ),
         ],
         axis=1,
-    )  # add_column does does support image lists, so using concatenation
+    )  # add_column does not support image lists, so using concatenation
+    return subset_processed
+
+
+def evaluate(
+    subset: datasets.Dataset, metrics: list[Metric]
+) -> tuple[dict, datasets.Dataset]:
+    predictions = subset["predictions"]
+    pass_size = len(predictions[0])  # getting the number of k for the pass@k
+
+    images_lists = subset["images_result"]
 
     # default metrics computation(parsing and compiling)
     individual_parsing_scores = [
@@ -67,18 +75,18 @@ def evaluate(
         for image_list in images_lists
     ]
 
-    subset_processed: datasets.Dataset = subset_processed.add_column(
+    subset: datasets.Dataset = subset.add_column(
         "parsing_score", individual_parsing_scores
     )
-    subset_processed: datasets.Dataset = subset_processed.add_column(
+    subset: datasets.Dataset = subset.add_column(
         "compiling_score", individual_compiling_scores
     )
 
     # computing metrics
-    metric_results = [metric.compute(subset_processed) for metric in metrics]
+    metric_results = [metric.compute(subset) for metric in metrics]
 
     for metric, metric_result in zip(metrics, metric_results):
-        subset_processed: datasets.Dataset = subset_processed.add_column(
+        subset: datasets.Dataset = subset.add_column(
             type(metric).__name__,
             metric_result,
             feature=datasets.Sequence(datasets.Value("float")),
@@ -88,30 +96,38 @@ def evaluate(
 
     # each metric is computed on list of predictions of length pass@k, and yields a list of list of result of the same length.
     # from that list[list[float]](the results), we get the best result according to a certain policy(here the arithmetic mean)
-    subset_processed = subset_processed.map(
+    subset = subset.map(
         compute_best_prediction,
         fn_kwargs={"computed_metrics_names": computed_metrics_names},
     )
 
     scores = {
-        metric_name: sum(subset_processed[f"best_{metric_name}"])
-        / len(subset_processed)
+        metric_name: sum(subset[f"best_{metric_name}"]) / len(subset)
         for metric_name in computed_metrics_names
     }
-    return scores, subset_processed
+    scores["var_score"] = sum(subset["var_score"]) / len(subset)
+    return scores, subset
 
 
-def _images(predictions: list[list[str]], renderer: Renderer) -> list[list[Image]]:
-    output_images: list[list[Image]] = []
+def _images(
+    predictions: list[list[str]], renderer: Renderer
+) -> list[list[Image.Image]]:
+
+    new_width = 300  # TODO make a config parameter
+    new_height = 300
+
+    output_images: list[list[Image.Image]] = []
     for row_predictions in predictions:
         row_output_images = []
         for prediction in row_predictions:
             try:
                 result_image = renderer.from_string_to_image(prediction)
+                result_image = result_image.resize((new_width, new_height))
                 row_output_images.append(result_image)
             except RendererException:
                 pass
         output_images.append(row_output_images)
+
     return output_images
 
 

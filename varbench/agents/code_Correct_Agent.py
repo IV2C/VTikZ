@@ -4,7 +4,7 @@ from varbench.prompt_templates import (
     CODE_CORRECTOR_SYSTEM_PROMPT,
 )
 from varbench.renderers import Renderer, RendererException
-from varbench.utils.parsing import get_config, get_first_code_block
+from varbench.utils.parsing import get_config, get_first_code_block, replace_first_code_block
 
 from loguru import logger
 from PIL import Image
@@ -30,31 +30,32 @@ class CodeCorrectAgent:
         pass
 
     def get_correct_code(self, code: str) -> tuple[Image.Image, str]:
-        """Tries to render an image from the text given, self-iterates with the agent in case of an error
+        """Tries to render an image from the code in the text given, self-iterates with the agent in case of an error
 
         Args:
-            code (str): the code to render
+            code (str): the message containing the code to render
         Returns:
-            tuple[Image.Image,str]: The image rendered and the associated code
+            tuple[Image.Image,str]: The image rendered and the associated response(the original one with the code replace with a working one)
         """
-
+        original_response = code
+        code = get_first_code_block(code)
         if len(code.split("\n")) < 5:
             logger.warning(f"The following code is too short to be corrected \n {code}")
             return None, None
         for _ in range(self.max_iteration):
             try:
-                return self.renderer.from_string_to_image(code), code
+                return self.renderer.from_string_to_image(code), replace_first_code_block(original_response,code)
             except RendererException as re:
-                logger.info("Rendering code failed, CodeCorrect Agent trying to correct")
+                logger.info("Rendering code failed, CodeCorrect Agent trying to correct...")
                 
                 messages = [{"role": "system", "content": CODE_CORRECTOR_SYSTEM_PROMPT}]
                 user_message = CODE_CORRECTOR_IT_PROMPT.format(
                     error_message=re.extract_error(), code=code
                 )
                 messages.append({"role": "user", "content": user_message})
-                code = get_first_code_block(self.api.chat_request(messages))
+                code = get_first_code_block(self.api.chat_request(messages)[0])
         try:
-            return self.renderer.from_string_to_image(code), code
+            return self.renderer.from_string_to_image(code), replace_first_code_block(original_response,code)
         except RendererException as re:
             return None, None
 

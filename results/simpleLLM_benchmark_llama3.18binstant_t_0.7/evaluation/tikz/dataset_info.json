@@ -38,7 +38,7 @@
     },
     "predictions": {
       "feature": {
-        "dtype": "null",
+        "dtype": "string",
         "_type": "Value"
       },
       "_type": "Sequence"
@@ -54,125 +54,125 @@
       "_type": "Value"
     },
     "compiling_score": {
-      "dtype": "int64",
+      "dtype": "float64",
       "_type": "Value"
-    },
-    "LPIPSMetric": {
-      "feature": {
-        "dtype": "null",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "TERMetric": {
-      "feature": {
-        "dtype": "null",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
     },
     "FeatureMatchMetric": {
       "feature": {
-        "dtype": "null",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "BleuMetric": {
-      "feature": {
-        "dtype": "null",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "ClipImageMetric": {
-      "feature": {
-        "dtype": "null",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "MSSSIMMetric": {
-      "feature": {
-        "dtype": "null",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "LineMetric": {
-      "feature": {
-        "dtype": "float64",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "PSNRMetric": {
-      "feature": {
-        "dtype": "null",
+        "dtype": "float32",
         "_type": "Value"
       },
       "_type": "Sequence"
     },
     "ChrfMetric": {
       "feature": {
-        "dtype": "null",
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "MSSSIMMetric": {
+      "feature": {
+        "dtype": "float32",
         "_type": "Value"
       },
       "_type": "Sequence"
     },
     "ClipTextMetric": {
       "feature": {
-        "dtype": "null",
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "LineMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "PSNRMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "TERMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "BleuMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "ClipImageMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "LPIPSMetric": {
+      "feature": {
+        "dtype": "float32",
         "_type": "Value"
       },
       "_type": "Sequence"
     },
     "var_score": {
-      "dtype": "int64",
+      "dtype": "float64",
       "_type": "Value"
     },
     "index_best_prediction": {
       "dtype": "int64",
       "_type": "Value"
     },
-    "best_LPIPSMetric": {
-      "dtype": "int64",
-      "_type": "Value"
-    },
-    "best_TERMetric": {
-      "dtype": "int64",
-      "_type": "Value"
-    },
     "best_FeatureMatchMetric": {
-      "dtype": "int64",
-      "_type": "Value"
-    },
-    "best_BleuMetric": {
-      "dtype": "int64",
-      "_type": "Value"
-    },
-    "best_ClipImageMetric": {
-      "dtype": "int64",
-      "_type": "Value"
-    },
-    "best_MSSSIMMetric": {
-      "dtype": "int64",
-      "_type": "Value"
-    },
-    "best_LineMetric": {
-      "dtype": "int64",
-      "_type": "Value"
-    },
-    "best_PSNRMetric": {
-      "dtype": "int64",
+      "dtype": "float64",
       "_type": "Value"
     },
     "best_ChrfMetric": {
-      "dtype": "int64",
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_MSSSIMMetric": {
+      "dtype": "float64",
       "_type": "Value"
     },
     "best_ClipTextMetric": {
-      "dtype": "int64",
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_LineMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_PSNRMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_TERMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_BleuMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_ClipImageMetric": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "best_LPIPSMetric": {
+      "dtype": "float64",
       "_type": "Value"
     }
   },

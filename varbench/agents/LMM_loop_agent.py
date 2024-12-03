@@ -48,44 +48,46 @@ class LMMLoopAgent(Agent):
     def single_loop(self, instruction: str, code: str, image: Image.Image) -> str:
         # generating results
         messages: list = self._create_message(instruction, code, image)
-        response = self.api.chat_request(messages)[0]
-        
+        original_response = self.api.chat_request(messages)[0]
+        computed_image, original_response = self.correct_code_agent.get_correct_code(
+            original_response
+        )
+        messages.append({"role": "assistant", "content": original_response})
         # debugging
         if self.debug_store_conv:
-            image.save(f".tmp/debug/image.jpg")
-            with open(f".tmp/debug/initial_response.txt", "w") as debug_file:
+            with open(f".tmp/debug/original_response.txt", "w") as debug_file:
                 debug_file.write(response)
+            computed_image.save(f".tmp/debug/original_image.jpg")
         # making self-refining interactions
         for i in range(self.interation_nb):
-            # adding the code response to the conversation
-            messages.append({"role": "assistant", "content": response})
-            if (
-                "instruction satisfied" in response
-            ):  # stopping the conversation if the instruction is satisfied
-                break
-            # calling the code correcting agent
-            code_response = get_first_code_block(response)
-            
-            computed_image, code_response = self.correct_code_agent.get_correct_code(code_response)
-            if not computed_image or not code:
-                return (
-                    None  # the code correcting agent did not manage to correct the code
-                )
 
             user_message = self._create_self_revise_message_multimodal(computed_image)
             messages.extend(user_message)
             response = self.api.chat_request(messages)[0]
 
+            if (
+                "instruction satisfied" in response
+            ):  # stopping the conversation if the instruction is satisfied
+                break
+            # calling the code correcting agent
+            computed_image, response = self.correct_code_agent.get_correct_code(
+                response
+            )
+
             # debugging
             if self.debug_store_conv:
-                with open(f".tmp/debug/reponse{i+1}.txt", "w") as debug_file:
+                with open(f".tmp/debug/response{i}.txt", "w") as debug_file:
                     debug_file.write(response)
                 computed_image.save(f".tmp/debug/image{i}.jpg")
-                self.renderer.from_string_to_image(code_response).save(
-                    f".tmp/debug/image{i+1}.jpg"
+
+            # adding the code response to the conversation
+            messages.append({"role": "assistant", "content": response})
+
+            if not computed_image or not code:
+                return (
+                    None  # the code correcting agent did not manage to correct the code
                 )
 
-        messages.append({"role": "assistant", "content": response})
         logger.info(messages)
         return response
 

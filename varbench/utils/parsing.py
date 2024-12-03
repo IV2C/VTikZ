@@ -33,6 +33,18 @@ def get_first_code_block(text):
     match = re.search(r"```[a-zA-Z]*\n(.*?)```", text, re.DOTALL)
     return match.group(1).strip() if match else None
 
+def replace_first_code_block(text, replacement):
+    # Regex to match the first code block
+    pattern = r"(```[a-zA-Z]*\n.*?```)"
+    # Split the text into parts at the code block
+    parts = re.split(pattern, text, flags=re.DOTALL)
+    
+    # Replace the first code block (index 1 will always be the first code block)
+    if len(parts) > 1:
+        parts[1] = f"```\n{replacement}\n```"
+    
+    # Reconstruct the text by joining the parts back together
+    return ''.join(parts)
 
 def make_numerical(string_value: str) -> float | int | str | bool:
     try:

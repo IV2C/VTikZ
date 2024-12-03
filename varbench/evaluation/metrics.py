@@ -61,7 +61,6 @@ class ClipImageMetric(Metric):
 
     def compute(self, dataset: Dataset) -> list[list[float]]:
         logger.info("Computing clip image to image similarity scores")
-        logger.info(dataset["images_result"])
         image_result = dataset["images_result"]
         image_solution = dataset["image_solution"]
         individual_image_scores = self.clip_comparer.image_similarities(
@@ -116,7 +115,7 @@ class ChrfMetric(Metric):
         super().__init__(*args, **kwargs)
 
     def compute(self, dataset: Dataset) -> list[list[float]]:
-        logger.info("Computing bleu_score")
+        logger.info("Computing chrf_score")
         all_predictions = dataset["predictions"]
         solutions = dataset["code_solution"]
 
@@ -139,7 +138,7 @@ class TERMetric(Metric):
         super().__init__(*args, **kwargs)
 
     def compute(self, dataset: Dataset) -> list[list[float]]:
-        logger.info("Computing bleu_score")
+        logger.info("Computing TER_score")
         all_predictions = dataset["predictions"]
         solutions = dataset["code_solution"]
 
@@ -322,6 +321,8 @@ class MSSSIMMetric(Metric):
 
 
 def instantiate_metrics(metric_names: list[str]) -> list[Metric]:
+
+    logger.info(f"loading metrics : " + str(metric_names))
 
     metric_map = {
         "patch": PatchMetric,

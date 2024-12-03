@@ -6,9 +6,11 @@ from varbench.api.chat_api import ChatApi
 from varbench.evaluation.metrics import instantiate_metrics
 from varbench.renderers import Renderer, SvgRenderer, TexRenderer
 from varbench.utils.model_launch import launch_model
-from .evaluation.evaluator import evaluate
-from .agents.agent import SimpleLLMAgent, instantiate_agent
+from varbench.evaluation.evaluator import evaluate, generate
+from varbench.agents import instantiate_agent
 import json
+
+from datasets import Dataset
 
 from loguru import logger
 
@@ -49,7 +51,7 @@ parser.add_argument(
     "-a",
     type=str,
     help="Name of the agent to use",
-    choices=["simpleLLM", "simpleLMM", "loopVLMLLM","loopLMM"],
+    choices=["simpleLLM", "simpleLMM", "loopVLMLLM", "loopLMM"],
     default="simpleLLM",
     required=True,
 )
@@ -137,12 +139,14 @@ key_args["n"] = args.passk
 
 
 # loading model
+model_process = None
 if key_args["run_model"]:
     if key_args["api_url"] and key_args["api_url"] != "":
         logger.warning(
             "found run-model and api_url parameters, api_url will be ignored"
         )
-    key_args["api_url"] = launch_model(key_args["model_name"])
+    key_args["api_url"], model_process = launch_model(key_args["model_name"])
+
 
 if not key_args["api_key"]:
     key_args["api_key"] = os.environ.get("OPENAI_API_KEY")
@@ -162,31 +166,57 @@ if vlm_model and vlm_model != "":
 else:
     vlm_api = None
 interaction_amount: int = args.interaction_amount
-# instantiating metrics
-metrics = instantiate_metrics(args.metrics)
 
 # result path creation
 if not os.path.exists("./results"):
     os.mkdir("./results")
-
+split_used = "benchmark"
 full_config_name = (
     args.agent
     + "_"
-    + key_args["model_name"].replace("/", "_").replace("-","")
+    + split_used
+    + "_"
+    + key_args["model_name"].replace("/", "_").replace("-", "")
     + "_t_"
     + str(key_args["temperature"])
-    + ("_" + vlm_model.replace("/", "_").replace("-","") + "_t_" + str(vlm_temperature))
-    if vlm_model
-    else ""
+    + (
+        (
+            "_"
+            + vlm_model.replace("/", "_").replace("-", "")
+            + "_t_"
+            + str(vlm_temperature)
+        )
+        if vlm_model
+        else ""
+    )
 )
+# result path handling
 result_path = os.path.join("./results", full_config_name)
+generation_result_path = os.path.join(result_path, "generation")
+evaluation_result_path = os.path.join(result_path, "evaluation")
 
 if not os.path.exists(result_path):
     os.mkdir(result_path)
+if not os.path.exists(generation_result_path):
+    os.mkdir(generation_result_path)
+if not os.path.exists(evaluation_result_path):
+    os.mkdir(evaluation_result_path)
 
-# evaluation
+
+logger.info(
+    f"Varbench Evaluation : split = {split_used} | agent = {args.agent} | model = {key_args["model_name"]} | api = {key_args["api_url"]}"
+)
+# generation
 for subset in subsets:
-    dataset = load_dataset("CharlyR/varbench", subset, split="test")
+    subset_generation_result_path = os.path.join(generation_result_path, subset)
+
+    # skipping if exists
+    if os.path.exists(subset_generation_result_path):
+        logger.warning("Generated subset exists, skipping")
+        continue
+
+    logger.info(f"Starting generation on subset {str(subset)}")
+    dataset = load_dataset("CharlyR/varbench", subset, split=split_used)
 
     # creating compiler
     match subset:
@@ -201,9 +231,32 @@ for subset in subsets:
     # instantiate the agent
     agent = instantiate_agent(args.agent, api, vlm_api, renderer, interaction_amount)
 
+    # generating and saving the dataset
+    subset_processed: Dataset = generate(dataset, agent, renderer)
+    subset_processed.save_to_disk(subset_generation_result_path)
+
+# instantiating metrics
+metrics = instantiate_metrics(args.metrics)
+# stopping the model if running
+if model_process:
+    model_process.terminate()
+    model_process.kill()
+
+# evaluation
+for subset in subsets:
+
+    logger.info(f"Starting evaluation on subset {str(subset)}")
+
+    # loading existing dataset
+    subset_generation_result_path = os.path.join(generation_result_path, subset)
+    dataset = Dataset.load_from_disk(subset_generation_result_path)
+
     # evaluating
-    result_scores, score_dataset = evaluate(dataset, agent, renderer, metrics)
-    score_dataset.save_to_disk(result_path, storage_options={})
+    result_scores, score_dataset = evaluate(dataset, metrics)
+
+    subset_evaluation_result_path = os.path.join(evaluation_result_path, subset)
+
+    score_dataset.save_to_disk(subset_evaluation_result_path, storage_options={})
     logger.info(result_scores)
     with open(os.path.join(result_path, subset + ".json"), "w") as subset_result:
         subset_result.write(json.dumps(result_scores))

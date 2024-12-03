@@ -29,7 +29,7 @@ class TexRenderer(Renderer):
         image = convert_from_path(pdf_path=output_file_name)[0]
         image.save(output)
 
-    def from_string_to_image(self, input_string: str) -> PIL.Image:
+    def from_string_to_image(self, input_string: str) -> PIL.Image.Image:
         tmp_file_path = os.path.join(self.cache_path, "tmp.tex")
         file = open(tmp_file_path, "w")
         file.write(input_string)
