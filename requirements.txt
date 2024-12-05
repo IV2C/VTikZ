@@ -19,3 +19,4 @@ opencv-python==4.10.0.84
 opencv-python-headless==4.10.0.84
 lpips==0.1.4
 pytorch-msssim==1.0.0
+sacrebleu==2.4.3
