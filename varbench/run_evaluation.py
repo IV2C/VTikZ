@@ -32,6 +32,7 @@ parser.add_argument(
     type=str,
     help="Name of the metric(s) to evaluate on the output of the model",
     default=[
+        "patch",
         "line",
         "clipImage",
         "clipText",

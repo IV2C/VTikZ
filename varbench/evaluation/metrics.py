@@ -54,36 +54,6 @@ class LineMetric(Metric):
         return individual_lines_scores
 
 
-class ClipImageMetric(Metric):
-    def __init__(self, clip_comparer: ClipComparer = None, *args, **kwargs) -> None:
-        self.clip_comparer = clip_comparer
-        super().__init__(*args, **kwargs)
-
-    def compute(self, dataset: Dataset) -> list[list[float]]:
-        logger.info("Computing clip image to image similarity scores")
-        image_result = dataset["images_result"]
-        image_solution = dataset["image_solution"]
-        individual_image_scores = self.clip_comparer.image_similarities(
-            image_result, image_solution
-        )
-        return individual_image_scores
-
-
-class ClipTextMetric(Metric):
-    def __init__(self, clip_comparer: ClipComparer = None, *args, **kwargs) -> None:
-        self.clip_comparer = clip_comparer
-        super().__init__(*args, **kwargs)
-
-    def compute(self, dataset: Dataset) -> list[list[float]]:
-        logger.info("Computing clip text to image similarity scores")
-        image_result = dataset["images_result"]
-        result_description = dataset["result_description"]
-        individual_text_scores = self.clip_comparer.text_similarities(
-            image_result, result_description
-        )
-        return individual_text_scores
-
-
 class BleuMetric(Metric):
     def __init__(self, *args, **kwargs) -> None:
         from sacrebleu import BLEU
@@ -130,6 +100,10 @@ class ChrfMetric(Metric):
         return chrf_scores
 
 
+
+
+
+
 class TERMetric(Metric):
     def __init__(self, *args, **kwargs) -> None:
         from sacrebleu import TER
@@ -153,6 +127,39 @@ class TERMetric(Metric):
         return ter_inverted_scores
 
 
+
+
+
+########################################Image based metrics########################################
+
+class ClipImageMetric(Metric):
+    def __init__(self, clip_comparer: ClipComparer = None, *args, **kwargs) -> None:
+        self.clip_comparer = clip_comparer
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+        logger.info("Computing clip image to image similarity scores")
+        image_result = dataset["images_result"]
+        image_solution = dataset["image_solution"]
+        individual_image_scores = self.clip_comparer.image_similarities(
+            image_result, image_solution
+        )
+        return individual_image_scores
+
+
+class ClipTextMetric(Metric):
+    def __init__(self, clip_comparer: ClipComparer = None, *args, **kwargs) -> None:
+        self.clip_comparer = clip_comparer
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+        logger.info("Computing clip text to image similarity scores")
+        image_result = dataset["images_result"]
+        result_description = dataset["result_description"]
+        individual_text_scores = self.clip_comparer.text_similarities(
+            image_result, result_description
+        )
+        return individual_text_scores
 import cv2
 import numpy as np
 
@@ -345,21 +352,3 @@ def instantiate_metrics(metric_names: list[str]) -> list[Metric]:
 
 import math
 
-
-class MetricPolicy:
-    @staticmethod
-    def mathematical_average(values: list[float], weights: list[float] = None) -> float:
-        if weights is None:
-            return sum(values) / len(values)
-        return sum(v * w for v, w in zip(values, weights)) / sum(weights)
-
-    @staticmethod
-    def geometrical_average(values: list[float], weights: list[float] = None) -> float:
-        if weights is None:
-            return math.prod(values) ** (1 / len(values))
-        total_weight = sum(weights)
-        return math.prod(v ** (w / total_weight) for v, w in zip(values, weights))
-
-    @staticmethod
-    def harmonic_mean(values: list[float]) -> float:
-        return len(values) / sum(1 / v for v in values)
