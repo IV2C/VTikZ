@@ -1,21 +1,11 @@
-import difflib
 import datasets
-import subprocess
-import os
 
-from varbench.evaluation.clip_comparer import ClipComparer
-from varbench.evaluation.metrics import Metric, MetricPolicy
+from varbench.evaluation.metrics import Metric
 from ..prompt_templates import *
 from ..agents.agent import Agent
-from loguru import logger
 from ..renderers import Renderer, RendererException
 from PIL import Image
-import torch
-import pandas as pd
-import re
-from .line_patch_scorer import compute_line_score
 from ..utils.parsing import get_first_code_block
-from ..utils.patches import patches
 
 
 def generate(
