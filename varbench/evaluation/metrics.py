@@ -15,7 +15,7 @@ class Metric:
 
     def compute(self, dataset: Dataset) -> list[list[float]]:
         """computes the metric using the dataset
-        The dataset should have columns: id,code,code_solution,predictions,patches,result_description,image_solution,image_input,images_result
+        The dataset should have columns: id,code,code_solution,predictions,predictions_patches,patches,result_description,image_solution,image_input,images_result
 
         Args:
             dataset (Dataset): The dataset used to copute the metric on
@@ -29,10 +29,8 @@ class Metric:
 class PatchMetric(Metric):
     def compute(self, dataset: Dataset) -> list[list[float]]:
         logger.info("Computing patch_score")
-        inputs = dataset["code"]
-        predictions = dataset["predictions"]
         patch = dataset["patch"]
-        individual_patches = [patches(i, p) for i, p in zip(inputs, predictions)]
+        individual_patches = dataset["predictions_patches"]
         print(individual_patches[0])
         print(patch)
         individual_patches_scores = [
@@ -77,6 +75,27 @@ class BleuMetric(Metric):
         return bleu_scores
 
 
+class BleuPatchMetric(Metric):
+    def __init__(self, *args, **kwargs) -> None:
+        from sacrebleu import BLEU
+
+        self.bleu = BLEU()
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+        logger.info("Computing bleu_patch_score")
+        patches = dataset["patch"]
+        individual_patches = dataset["predictions_patches"]
+        bleu_patch_scores = [
+            [
+                self.bleu.sentence_score(row_patch, [reference_patch]).score
+                for row_patch in computed_patches
+            ]
+            for computed_patches, reference_patch in zip(individual_patches, patches)
+        ]
+        return bleu_patch_scores
+
+
 class ChrfMetric(Metric):
     def __init__(self, *args, **kwargs) -> None:
         from sacrebleu import CHRF
@@ -100,8 +119,25 @@ class ChrfMetric(Metric):
         return chrf_scores
 
 
+class ChrfPatchMetric(Metric):
+    def __init__(self, *args, **kwargs) -> None:
+        from sacrebleu import CHRF
 
+        self.chrf = CHRF()
+        super().__init__(*args, **kwargs)
 
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+        logger.info("Computing chrf_patch_score")
+        patches = dataset["patch"]
+        individual_patches = dataset["predictions_patches"]
+        bleu_patch_scores = [
+            [
+                self.chrf.sentence_score(row_patch, [reference_patch]).score
+                for row_patch in computed_patches
+            ]
+            for computed_patches, reference_patch in zip(individual_patches, patches)
+        ]
+        return bleu_patch_scores
 
 
 class TERMetric(Metric):
@@ -127,10 +163,29 @@ class TERMetric(Metric):
         return ter_inverted_scores
 
 
+class TERPatchMetric(Metric):
+    def __init__(self, *args, **kwargs) -> None:
+        from sacrebleu import TER
 
+        self.ter = TER()
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+        logger.info("Computing ter_patch_score")
+        patches = dataset["patch"]
+        individual_patches = dataset["predictions_patches"]
+        bleu_patch_scores = [
+            [
+                100 - self.ter.sentence_score(row_patch, [reference_patch]).score
+                for row_patch in computed_patches
+            ]
+            for computed_patches, reference_patch in zip(individual_patches, patches)
+        ]
+        return bleu_patch_scores
 
 
 ########################################Image based metrics########################################
+
 
 class ClipImageMetric(Metric):
     def __init__(self, clip_comparer: ClipComparer = None, *args, **kwargs) -> None:
@@ -160,6 +215,8 @@ class ClipTextMetric(Metric):
             image_result, result_description
         )
         return individual_text_scores
+
+
 import cv2
 import numpy as np
 
@@ -337,8 +394,11 @@ def instantiate_metrics(metric_names: list[str]) -> list[Metric]:
         "clipImage": ClipImageMetric,
         "clipText": ClipTextMetric,
         "bleu": BleuMetric,
+        "bleuPatch": BleuPatchMetric,
         "chrf": ChrfMetric,
+        "chrfPatch": ChrfPatchMetric,
         "TER": TERMetric,
+        "TERPatch": TERPatchMetric,
         "featureMatch": FeatureMatchMetric,
         "LPIPS": LPIPSMetric,
         "psnr": PSNRMetric,
@@ -351,4 +411,3 @@ def instantiate_metrics(metric_names: list[str]) -> list[Metric]:
 
 
 import math
-

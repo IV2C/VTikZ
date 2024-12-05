@@ -1,6 +1,7 @@
 import datasets
 
 from varbench.evaluation.metrics import Metric
+from varbench.utils.patches import patches
 from ..prompt_templates import *
 from ..agents.agent import Agent
 from ..renderers import Renderer, RendererException
@@ -26,12 +27,12 @@ def generate(
         for row_predictions in predictions
     ]
 
-    # computing the images out of the results
-    images_lists = _images(predictions, renderer)
-
     subset_processed: datasets.Dataset = subset.add_column(
         "predictions", predictions, feature=datasets.Sequence(datasets.Value("string"))
     )
+
+    # computing the images out of the results
+    images_lists = _images(predictions, renderer)
     subset_processed: datasets.Dataset = datasets.concatenate_datasets(
         [
             subset_processed,
@@ -47,9 +48,7 @@ def generate(
     return subset_processed
 
 
-def evaluate(
-    subset: datasets.Dataset, metrics: list[Metric]
-) -> tuple[dict, datasets.Dataset]:
+def evaluate(subset: datasets.Dataset, metrics: list[Metric]) -> datasets.Dataset:
     predictions = subset["predictions"]
     pass_size = len(predictions[0])  # getting the number of k for the pass@k
 
@@ -71,18 +70,27 @@ def evaluate(
     subset: datasets.Dataset = subset.add_column(
         "compiling_score", individual_compiling_scores
     )
-
+    # computing the patches
+    individual_patches = [patches(i, p) for i, p in zip(subset["code"], predictions)]
+    subset: datasets.Dataset = subset.add_column(
+        "predictions_patches",
+        individual_patches,
+        feature=datasets.Sequence(datasets.Value("string")),
+    )
     # computing metrics
     metric_results = [metric.compute(subset) for metric in metrics]
 
     for metric, metric_result in zip(metrics, metric_results):
+        metric_results = [
+            [round(i_metric_result, 5) for i_metric_result in result]
+            for result in metric_result
+        ]
+
         subset: datasets.Dataset = subset.add_column(
             type(metric).__name__,
             metric_result,
             feature=datasets.Sequence(datasets.Value("float")),
         )
-
-
 
     return subset
 
@@ -91,7 +99,7 @@ def _images(
     predictions: list[list[str]], renderer: Renderer
 ) -> list[list[Image.Image]]:
 
-    new_width = 300  # TODO make a config parameter
+    new_width = 300  # TODO make it a config parameter
     new_height = 300
 
     output_images: list[list[Image.Image]] = []
@@ -107,4 +115,3 @@ def _images(
         output_images.append(row_output_images)
 
     return output_images
-
