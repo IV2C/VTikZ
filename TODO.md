@@ -47,11 +47,11 @@
 - [X] Implement LLM+something solution and test it
 - [X] test llama3.1 8B on the full dataset
 - [X] In the notebook, do a flatmap on the values in each array instead of taking only the "best_metric"
-- [ ] Metrics Bleu, chrf, TER on patch only
+- [X] Metrics Bleu, chrf, TER on patch only
+- [X] Add a cache mechanism(based on a hash of "model",prompt,temperature), only for testing purposes(unless temperature 0?)
 - [ ] Metrics strict image equality
-- [ ] Add a cache mechanism(based on a hash of "model",prompt,temperature), only for testing purposes(unless temperature 0?)
 - [ ] Fix LMM loop
-- [ ] Relaunch llama3.1 8B with the other metrics done
+- [X] Relaunch llama3.1 8B with the other metrics done
 - [ ] Human evaluation tool with comments
 - [ ] Test LLM-only models then compare with Multimodal with image in input
 - [ ] Add a default seed to the apis? 
@@ -61,7 +61,7 @@
 
 - [ ] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches)
 - [ ] Create synthetic data and then verify
-- [ ] Assessment of vlm on checking 
+- [X] Assessment of vlm on checking 
 
 Eventually
 - [ ] Create a SimpleOpenAi API, in the case of an api compatible with openai, but that does not support anything but simple requests

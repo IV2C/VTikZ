@@ -154,7 +154,8 @@ class TERMetric(Metric):
 
         ter_inverted_scores = [
             [
-                100 - self.ter.sentence_score(row_prediction, [solution]).score
+                (100 * 100)
+                / (self.ter.sentence_score(row_prediction, [solution]).score + 100)
                 for row_prediction in predictions
             ]
             for predictions, solution in zip(all_predictions, solutions)
@@ -176,7 +177,8 @@ class TERPatchMetric(Metric):
         individual_patches = dataset["predictions_patches"]
         bleu_patch_scores = [
             [
-                100 - self.ter.sentence_score(row_patch, [reference_patch]).score
+                (100 * 100)
+                / (100 + self.ter.sentence_score(row_patch, [reference_patch]).score)
                 for row_patch in computed_patches
             ]
             for computed_patches, reference_patch in zip(individual_patches, patches)

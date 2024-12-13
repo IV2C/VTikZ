@@ -14,6 +14,7 @@ class ChatCompletionRequest:
         n=1,
         temperature=0,
         max_tokens=1000,
+        seed =0
     ):
         self.custom_id = custom_id
         self.method = "POST"
@@ -24,6 +25,7 @@ class ChatCompletionRequest:
             "n": n,
             "temperature": temperature,
             "max_tokens": max_tokens,
+            "seed" :seed
         }
         if response_format:
             self.body["response_format"] = {

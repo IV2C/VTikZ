@@ -9,10 +9,60 @@ from pydantic import BaseModel
 from openai import OpenAI
 from loguru import logger
 import tqdm
+import hashlib
 
 from varbench.utils.chat_models import ChatCompletionRequest
 from varbench.utils.parsing import get_config, parse_openai_jsonl
 import os
+import pickle
+import atexit
+
+if get_config("MAIN").get("cache_enabled"):
+
+    cache_location = os.path.join(
+        get_config("MAIN").get("cache_location", ".cache"), "chat_cache"
+    )
+
+    if os.path.exists(cache_location):
+        cache_chatapi = open(cache_location, "rb")
+        cache: dict[int, str] = pickle.load(cache_chatapi)
+    else:
+        cache: dict[int, str] = {}
+
+    def save_cache(cache, cache_location):
+        logger.info("program exited, saving cache")
+        logger.info(str(cache))
+        pickle.dump(cache, open(cache_location, "wb"))
+
+    logger.info("chat api cache loaded")
+    logger.info(str(cache))
+    atexit.register(lambda: save_cache(cache, cache_location))
+
+
+def CachedRequest(func):
+    def checkForCached(*args, **kwargs):
+        if not get_config("MAIN").get("cache_enabled"):
+            return func(*args, **kwargs)
+        model_name = args[0].model_name
+        temperature = args[0].temperature
+        seed = args[0].seed
+        messages = str(args[1])
+        func_name = func.__name__
+
+        logger.warning(str((seed, model_name, temperature, messages, func_name)).encode("utf8"))
+
+        input_hash = hashlib.sha1(str((seed, model_name, temperature, messages, func_name)).encode("utf8")).hexdigest()
+
+        return_value = cache.get(input_hash)
+        if not return_value:
+            return_value = func(*args, **kwargs)
+            cache[input_hash] = return_value
+            logger.info("new cache")
+            logger.info(str(cache))
+
+        return return_value
+
+    return checkForCached
 
 
 class ChatApi(ABC):
@@ -20,6 +70,7 @@ class ChatApi(ABC):
         self.temperature = temperature
         self.n = n
         self.model_name = model_name
+        self.seed = get_config("API").get("seed", 0)
         super().__init__()
 
     def from_url(
@@ -97,6 +148,7 @@ class GroqApi(ChatApi):
         self.client = OpenAI(base_url=api_url, api_key=api_key)
         super().__init__(temperature, n, model_name)
 
+    @CachedRequest
     def chat_request(
         self, messages: Iterable[ChatCompletionMessageParam]
     ) -> Iterable[str]:
@@ -106,12 +158,14 @@ class GroqApi(ChatApi):
                 model=self.model_name,
                 temperature=self.temperature,
                 n=1,
+                seed=self.seed,
             )
             .choices[-1]
             .message.content
             for _ in range(self.n)
         ]
 
+    @CachedRequest
     def structured_request(
         self, messages: Iterable[ChatCompletionMessageParam], response_format: BaseModel
     ) -> Iterable[BaseModel]:
@@ -121,6 +175,7 @@ class GroqApi(ChatApi):
                 response_model=response_format,
                 messages=messages,
                 temperature=self.temperature,
+                seed=self.seed,
             )
             for _ in range(self.n)
         ]
@@ -162,6 +217,7 @@ class OpenAIApi(ChatApi):
         self.client = OpenAI(base_url=api_url, api_key=api_key)
         super().__init__(temperature, n, model_name)
 
+    @CachedRequest
     def chat_request(
         self, messages: Iterable[ChatCompletionMessageParam]
     ) -> Iterable[str]:
@@ -170,9 +226,11 @@ class OpenAIApi(ChatApi):
             model=self.model_name,
             temperature=self.temperature,
             n=self.n,
+            seed=self.seed,
         )
         return [choice.message.content for choice in completion.choices]
 
+    @CachedRequest
     def structured_request(
         self, messages: Iterable[ChatCompletionMessageParam], response_format: BaseModel
     ):
@@ -182,6 +240,7 @@ class OpenAIApi(ChatApi):
             n=self.n,
             temperature=self.temperature,
             model=self.model_name,
+            seed=self.seed,
         )
         return [choice.message.parsed for choice in completion.choices]
 
@@ -201,6 +260,7 @@ class OpenAIApi(ChatApi):
                     response_format=response_format,
                     model=self.model_name,
                     temperature=self.temperature,
+                    seed=self.seed,
                 ).to_json()
                 for message, id in zip(messages, ids)
             ]
@@ -269,6 +329,7 @@ class VLLMApi(OpenAIApi):
 
         super().__init__(temperature, n, model_name, api_url, api_key)
 
+    @CachedRequest
     def structured_request(
         self, messages: Iterable[ChatCompletionMessageParam], response_format: BaseModel
     ):
@@ -281,6 +342,7 @@ class VLLMApi(OpenAIApi):
             n=self.n,
             temperature=self.temperature,
             model=self.model_name,
+            seed=self.seed,
         )
         return [
             response_format.model_validate_json(choice.message.content)

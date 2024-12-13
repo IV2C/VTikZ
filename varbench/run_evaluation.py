@@ -256,14 +256,11 @@ for subset in subsets:
     dataset = Dataset.load_from_disk(subset_generation_result_path)
 
     # evaluating
-    result_scores, score_dataset = evaluate(dataset, metrics)
+    score_dataset = evaluate(dataset, metrics)
 
     subset_evaluation_result_path = os.path.join(evaluation_result_path, subset)
 
     score_dataset.save_to_disk(subset_evaluation_result_path, storage_options={})
-    logger.info(result_scores)
-    with open(os.path.join(result_path, subset + ".json"), "w") as subset_result:
-        subset_result.write(json.dumps(result_scores))
     score_dataset.push_to_hub(
         "CharlyR/varbench-evaluation",
         config_name=subset,
