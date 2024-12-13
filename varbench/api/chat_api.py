@@ -19,8 +19,13 @@ import atexit
 
 if get_config("MAIN").get("cache_enabled"):
 
+    cache_path = get_config("MAIN").get("cache_location", ".cache")
+
+    if not os.path.exists(cache_path):
+        os.mkdir(cache_path)
+    
     cache_location = os.path.join(
-        get_config("MAIN").get("cache_location", ".cache"), "chat_cache"
+        cache_path, "chat_cache"
     )
 
     if os.path.exists(cache_location):
@@ -49,16 +54,14 @@ def CachedRequest(func):
         messages = str(args[1])
         func_name = func.__name__
 
-        logger.warning(str((seed, model_name, temperature, messages, func_name)).encode("utf8"))
-
         input_hash = hashlib.sha1(str((seed, model_name, temperature, messages, func_name)).encode("utf8")).hexdigest()
 
         return_value = cache.get(input_hash)
         if not return_value:
             return_value = func(*args, **kwargs)
             cache[input_hash] = return_value
-            logger.info("new cache")
-            logger.info(str(cache))
+            logger.debug("new cache")
+            logger.debug(str(cache))
 
         return return_value
 

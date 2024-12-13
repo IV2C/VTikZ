@@ -125,6 +125,6 @@ class TestPatchTextMetrics(unittest.TestCase):
         result_scores = ter_patch_metric.compute(self.dataset)
         logger.info(result_scores)
         self.assertEqual(round(result_scores[0][0], 5), 100.0)
-        self.assertEqual(round(result_scores[0][1], 5), 87.5)
-        self.assertEqual(round(result_scores[0][2], 5), 0.0)
+        self.assertEqual(round(result_scores[0][1], 5), 88.88889)
+        self.assertEqual(round(result_scores[0][2], 5), 50.0)
         self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])

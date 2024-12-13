@@ -3,6 +3,7 @@ import json
 import re
 from loguru import logger
 
+
 def parse_openai_jsonl(input_data: str) -> dict[str, str]:
     # Split the JSONL input into separate lines
     lines = input_data.strip().splitlines()
@@ -33,18 +34,20 @@ def get_first_code_block(text):
     match = re.search(r"```[a-zA-Z]*\n(.*?)```", text, re.DOTALL)
     return match.group(1).strip() if match else None
 
+
 def replace_first_code_block(text, replacement):
     # Regex to match the first code block
     pattern = r"(```[a-zA-Z]*\n.*?```)"
     # Split the text into parts at the code block
     parts = re.split(pattern, text, flags=re.DOTALL)
-    
+
     # Replace the first code block (index 1 will always be the first code block)
     if len(parts) > 1:
         parts[1] = f"```\n{replacement}\n```"
-    
+
     # Reconstruct the text by joining the parts back together
-    return ''.join(parts)
+    return "".join(parts)
+
 
 def make_numerical(string_value: str) -> float | int | str | bool:
     try:
@@ -57,8 +60,7 @@ def make_numerical(string_value: str) -> float | int | str | bool:
                 return True
             elif str(string_value) == "False":
                 return False
-            
-        
+
             return string_value
     return result
 
@@ -66,4 +68,7 @@ def make_numerical(string_value: str) -> float | int | str | bool:
 def get_config(config_name: str):
     config = configparser.ConfigParser()
     config.read("config-varbench.cfg")
-    return {key: make_numerical(value) for key, value in config[config_name].items()}
+    config_k = {
+        key: make_numerical(value) for key, value in config[config_name].items()
+    }
+    return config_k
