@@ -386,6 +386,32 @@ class MSSSIMMetric(Metric):
         ]
 
 
+class ImageDiffMetric(Metric):
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+
+        def dif_score(reference: np.ndarray, prediction: np.ndarray):
+            dif_image = prediction - reference
+            dif_image.shape
+            flatten_dif_image = dif_image.ravel()
+            norm = np.linalg.norm(flatten_dif_image)
+            norm_normalized = norm / math.prod(dif_image.shape)
+
+            return 100.0 / (1 + math.log(1 + 10 * norm_normalized)), norm_normalized
+
+        references = dataset["image_solution"]
+        predictions = dataset["images_result"]
+        references = [np.array(pil_image.convert("RGB")) for pil_image in references]
+        predictions = [
+            [np.array(pil_image.convert("RGB")) for pil_image in pil_images]
+            for pil_images in predictions
+        ]
+
+        return [
+            [dif_score(reference, prediction) for prediction in row_predictions]
+            for reference, row_predictions in zip(references, predictions)
+        ]
+
+
 def instantiate_metrics(metric_names: list[str]) -> list[Metric]:
 
     logger.info(f"loading metrics : " + str(metric_names))
@@ -405,6 +431,7 @@ def instantiate_metrics(metric_names: list[str]) -> list[Metric]:
         "LPIPS": LPIPSMetric,
         "psnr": PSNRMetric,
         "msssim": MSSSIMMetric,
+        "imageDiff": ImageDiffMetric,
     }
     metrics: set[Metric] = set([metric_map[m_name] for m_name in set(metric_names)])
     if set([ClipImageMetric, ClipTextMetric]) & metrics:

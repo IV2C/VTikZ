@@ -49,7 +49,7 @@
 - [X] In the notebook, do a flatmap on the values in each array instead of taking only the "best_metric"
 - [X] Metrics Bleu, chrf, TER on patch only
 - [X] Add a cache mechanism(based on a hash of "model",prompt,temperature), only for testing purposes(unless temperature 0?)
-- [ ] Metrics strict image equality
+- [X] Metrics strict image equality
 - [ ] Fix LMM loop
 - [X] Relaunch llama3.1 8B with the other metrics done
 - [ ] Human evaluation tool with comments

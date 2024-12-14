@@ -46,6 +46,7 @@ parser.add_argument(
         "LPIPS",
         "psnr",
         "msssim",
+        "imageDiff",
     ],
 )
 

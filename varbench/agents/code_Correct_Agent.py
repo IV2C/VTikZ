@@ -53,7 +53,9 @@ class CodeCorrectAgent:
                     error_message=re.extract_error(), code=code
                 )
                 messages.append({"role": "user", "content": user_message})
-                code = get_first_code_block(self.api.chat_request(messages)[0])
+                correct_agent_response = self.api.chat_request(messages)[0]
+                logger.warning(correct_agent_response)
+                code = get_first_code_block(correct_agent_response)
         try:
             return self.renderer.from_string_to_image(code), replace_first_code_block(original_response,code)
         except RendererException as re:

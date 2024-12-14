@@ -53,11 +53,7 @@ class LMMLoopAgent(Agent):
             original_response
         )
         messages.append({"role": "assistant", "content": original_response})
-        # debugging
-        if self.debug_store_conv:
-            with open(f".tmp/debug/original_response.txt", "w") as debug_file:
-                debug_file.write(response)
-            computed_image.save(f".tmp/debug/original_image.jpg")
+
         # making self-refining interactions
         for i in range(self.interation_nb):
 
@@ -66,7 +62,7 @@ class LMMLoopAgent(Agent):
             response = self.api.chat_request(messages)[0]
 
             if (
-                "instruction satisfied" in response
+                "instruction satisfied" in response or "```" not in response
             ):  # stopping the conversation if the instruction is satisfied
                 break
             # calling the code correcting agent
@@ -74,22 +70,16 @@ class LMMLoopAgent(Agent):
                 response
             )
 
-            # debugging
-            if self.debug_store_conv:
-                with open(f".tmp/debug/response{i}.txt", "w") as debug_file:
-                    debug_file.write(response)
-                computed_image.save(f".tmp/debug/image{i}.jpg")
-
             # adding the code response to the conversation
             messages.append({"role": "assistant", "content": response})
 
-            if not computed_image or not code:
+            if not computed_image or not response:
                 return (
                     None  # the code correcting agent did not manage to correct the code
                 )
 
         logger.info(messages)
-        return response
+        return get_first_code_block(response)
 
     def batchCompute(
         self,

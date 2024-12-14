@@ -23,10 +23,8 @@ if get_config("MAIN").get("cache_enabled"):
 
     if not os.path.exists(cache_path):
         os.mkdir(cache_path)
-    
-    cache_location = os.path.join(
-        cache_path, "chat_cache"
-    )
+
+    cache_location = os.path.join(cache_path, "chat_cache")
 
     if os.path.exists(cache_location):
         cache_chatapi = open(cache_location, "rb")
@@ -36,11 +34,9 @@ if get_config("MAIN").get("cache_enabled"):
 
     def save_cache(cache, cache_location):
         logger.info("program exited, saving cache")
-        logger.info(str(cache))
         pickle.dump(cache, open(cache_location, "wb"))
 
     logger.info("chat api cache loaded")
-    logger.info(str(cache))
     atexit.register(lambda: save_cache(cache, cache_location))
 
 
@@ -51,10 +47,13 @@ def CachedRequest(func):
         model_name = args[0].model_name
         temperature = args[0].temperature
         seed = args[0].seed
+        n = args[0].n
         messages = str(args[1])
         func_name = func.__name__
 
-        input_hash = hashlib.sha1(str((seed, model_name, temperature, messages, func_name)).encode("utf8")).hexdigest()
+        input_hash = hashlib.sha1(
+            str((seed, model_name, temperature, messages, func_name, n)).encode("utf8")
+        ).hexdigest()
 
         return_value = cache.get(input_hash)
         if not return_value:
@@ -62,7 +61,8 @@ def CachedRequest(func):
             cache[input_hash] = return_value
             logger.debug("new cache")
             logger.debug(str(cache))
-
+        else:
+            logger.warning("Cache hit")
         return return_value
 
     return checkForCached
