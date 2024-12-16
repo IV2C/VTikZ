@@ -11,6 +11,7 @@ class TestCache(unittest.TestCase):
             self.temperature = 0.55
             self.model_name = "test_model_name"
             self.seed = 55
+            self.n=55
             super().__init__()
 
         @CachedRequest
