@@ -56,7 +56,7 @@ class BleuMetric(Metric):
     def __init__(self, *args, **kwargs) -> None:
         from sacrebleu import BLEU
 
-        self.bleu = BLEU()
+        self.bleu = BLEU(effective_order=True, max_ngram_order=8)
         super().__init__(*args, **kwargs)
 
     def compute(self, dataset: Dataset) -> list[list[float]]:
@@ -79,7 +79,7 @@ class BleuPatchMetric(Metric):
     def __init__(self, *args, **kwargs) -> None:
         from sacrebleu import BLEU
 
-        self.bleu = BLEU()
+        self.bleu = BLEU(effective_order=True, max_ngram_order=8)
         super().__init__(*args, **kwargs)
 
     def compute(self, dataset: Dataset) -> list[list[float]]:
@@ -89,6 +89,59 @@ class BleuPatchMetric(Metric):
         bleu_patch_scores = [
             [
                 self.bleu.sentence_score(row_patch, [reference_patch]).score
+                for row_patch in computed_patches
+            ]
+            for computed_patches, reference_patch in zip(individual_patches, patches)
+        ]
+        return bleu_patch_scores
+
+
+## Non-agnostic metric
+class CrystalBleuMetric(Metric):
+    def __init__(self, dataset: Dataset, *args, **kwargs) -> None:
+        from .crystal_bleu import CrystalBLEU
+
+        full_corpus: list[str] = dataset["code"]
+
+        self.crystal_bleu = CrystalBLEU(
+            effective_order=True, max_ngram_order=8, full_corpus=full_corpus, k=500
+        )
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+        logger.info("Computing bleu_score")
+        all_predictions = dataset["predictions"]
+        solutions = dataset["code_solution"]
+
+        bleu_scores = [
+            [
+                self.crystal_bleu.sentence_score(row_prediction, [solution]).score
+                for row_prediction in predictions
+            ]
+            for predictions, solution in zip(all_predictions, solutions)
+        ]
+
+        return bleu_scores
+
+
+class CrystalBleuPatchMetric(Metric):
+    def __init__(self, dataset: Dataset, *args, **kwargs) -> None:
+        from .crystal_bleu import CrystalBLEU
+
+        full_corpus: list[str] = dataset["code"]
+
+        self.crystal_bleu = CrystalBLEU(
+            effective_order=True, max_ngram_order=8, full_corpus=full_corpus, k=500
+        )
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+        logger.info("Computing bleu_patch_score")
+        patches = dataset["patch"]
+        individual_patches = dataset["predictions_patches"]
+        bleu_patch_scores = [
+            [
+                self.crystal_bleu.sentence_score(row_patch, [reference_patch]).score
                 for row_patch in computed_patches
             ]
             for computed_patches, reference_patch in zip(individual_patches, patches)
@@ -412,31 +465,69 @@ class ImageDiffMetric(Metric):
         ]
 
 
-def instantiate_metrics(metric_names: list[str]) -> list[Metric]:
+agnostic_metric_map = {
+    "patch": PatchMetric,
+    "line": LineMetric,
+    "clipImage": ClipImageMetric,
+    "clipText": ClipTextMetric,
+    "bleu": BleuMetric,
+    "bleuPatch": BleuPatchMetric,
+    "crystalBleu": BleuMetric,
+    "crystalBleuPatch": BleuPatchMetric,
+    "chrf": ChrfMetric,
+    "chrfPatch": ChrfPatchMetric,
+    "TER": TERMetric,
+    "TERPatch": TERPatchMetric,
+    "featureMatch": FeatureMatchMetric,
+    "LPIPS": LPIPSMetric,
+    "psnr": PSNRMetric,
+    "msssim": MSSSIMMetric,
+    "imageDiff": ImageDiffMetric,
+}
+non_agnostic_metric_map = {
+    "crystalBleu": BleuMetric,
+    "crystalBleuPatch": BleuPatchMetric,
+}
 
+
+def instantiate_agnostic_metrics(metric_names: list[str]) -> list[Metric]:
+    """isntantiates the appropriate metrics, given alist of strings
+
+    Args:
+        metric_names (list[str]): list of the metrics' names
+        dataset (Dataset): The hg dataset from the current evaluated subset
+
+    Returns:
+        list[Metric]: list of metrics
+    """
     logger.info(f"loading metrics : " + str(metric_names))
 
-    metric_map = {
-        "patch": PatchMetric,
-        "line": LineMetric,
-        "clipImage": ClipImageMetric,
-        "clipText": ClipTextMetric,
-        "bleu": BleuMetric,
-        "bleuPatch": BleuPatchMetric,
-        "chrf": ChrfMetric,
-        "chrfPatch": ChrfPatchMetric,
-        "TER": TERMetric,
-        "TERPatch": TERPatchMetric,
-        "featureMatch": FeatureMatchMetric,
-        "LPIPS": LPIPSMetric,
-        "psnr": PSNRMetric,
-        "msssim": MSSSIMMetric,
-        "imageDiff": ImageDiffMetric,
-    }
-    metrics: set[Metric] = set([metric_map[m_name] for m_name in set(metric_names)])
+    metrics: set[Metric] = set(
+        [agnostic_metric_map[m_name] for m_name in set(metric_names)]
+    )
     if set([ClipImageMetric, ClipTextMetric]) & metrics:
         clip_comparer = ClipComparer()
     return [metric(clip_comparer) for metric in metrics]
+
+
+def instantiate_non_agnostic_metrics(
+    metric_names: list[str], dataset: Dataset
+) -> list[Metric]:
+    """isntantiates the appropriate metrics, given alist of strings
+
+    Args:
+        metric_names (list[str]): list of the metrics' names
+        dataset (Dataset): The hg dataset from the current evaluated subset
+
+    Returns:
+        list[Metric]: list of metrics
+    """
+    logger.info(f"loading metrics : " + str(metric_names))
+
+    metrics: set[Metric] = set(
+        [non_agnostic_metric_map[m_name] for m_name in set(metric_names)]
+    )
+    return [metric(dataset=dataset) for metric in metrics]
 
 
 import math

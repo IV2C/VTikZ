@@ -4,7 +4,7 @@ import cairosvg
 import PIL
 import io
 from xml.etree.ElementTree import ParseError
-
+from loguru import logger
 class SvgRenderer(Renderer):
     def __init__(self):
         pass
@@ -21,12 +21,13 @@ class SvgRenderer(Renderer):
             raise SvgRendererException(pe.msg)
         
 class SvgRendererException(RendererException):
-    def __init__(self, message:str, *args: object) -> None:
-        super().__init__(message,*args)
+    def __init__(self, message:str, *args: object) -> str:
+        logger.warning(message)
+        super().__init__(str(message),*args)
     def __str__(self) -> str:
         return f"[SvgRendererException:{self.message}]"
     def extract_error(self):
         """extracts the meaningful error from the error message 
         """
         #TODO
-        pass
+        return self.message

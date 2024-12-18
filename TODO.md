@@ -50,11 +50,15 @@
 - [X] Metrics Bleu, chrf, TER on patch only
 - [X] Add a cache mechanism(based on a hash of "model",prompt,temperature), only for testing purposes(unless temperature 0?)
 - [X] Metrics strict image equality
-- [ ] Fix LMM loop
+- [X] Fix LMM loop
 - [X] Relaunch llama3.1 8B with the other metrics done
+- [X] Svg renderer error parsing
+- [ ] Implement crystal-bleu => https://dl.acm.org/doi/pdf/10.1145/3551349.3556903 | https://github.com/sola-st/crystalbleu
+- [ ] Implement EED => https://aclanthology.org/W19-5359/ and https://github.com/rwth-i6/ExtendedEditDistance/blob/master/EED.py
 - [ ] Human evaluation tool with comments
+- [ ] ascii art "renderer"
 - [ ] Test LLM-only models then compare with Multimodal with image in input
-- [ ] Add a default seed to the apis? 
+- [X] Add a default seed to the apis? 
 - [ ] test llm-vlm loop on the test dataset
 - [X] create a multimodal loop model(give the model the image he generated and iterate)
 - [X] create a multimodal vision loop agent that is similar to the LLM+VLM but that has a more complex vision instruction(see the prompt templates)
@@ -65,7 +69,7 @@
 
 Eventually
 - [ ] Create a SimpleOpenAi API, in the case of an api compatible with openai, but that does not support anything but simple requests
-- [ ] ascii art "renderer"
+
 - [X] github action
   - [X] Tests
   - [ ] creates and publishes the dataset

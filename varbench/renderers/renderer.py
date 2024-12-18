@@ -24,7 +24,7 @@ class RendererException(Exception):
         super().__init__(*args)
     def __str__(self) -> str:
         return f"[RendererException:{self.message}]"
-    def extract_error(self):
+    def extract_error(self) -> str:
         """extracts the meaningful error from the error message 
         """
         pass

@@ -67,7 +67,6 @@ class TestRenderers(unittest.TestCase):
         with self.assertRaises(RendererException) as context:
             compiler.from_string_to_image(tikzstring)
 
-        # Access the exception message
         self.assertEqual(
             context.exception.extract_error(),
             """! Extra }, or forgotten \\endgroup.
@@ -75,7 +74,7 @@ class TestRenderers(unittest.TestCase):
 \\egroup \\egroup \\fi \\pgfke...
 l.60 \\pic {squid}
 ;""",
-        )  # Or use assert to verify the message
+        ) 
 
     @timeout_decorator.timeout(600)
     def test_svg_from_string_exception(self):
@@ -85,7 +84,15 @@ l.60 \\pic {squid}
         svgFile = os.path.join("tests/resources/svg", "malformed.svg")
         with open(svgFile, "r") as f:
             svgstring = f.read()
+            
+        with self.assertRaises(RendererException) as context:
+            compiler.from_string_to_image(svgstring)
 
+
+        self.assertEqual(
+            context.exception.extract_error(),
+            """mismatched tag: line 61, column 2""",
+        ) 
         self.assertRaises(RendererException, compiler.from_string_to_image, svgstring)
 
     def tearDown(self):

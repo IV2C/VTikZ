@@ -3,7 +3,10 @@ import os
 import argparse
 
 from varbench.api.chat_api import ChatApi
-from varbench.evaluation.metrics import instantiate_metrics
+from varbench.evaluation.metrics import (
+    instantiate_agnostic_metrics,
+    instantiate_non_agnostic_metrics,
+)
 from varbench.renderers import Renderer, SvgRenderer, TexRenderer
 from varbench.utils.model_launch import launch_model
 from varbench.evaluation.evaluator import evaluate, generate
@@ -38,6 +41,8 @@ parser.add_argument(
         "clipText",
         "bleu",
         "bleuPatch",
+        "crystalBleu",
+        "crystalBleuPatch",
         "chrf",
         "chrfPatch",
         "TER",
@@ -240,8 +245,8 @@ for subset in subsets:
     subset_processed: Dataset = generate(dataset, agent, renderer)
     subset_processed.save_to_disk(subset_generation_result_path)
 
-# instantiating metrics
-metrics = instantiate_metrics(args.metrics)
+# instantiating dataset agnostic metrics
+agnostic_metrics = instantiate_agnostic_metrics(args.metrics)
 # stopping the model if running
 if model_process:
     model_process.terminate()
@@ -255,6 +260,9 @@ for subset in subsets:
     # loading existing dataset
     subset_generation_result_path = os.path.join(generation_result_path, subset)
     dataset = Dataset.load_from_disk(subset_generation_result_path)
+
+    # instantiating non agnostic metrics
+    metrics = agnostic_metrics + instantiate_non_agnostic_metrics(args.metrics)
 
     # evaluating
     score_dataset = evaluate(dataset, metrics)

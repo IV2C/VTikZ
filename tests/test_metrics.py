@@ -1,14 +1,19 @@
 import unittest
 
 from varbench.evaluation.metrics import (
+    BleuMetric,
     BleuPatchMetric,
+    ChrfMetric,
     ChrfPatchMetric,
+    CrystalBleuMetric,
+    CrystalBleuPatchMetric,
     FeatureMatchMetric,
     LPIPSMetric,
     MSSSIMMetric,
     Metric,
     PSNRMetric,
     PatchMetric,
+    TERMetric,
     TERPatchMetric,
 )
 from PIL import Image
@@ -76,6 +81,7 @@ class TestPatchTextMetrics(unittest.TestCase):
     @classmethod
     def setUpClass(self) -> None:
         dataset = {
+            "code": ["@@ @@ @@ @@ Hello Hello Hello Hello"],
             "patch": ["@@ -1 +1 @@ \n -Hello Word! \n +Hello World!"],
             "predictions_patches": [
                 [
@@ -87,6 +93,7 @@ class TestPatchTextMetrics(unittest.TestCase):
         }
         features = datasets.Features(
             {
+                "code": datasets.Value("string"),
                 "patch": datasets.Value("string"),
                 "predictions_patches": datasets.Sequence(datasets.Value("string")),
             }
@@ -107,7 +114,7 @@ class TestPatchTextMetrics(unittest.TestCase):
         result_scores = bleu_patch_metric.compute(self.dataset)
         logger.info(result_scores)
         self.assertEqual(round(result_scores[0][0], 5), 100.0)
-        self.assertEqual(round(result_scores[0][1], 5), 85.55262)
+        self.assertEqual(round(result_scores[0][1], 5), 80.62626)
         self.assertEqual(round(result_scores[0][2], 5), 0.0)
         self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
 
@@ -127,4 +134,70 @@ class TestPatchTextMetrics(unittest.TestCase):
         self.assertEqual(round(result_scores[0][0], 5), 100.0)
         self.assertEqual(round(result_scores[0][1], 5), 88.88889)
         self.assertEqual(round(result_scores[0][2], 5), 50.0)
+        self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
+
+    def test_crystalbleu_patch_metrics(self):
+        ter_patch_metric: Metric = CrystalBleuPatchMetric(dataset=self.dataset)
+        result_scores = ter_patch_metric.compute(self.dataset)
+        logger.info(result_scores)
+        self.assertEqual(round(result_scores[0][0], 5), 100.0)
+        self.assertEqual(round(result_scores[0][1], 5), 79.85104)
+        self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
+
+
+class TestTextMetrics(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(self) -> None:
+        dataset = {
+            "code": [open("tests/resources/tikz/cow/cow.tex").read()],
+            "code_solution": [
+                open("tests/resources/tikz/cow/cow_brown_dots.tex").read()
+            ],
+            "predictions": [
+                [
+                    open("tests/resources/tikz/cow/cow_brown_dots.tex").read(),
+                    open("tests/resources/tikz/cow/cow_brown_dots_dif.tex").read(),
+                ]
+            ],
+        }
+        features = datasets.Features(
+            {
+                "code": datasets.Value("string"),
+                "code_solution": datasets.Value("string"),
+                "predictions": datasets.Sequence(datasets.Value("string")),
+            }
+        )
+        self.dataset = datasets.Dataset.from_dict(dataset, features=features)
+
+    def test_bleu_metrics(self):
+        bleu_patch_metric: Metric = BleuMetric()
+        result_scores = bleu_patch_metric.compute(self.dataset)
+        logger.info(result_scores)
+        self.assertEqual(round(result_scores[0][0], 5), 100.0)
+        self.assertEqual(round(result_scores[0][1], 5), 97.80731)
+        self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
+
+    def test_chrf_metrics(self):
+        chrf_patch_metric: Metric = ChrfMetric()
+        result_scores = chrf_patch_metric.compute(self.dataset)
+        logger.info(result_scores)
+        self.assertEqual(round(result_scores[0][0], 5), 100.0)
+        self.assertEqual(round(result_scores[0][1], 5), 99.22962)
+        self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
+
+    def test_TER_metrics(self):
+        ter_patch_metric: Metric = TERMetric()
+        result_scores = ter_patch_metric.compute(self.dataset)
+        logger.info(result_scores)
+        self.assertEqual(round(result_scores[0][0], 5), 100.0)
+        self.assertEqual(round(result_scores[0][1], 5), 94.73684)
+        self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
+
+    def test_crystalbleu_metrics(self):
+        ter_patch_metric: Metric = CrystalBleuMetric(dataset=self.dataset)
+        result_scores = ter_patch_metric.compute(self.dataset)
+        logger.info(result_scores)
+        self.assertEqual(round(result_scores[0][0], 5), 100.0)
+        self.assertEqual(round(result_scores[0][1], 5), 85.43634)
         self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])

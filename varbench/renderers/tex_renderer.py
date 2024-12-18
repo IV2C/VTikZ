@@ -65,7 +65,7 @@ class TexRendererException(RendererException):
     def __str__(self) -> str:
         return f"[TexRendererException:{self.message}]"
 
-    def extract_error(self):
+    def extract_error(self)->str:
         error_lines = []
         start_saving = False
         exception_message = self.message.split("\n")
