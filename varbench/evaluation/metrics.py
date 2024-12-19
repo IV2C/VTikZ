@@ -4,6 +4,7 @@ import torch.utils
 import torch.utils
 
 from varbench.evaluation.clip_comparer import ClipComparer
+from varbench.evaluation.eed.EED import eed
 from varbench.evaluation.line_patch_scorer import compute_line_score
 from varbench.utils.patches import patches
 
@@ -96,59 +97,6 @@ class BleuPatchMetric(Metric):
         return bleu_patch_scores
 
 
-## Non-agnostic metric
-class CrystalBleuMetric(Metric):
-    def __init__(self, dataset: Dataset, *args, **kwargs) -> None:
-        from .crystal_bleu import CrystalBLEU
-
-        full_corpus: list[str] = dataset["code"]
-
-        self.crystal_bleu = CrystalBLEU(
-            effective_order=True, max_ngram_order=8, full_corpus=full_corpus, k=500
-        )
-        super().__init__(*args, **kwargs)
-
-    def compute(self, dataset: Dataset) -> list[list[float]]:
-        logger.info("Computing bleu_score")
-        all_predictions = dataset["predictions"]
-        solutions = dataset["code_solution"]
-
-        bleu_scores = [
-            [
-                self.crystal_bleu.sentence_score(row_prediction, [solution]).score
-                for row_prediction in predictions
-            ]
-            for predictions, solution in zip(all_predictions, solutions)
-        ]
-
-        return bleu_scores
-
-
-class CrystalBleuPatchMetric(Metric):
-    def __init__(self, dataset: Dataset, *args, **kwargs) -> None:
-        from .crystal_bleu import CrystalBLEU
-
-        full_corpus: list[str] = dataset["code"]
-
-        self.crystal_bleu = CrystalBLEU(
-            effective_order=True, max_ngram_order=8, full_corpus=full_corpus, k=500
-        )
-        super().__init__(*args, **kwargs)
-
-    def compute(self, dataset: Dataset) -> list[list[float]]:
-        logger.info("Computing bleu_patch_score")
-        patches = dataset["patch"]
-        individual_patches = dataset["predictions_patches"]
-        bleu_patch_scores = [
-            [
-                self.crystal_bleu.sentence_score(row_patch, [reference_patch]).score
-                for row_patch in computed_patches
-            ]
-            for computed_patches, reference_patch in zip(individual_patches, patches)
-        ]
-        return bleu_patch_scores
-
-
 class ChrfMetric(Metric):
     def __init__(self, *args, **kwargs) -> None:
         from sacrebleu import CHRF
@@ -208,7 +156,13 @@ class TERMetric(Metric):
         ter_inverted_scores = [
             [
                 (100 * 100)
-                / (self.ter.sentence_score(row_prediction, [solution]).score + 100)
+                / (
+                    100
+                    + min(
+                        100.0,
+                        self.ter.sentence_score(row_prediction, [solution]).score,
+                    )
+                )
                 for row_prediction in predictions
             ]
             for predictions, solution in zip(all_predictions, solutions)
@@ -231,7 +185,99 @@ class TERPatchMetric(Metric):
         bleu_patch_scores = [
             [
                 (100 * 100)
-                / (100 + self.ter.sentence_score(row_patch, [reference_patch]).score)
+                / (
+                    100
+                    + min(
+                        100.0,
+                        self.ter.sentence_score(row_patch, [reference_patch]).score,
+                    )
+                )
+                for row_patch in computed_patches
+            ]
+            for computed_patches, reference_patch in zip(individual_patches, patches)
+        ]
+        return bleu_patch_scores
+
+
+class EEDMetric(Metric):
+
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+        logger.info("Computing eed_score")
+        all_predictions = dataset["predictions"]
+        solutions = dataset["code_solution"]
+
+        eed_inverted_scores = [
+            [
+                100 / (1 + eed(row_prediction, solution))
+                for row_prediction in predictions
+            ]
+            for predictions, solution in zip(all_predictions, solutions)
+        ]
+        return eed_inverted_scores
+
+
+class EEDPatchMetric(Metric):
+
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+        logger.info("Computing eed_patch_score")
+        patches = dataset["patch"]
+        individual_patches = dataset["predictions_patches"]
+        eed_patch_scores = [
+            [
+                100 / (1 + eed(row_patch, reference_patch))
+                for row_patch in computed_patches
+            ]
+            for computed_patches, reference_patch in zip(individual_patches, patches)
+        ]
+        return eed_patch_scores
+
+
+## Non-agnostic metric
+class CrystalBleuMetric(Metric):
+    def __init__(self, dataset: Dataset, *args, **kwargs) -> None:
+        from .crystal_bleu import CrystalBLEU
+
+        full_corpus: list[str] = dataset["code"]
+
+        self.crystal_bleu = CrystalBLEU(
+            effective_order=True, max_ngram_order=8, full_corpus=full_corpus, k=500
+        )
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+        logger.info("Computing bleu_score")
+        all_predictions = dataset["predictions"]
+        solutions = dataset["code_solution"]
+
+        bleu_scores = [
+            [
+                self.crystal_bleu.sentence_score(row_prediction, [solution]).score
+                for row_prediction in predictions
+            ]
+            for predictions, solution in zip(all_predictions, solutions)
+        ]
+
+        return bleu_scores
+
+
+class CrystalBleuPatchMetric(Metric):
+    def __init__(self, dataset: Dataset, *args, **kwargs) -> None:
+        from .crystal_bleu import CrystalBLEU
+
+        full_corpus: list[str] = dataset["code"]
+
+        self.crystal_bleu = CrystalBLEU(
+            effective_order=True, max_ngram_order=8, full_corpus=full_corpus, k=500
+        )
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+        logger.info("Computing bleu_patch_score")
+        patches = dataset["patch"]
+        individual_patches = dataset["predictions_patches"]
+        bleu_patch_scores = [
+            [
+                self.crystal_bleu.sentence_score(row_patch, [reference_patch]).score
                 for row_patch in computed_patches
             ]
             for computed_patches, reference_patch in zip(individual_patches, patches)

@@ -7,6 +7,8 @@ from varbench.evaluation.metrics import (
     ChrfPatchMetric,
     CrystalBleuMetric,
     CrystalBleuPatchMetric,
+    EEDMetric,
+    EEDPatchMetric,
     FeatureMatchMetric,
     LPIPSMetric,
     MSSSIMMetric,
@@ -144,6 +146,15 @@ class TestPatchTextMetrics(unittest.TestCase):
         self.assertEqual(round(result_scores[0][1], 5), 79.85104)
         self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
 
+    def test_EED_patch_metrics(self):
+        eed_patch_metric: Metric = EEDPatchMetric()
+        result_scores = eed_patch_metric.compute(self.dataset)
+        logger.info(result_scores)
+        self.assertEqual(round(result_scores[0][0], 5), 100.0)
+        self.assertEqual(round(result_scores[0][1], 5), 98.88393)
+        self.assertEqual(round(result_scores[0][2], 5), 51.81159)
+        self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
+
 
 class TestTextMetrics(unittest.TestCase):
 
@@ -195,9 +206,17 @@ class TestTextMetrics(unittest.TestCase):
         self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
 
     def test_crystalbleu_metrics(self):
-        ter_patch_metric: Metric = CrystalBleuMetric(dataset=self.dataset)
-        result_scores = ter_patch_metric.compute(self.dataset)
+        crystalbleu_patch_metric: Metric = CrystalBleuMetric(dataset=self.dataset)
+        result_scores = crystalbleu_patch_metric.compute(self.dataset)
         logger.info(result_scores)
         self.assertEqual(round(result_scores[0][0], 5), 100.0)
         self.assertEqual(round(result_scores[0][1], 5), 85.43634)
+        self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
+
+    def test_eed_metrics(self):
+        eed_patch_metric: Metric = EEDMetric(dataset=self.dataset)
+        result_scores = eed_patch_metric.compute(self.dataset)
+        logger.info(result_scores)
+        self.assertEqual(round(result_scores[0][0], 5), 100.0)
+        self.assertEqual(round(result_scores[0][1], 5), 98.8533)
         self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
