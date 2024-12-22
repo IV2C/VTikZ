@@ -29,5 +29,4 @@ class SvgRendererException(RendererException):
     def extract_error(self):
         """extracts the meaningful error from the error message 
         """
-        #TODO
         return self.message

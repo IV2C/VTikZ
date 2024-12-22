@@ -1,3 +1,4 @@
+import uuid
 import PIL.Image
 from . import Renderer
 import os
@@ -30,7 +31,8 @@ class TexRenderer(Renderer):
         image.save(output)
 
     def from_string_to_image(self, input_string: str) -> PIL.Image.Image:
-        tmp_file_path = os.path.join(self.cache_path, "tmp.tex")
+        current_temp_file = str(uuid.uuid4()) + ".tex"
+        tmp_file_path = os.path.join(self.cache_path, current_temp_file)
         file = open(tmp_file_path, "w")
         file.write(input_string)
         file.flush()
@@ -55,7 +57,10 @@ class TexRenderer(Renderer):
         )
 
         logger.debug("converting to png")
-        return convert_from_path(pdf_path=output_file_name)[0]
+        to_return_image = convert_from_path(pdf_path=output_file_name)[0]
+        for ext in ["pdf", "tex", "aux", "log"]:
+            os.remove(output_file_name.replace("pdf", ext))
+        return to_return_image
 
 
 class TexRendererException(RendererException):
@@ -65,7 +70,7 @@ class TexRendererException(RendererException):
     def __str__(self) -> str:
         return f"[TexRendererException:{self.message}]"
 
-    def extract_error(self)->str:
+    def extract_error(self) -> str:
         error_lines = []
         start_saving = False
         exception_message = self.message.split("\n")

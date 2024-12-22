@@ -490,7 +490,6 @@ class ImageDiffMetric(Metric):
 
         def dif_score(reference: np.ndarray, prediction: np.ndarray):
             dif_image = prediction - reference
-            dif_image.shape
             flatten_dif_image = dif_image.ravel()
             norm = np.linalg.norm(flatten_dif_image)
             norm_normalized = norm / math.prod(dif_image.shape)
