@@ -391,11 +391,8 @@ class LPIPSMetric(Metric):
 
         self.transform = transforms.Compose(
             [
-                transforms.Resize((64, 64)),
                 transforms.ToTensor(),
-                transforms.Normalize(
-                    mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)
-                ),  # Normalize to [-1, 1]
+                transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
             ]
         )
         self.loss_fn_alex = lpips.LPIPS(net="alex")
@@ -510,6 +507,34 @@ class ImageDiffMetric(Metric):
         ]
 
 
+class MSEMetric(Metric):
+    def __init__(self, *args, **kwargs):
+        import torchvision.transforms as transforms
+
+        self.to_tensor = transforms.ToTensor()
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+
+        def mse_similarity(hyp, ref):
+            err = torch.mean((ref - hyp) ** 2)
+
+            return 100.0 - (100.0 * err)
+
+        references = dataset["image_solution"]
+        predictions = dataset["images_result"]
+        references = [self.to_tensor(pil_image.convert("RGB")) for pil_image in references]
+        predictions = [
+            [self.to_tensor(pil_image.convert("RGB")) for pil_image in pil_images]
+            for pil_images in predictions
+        ]
+
+        return [
+            [mse_similarity(reference, prediction) for prediction in row_predictions]
+            for reference, row_predictions in zip(references, predictions)
+        ]
+
+
 agnostic_metric_map = {
     "patch": PatchMetric,
     "line": LineMetric,
@@ -528,6 +553,7 @@ agnostic_metric_map = {
     "psnr": PSNRMetric,
     "msssim": MSSSIMMetric,
     "imageDiff": ImageDiffMetric,
+    "MSE": MSEMetric,
 }
 non_agnostic_metric_map = {
     "crystalBleu": BleuMetric,

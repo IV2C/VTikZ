@@ -52,6 +52,7 @@ parser.add_argument(
         "psnr",
         "msssim",
         "imageDiff",
+        "MSE",
     ],
 )
 
