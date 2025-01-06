@@ -40,7 +40,7 @@ class TestRenderers(unittest.TestCase):
         with open(tikzfile, "r") as f:
             tikzstring = f.read()
 
-        result: PIL.Image = compiler.from_string_to_image(tikzstring)
+        result: PIL.Image.Image = compiler.from_string_to_image(tikzstring)
         self.assertTrue(np.any(np.array(result)))
 
     @timeout_decorator.timeout(600)
@@ -52,7 +52,7 @@ class TestRenderers(unittest.TestCase):
         with open(svgFile, "r") as f:
             svgstring = f.read()
 
-        result: PIL.Image = compiler.from_string_to_image(svgstring)
+        result: PIL.Image.Image = compiler.from_string_to_image(svgstring)
         self.assertTrue(np.any(np.array(result)))
 
     @timeout_decorator.timeout(600)
@@ -94,6 +94,41 @@ l.60 \\pic {squid}
             """mismatched tag: line 61, column 2""",
         ) 
         self.assertRaises(RendererException, compiler.from_string_to_image, svgstring)
+
+
+    @timeout_decorator.timeout(600)
+    def test_p5js_from_string(self):
+        from varbench.renderers import P5JSRenderer
+
+        compiler = P5JSRenderer()
+        p5js_file = os.path.join("tests/resources/p5js", "kirby.js")
+        with open(p5js_file, "r") as f:
+            p5js_String = f.read()
+
+        result: PIL.Image.Image = compiler.from_string_to_image(p5js_String)
+
+        self.assertTrue(np.any(np.array(result)))
+        
+    @timeout_decorator.timeout(600)
+    def test_P5js_from_string_exception(self):
+        from varbench.renderers import P5JSRenderer, RendererException
+
+        compiler = P5JSRenderer()
+        p5js_file = os.path.join("tests/resources/p5js", "malformed.js")
+        with open(p5js_file, "r") as f:
+            p5js_string = f.read()
+            
+        with self.assertRaises(RendererException) as context:
+            compiler.from_string_to_image(p5js_string)
+
+
+        self.assertTrue(
+            """Uncaught SyntaxError: Invalid or unexpected token""" in context.exception.extract_error()
+            
+        ) 
+        self.assertRaises(RendererException, compiler.from_string_to_image, p5js_string)
+
+
 
     def tearDown(self):
         if os.path.exists("tests/resources/tikz/dog.jpeg"):
