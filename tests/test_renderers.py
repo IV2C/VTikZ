@@ -97,6 +97,7 @@ l.60 \\pic {squid}
 
 
     @timeout_decorator.timeout(600)
+    @unittest.skipIf(os.environ.get("CI"), "P5 tests skipped for P5js, browser too big for CI")
     def test_p5js_from_string(self):
         from varbench.renderers import P5JSRenderer
 
@@ -110,6 +111,7 @@ l.60 \\pic {squid}
         self.assertTrue(np.any(np.array(result)))
         
     @timeout_decorator.timeout(600)
+    @unittest.skipIf(os.environ.get("CI"), "P5 tests skipped for P5js, browser too big for CI")
     def test_P5js_from_string_exception(self):
         from varbench.renderers import P5JSRenderer, RendererException
 
