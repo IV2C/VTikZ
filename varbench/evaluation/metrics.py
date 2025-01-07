@@ -245,7 +245,7 @@ class CrystalBleuMetric(Metric):
         super().__init__(*args, **kwargs)
 
     def compute(self, dataset: Dataset) -> list[list[float]]:
-        logger.info("Computing bleu_score")
+        logger.info("Computing crystalbleu_score")
         all_predictions = dataset["predictions"]
         solutions = dataset["code_solution"]
 
@@ -272,7 +272,7 @@ class CrystalBleuPatchMetric(Metric):
         super().__init__(*args, **kwargs)
 
     def compute(self, dataset: Dataset) -> list[list[float]]:
-        logger.info("Computing bleu_patch_score")
+        logger.info("Computing crystalbleu_patch_score")
         patches = dataset["patch"]
         individual_patches = dataset["predictions_patches"]
         bleu_patch_scores = [
@@ -491,7 +491,7 @@ class ImageDiffMetric(Metric):
             norm = np.linalg.norm(flatten_dif_image)
             norm_normalized = norm / math.prod(dif_image.shape)
 
-            return 100.0 / (1 + math.log(1 + 10 * norm_normalized)), norm_normalized
+            return 100.0 / (1 + math.log(1 + 10 * norm_normalized))
 
         references = dataset["image_solution"]
         predictions = dataset["images_result"]
@@ -523,14 +523,19 @@ class MSEMetric(Metric):
 
         references = dataset["image_solution"]
         predictions = dataset["images_result"]
-        references = [self.to_tensor(pil_image.convert("RGB")) for pil_image in references]
+        references = [
+            self.to_tensor(pil_image.convert("RGB")) for pil_image in references
+        ]
         predictions = [
             [self.to_tensor(pil_image.convert("RGB")) for pil_image in pil_images]
             for pil_images in predictions
         ]
 
         return [
-            [mse_similarity(reference, prediction) for prediction in row_predictions]
+            [
+                mse_similarity(reference, prediction).item()
+                for prediction in row_predictions
+            ]
             for reference, row_predictions in zip(references, predictions)
         ]
 
@@ -542,8 +547,6 @@ agnostic_metric_map = {
     "clipText": ClipTextMetric,
     "bleu": BleuMetric,
     "bleuPatch": BleuPatchMetric,
-    "crystalBleu": BleuMetric,
-    "crystalBleuPatch": BleuPatchMetric,
     "chrf": ChrfMetric,
     "chrfPatch": ChrfPatchMetric,
     "TER": TERMetric,
@@ -556,8 +559,8 @@ agnostic_metric_map = {
     "MSE": MSEMetric,
 }
 non_agnostic_metric_map = {
-    "crystalBleu": BleuMetric,
-    "crystalBleuPatch": BleuPatchMetric,
+    "crystalBleu": CrystalBleuMetric,
+    "crystalBleuPatch": CrystalBleuPatchMetric,
 }
 
 
@@ -571,10 +574,15 @@ def instantiate_agnostic_metrics(metric_names: list[str]) -> list[Metric]:
     Returns:
         list[Metric]: list of metrics
     """
-    logger.info(f"loading metrics : " + str(metric_names))
-
     metrics: set[Metric] = set(
-        [agnostic_metric_map[m_name] for m_name in set(metric_names)]
+        [
+            agnostic_metric_map[m_name]
+            for m_name in set(metric_names)
+            if m_name in agnostic_metric_map
+        ]
+    )
+    logger.info(
+        f"loading metrics : " + str([type(metric).__name__ for metric in metrics])
     )
     if set([ClipImageMetric, ClipTextMetric]) & metrics:
         clip_comparer = ClipComparer()
@@ -593,10 +601,17 @@ def instantiate_non_agnostic_metrics(
     Returns:
         list[Metric]: list of metrics
     """
-    logger.info(f"loading metrics : " + str(metric_names))
 
     metrics: set[Metric] = set(
-        [non_agnostic_metric_map[m_name] for m_name in set(metric_names)]
+        [
+            non_agnostic_metric_map[m_name]
+            for m_name in set(metric_names)
+            if m_name in non_agnostic_metric_map
+        ]
+    )
+    logger.warning(dataset)
+    logger.info(
+        f"loading metrics : " + str([type(metric).__name__ for metric in metrics])
     )
     return [metric(dataset=dataset) for metric in metrics]
 

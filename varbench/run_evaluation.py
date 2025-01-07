@@ -263,7 +263,7 @@ for subset in subsets:
     dataset = Dataset.load_from_disk(subset_generation_result_path)
 
     # instantiating non agnostic metrics
-    metrics = agnostic_metrics + instantiate_non_agnostic_metrics(args.metrics)
+    metrics = agnostic_metrics + instantiate_non_agnostic_metrics(metric_names=args.metrics, dataset=dataset)
 
     # evaluating
     score_dataset = evaluate(dataset, metrics)

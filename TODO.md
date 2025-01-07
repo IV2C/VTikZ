@@ -53,8 +53,12 @@
 - [X] Fix LMM loop
 - [X] Relaunch llama3.1 8B with the other metrics done
 - [X] Svg renderer error parsing
-- [ ] Implement crystal-bleu => https://dl.acm.org/doi/pdf/10.1145/3551349.3556903 | https://github.com/sola-st/crystalbleu
-- [ ] Implement EED => https://aclanthology.org/W19-5359/ and https://github.com/rwth-i6/ExtendedEditDistance/blob/master/EED.py
+- [X] Implement crystal-bleu => https://dl.acm.org/doi/pdf/10.1145/3551349.3556903 | https://github.com/sola-st/crystalbleu
+- [X] Implement EED => https://aclanthology.org/W19-5359/ and https://github.com/rwth-i6/ExtendedEditDistance/blob/master/EED.py
+- [X] P5js renderer
+- [ ] Add test for imagediff
+- [ ] TODO in Pjs renderer
+- [ ] hml-css renderer
 - [ ] Human evaluation tool with comments
 - [ ] ascii art "renderer"
 - [ ] Test LLM-only models then compare with Multimodal with image in input

@@ -17,6 +17,8 @@ from varbench.evaluation.metrics import (
     PatchMetric,
     TERMetric,
     TERPatchMetric,
+    ImageDiffMetric,
+    MSEMetric
 )
 from PIL import Image
 
@@ -73,6 +75,20 @@ class TestImageMetrics(unittest.TestCase):
         msssim_metric: Metric = MSSSIMMetric()
 
         result_scores = msssim_metric.compute(self.dataset)
+        logger.info(result_scores)
+        self.assertEqual(result_scores[0][0], 100.0)
+        self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
+    def test_imagediff(self):
+        imagedif_metric: Metric = ImageDiffMetric()
+
+        result_scores = imagedif_metric.compute(self.dataset)
+        logger.info(result_scores)
+        self.assertEqual(result_scores[0][0], 100.0)
+        self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
+    def test_mse(self):
+        mse_metric: Metric = MSEMetric()
+        
+        result_scores = mse_metric.compute(self.dataset)
         logger.info(result_scores)
         self.assertEqual(result_scores[0][0], 100.0)
         self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
