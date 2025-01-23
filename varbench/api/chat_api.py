@@ -360,7 +360,7 @@ class VLLMApi(OpenAIApi):
     ) -> Iterable[Iterable[str]]:
         return [
             self.chat_request(message)
-            for message in tqdm(messages, desc="Request batch with vllm api")
+            for message in tqdm(messages, desc="Request batch with custom api")
         ]
 
     def batch_structured_request(
@@ -372,5 +372,5 @@ class VLLMApi(OpenAIApi):
     ) -> Iterable[Iterable[BaseModel]]:
         return [
             self.structured_request(message, response_format)
-            for message in tqdm(messages, desc="Structured request batch with vllm api")
+            for message in tqdm(messages, desc="Structured request batch with custom api")
         ]

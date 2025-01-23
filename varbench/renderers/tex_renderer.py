@@ -56,7 +56,7 @@ class TexRenderer(Renderer):
             self.cache_path, os.path.basename(tmp_file_path).replace("tex", "pdf")
         )
 
-        logger.debug("converting to png")
+        logger.debug(f"converting {tmp_file_path} to png")
         to_return_image = convert_from_path(pdf_path=output_file_name)[0]
         for ext in ["pdf", "tex", "aux", "log"]:
             os.remove(output_file_name.replace("pdf", ext))
