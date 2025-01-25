@@ -13,10 +13,14 @@ def generate(
     subset: datasets.Dataset, agent: Agent, renderer: Renderer
 ) -> datasets.Dataset:
     # computing the results
-    predictions = agent.batchCompute(
+    original_predictions = agent.batchCompute(
         subset["instruction"], subset["code"], subset["id"], subset["image_input"]
     )
-
+    
+    subset_processed: datasets.Dataset = subset.add_column(
+        "original_predictions", original_predictions, feature=datasets.Sequence(datasets.Value("string"))
+    )
+    
     # getting the code from the result predictions
     predictions = [
         [
@@ -24,10 +28,10 @@ def generate(
             for prediction in row_predictions
             if get_first_code_block(prediction)
         ]
-        for row_predictions in predictions
+        for row_predictions in original_predictions
     ]
 
-    subset_processed: datasets.Dataset = subset.add_column(
+    subset_processed: datasets.Dataset = subset_processed.add_column(
         "predictions", predictions, feature=datasets.Sequence(datasets.Value("string"))
     )
 

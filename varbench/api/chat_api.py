@@ -148,7 +148,7 @@ class GroqApi(ChatApi):
         self.structured_client = instructor.from_groq(
             Groq(api_key=api_key), mode=instructor.Mode.JSON
         )
-        self.client = OpenAI(base_url=api_url, api_key=api_key)
+        self.client = OpenAI(base_url=api_url, api_key=api_key,timeout=1200.0)
         super().__init__(temperature, n, model_name)
 
     @CachedRequest

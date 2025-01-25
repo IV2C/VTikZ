@@ -11,11 +11,18 @@ from varbench.renderers import Renderer, SvgRenderer, TexRenderer
 from varbench.utils.model_launch import launch_model
 from varbench.evaluation.evaluator import evaluate, generate
 from varbench.agents import instantiate_agent
-import json
 
 from datasets import Dataset
 
+#Logging setup
+from varbench.utils.parsing import get_config
+import sys
 from loguru import logger
+from tqdm import tqdm
+
+logger.remove()#removes the default loguru logger
+logger.add(lambda msg: tqdm.write(msg, end=""), level=get_config("MAIN").get("log_level") or "INFO")
+
 
 # login(token=os.environ.get("HF_TOKEN"))
 
@@ -26,7 +33,7 @@ parser.add_argument(
     nargs="+",
     type=str,
     help="Name of the subset(s) to evaluate the model on",
-    default=["tikz", "svg"],
+    default=["tikz"],
 )
 parser.add_argument(
     "--metrics",
@@ -51,7 +58,6 @@ parser.add_argument(
         "LPIPS",
         "psnr",
         "msssim",
-        "imageDiff",
         "MSE",
     ],
 )
@@ -181,19 +187,19 @@ interaction_amount: int = args.interaction_amount
 # result path creation
 if not os.path.exists("./results"):
     os.mkdir("./results")
-split_used = "benchmark"
+split_used = "benchmark"  # "test"  #   # #
 full_config_name = (
     args.agent
     + "_"
     + split_used
     + "_"
-    + key_args["model_name"].replace("/", "_").replace("-", "")
+    + key_args["model_name"].replace("/", "_").replace("-", "").replace(":", "")
     + "_t_"
     + str(key_args["temperature"])
     + (
         (
             "_"
-            + vlm_model.replace("/", "_").replace("-", "")
+            + vlm_model.replace("/", "_").replace("-", "").replace(":", "")
             + "_t_"
             + str(vlm_temperature)
         )
@@ -263,7 +269,9 @@ for subset in subsets:
     dataset = Dataset.load_from_disk(subset_generation_result_path)
 
     # instantiating non agnostic metrics
-    metrics = agnostic_metrics + instantiate_non_agnostic_metrics(metric_names=args.metrics, dataset=dataset)
+    metrics = agnostic_metrics + instantiate_non_agnostic_metrics(
+        metric_names=args.metrics, dataset=dataset
+    )
 
     # evaluating
     score_dataset = evaluate(dataset, metrics)
@@ -273,6 +281,6 @@ for subset in subsets:
     score_dataset.save_to_disk(subset_evaluation_result_path, storage_options={})
     score_dataset.push_to_hub(
         "CharlyR/varbench-evaluation",
-        config_name=subset,
-        split=full_config_name,
+        config_name=full_config_name,
+        split=subset,
     )

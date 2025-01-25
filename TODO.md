@@ -56,27 +56,27 @@
 - [X] Implement crystal-bleu => https://dl.acm.org/doi/pdf/10.1145/3551349.3556903 | https://github.com/sola-st/crystalbleu
 - [X] Implement EED => https://aclanthology.org/W19-5359/ and https://github.com/rwth-i6/ExtendedEditDistance/blob/master/EED.py
 - [X] P5js renderer
-- [ ] Add test for imagediff
+- [X] remove imagediff(useless => MSE and IoU better)
+- [X] Assessment of vlm on checking 
+- [X] Add a default seed to the apis? 
+- [X] create a multimodal loop model(give the model the image he generated and iterate)
+- [X] create a multimodal vision loop agent that is similar to the LLM+VLM but that has a more complex vision instruction(see the prompt templates)
+
+- [ ] IoU metric
+- [ ] Test LLM-only models then compare with Multimodal with image in input
+- [ ] test llm-vlm loop on the test dataset
+- [ ] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches)
+- [ ] Create synthetic data and then verify
+
+
+Eventually
+- [X] Create a SimpleOpenAi API, in the case of an api compatible with openai, but that does not support anything but simple requests => done via VLMAPI
+
 - [ ] TODO in Pjs renderer
 - [ ] hml-css renderer
 - [ ] Human evaluation tool with comments
 - [ ] ascii art "renderer"
-- [ ] Test LLM-only models then compare with Multimodal with image in input
-- [X] Add a default seed to the apis? 
-- [ ] test llm-vlm loop on the test dataset
-- [X] create a multimodal loop model(give the model the image he generated and iterate)
-- [X] create a multimodal vision loop agent that is similar to the LLM+VLM but that has a more complex vision instruction(see the prompt templates)
-
-- [ ] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches)
-- [ ] Create synthetic data and then verify
-- [X] Assessment of vlm on checking 
-
-Eventually
-- [ ] Create a SimpleOpenAi API, in the case of an api compatible with openai, but that does not support anything but simple requests
-
 - [X] github action
   - [X] Tests
   - [ ] creates and publishes the dataset
-- [ ] Add mask matching metric
-
 

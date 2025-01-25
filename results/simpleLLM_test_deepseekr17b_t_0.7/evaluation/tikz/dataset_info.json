@@ -57,58 +57,9 @@
       "dtype": "float64",
       "_type": "Value"
     },
-    "MSSSIMMetric": {
+    "predictions_patches": {
       "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "TERMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "BleuMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "PSNRMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "ClipImageMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "LPIPSMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "ChrfMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "ClipTextMetric": {
-      "feature": {
-        "dtype": "float32",
+        "dtype": "string",
         "_type": "Value"
       },
       "_type": "Sequence"
@@ -127,53 +78,110 @@
       },
       "_type": "Sequence"
     },
-    "var_score": {
-      "dtype": "float64",
-      "_type": "Value"
+    "ChrfPatchMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
-    "index_best_prediction": {
-      "dtype": "int64",
-      "_type": "Value"
+    "MSSSIMMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
-    "best_MSSSIMMetric": {
-      "dtype": "float64",
-      "_type": "Value"
+    "TERPatchMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
-    "best_TERMetric": {
-      "dtype": "float64",
-      "_type": "Value"
+    "ChrfMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
-    "best_BleuMetric": {
-      "dtype": "float64",
-      "_type": "Value"
+    "PSNRMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
-    "best_PSNRMetric": {
-      "dtype": "float64",
-      "_type": "Value"
+    "BleuMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
-    "best_ClipImageMetric": {
-      "dtype": "float64",
-      "_type": "Value"
+    "ClipTextMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
-    "best_LPIPSMetric": {
-      "dtype": "float64",
-      "_type": "Value"
+    "PatchMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
-    "best_ChrfMetric": {
-      "dtype": "float64",
-      "_type": "Value"
+    "MSEMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
-    "best_ClipTextMetric": {
-      "dtype": "float64",
-      "_type": "Value"
+    "ClipImageMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
-    "best_LineMetric": {
-      "dtype": "float64",
-      "_type": "Value"
+    "TERMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
-    "best_FeatureMatchMetric": {
-      "dtype": "float64",
-      "_type": "Value"
+    "BleuPatchMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "LPIPSMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "CrystalBleuMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "CrystalBleuPatchMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     }
   },
   "homepage": "",

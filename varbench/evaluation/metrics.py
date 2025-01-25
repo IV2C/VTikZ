@@ -32,8 +32,6 @@ class PatchMetric(Metric):
         logger.info("Computing patch_score")
         patch = dataset["patch"]
         individual_patches = dataset["predictions_patches"]
-        print(individual_patches[0])
-        print(patch)
         individual_patches_scores = [
             [int(computed_patch == p) * 100.0 for computed_patch in i]
             for i, p in zip(individual_patches, patch)
@@ -482,31 +480,6 @@ class MSSSIMMetric(Metric):
         ]
 
 
-class ImageDiffMetric(Metric):
-    def compute(self, dataset: Dataset) -> list[list[float]]:
-
-        def dif_score(reference: np.ndarray, prediction: np.ndarray):
-            dif_image = prediction - reference
-            flatten_dif_image = dif_image.ravel()
-            norm = np.linalg.norm(flatten_dif_image)
-            norm_normalized = norm / math.prod(dif_image.shape)
-
-            return 100.0 / (1 + math.log(1 + 10 * norm_normalized))
-
-        references = dataset["image_solution"]
-        predictions = dataset["images_result"]
-        references = [np.array(pil_image.convert("RGB")) for pil_image in references]
-        predictions = [
-            [np.array(pil_image.convert("RGB")) for pil_image in pil_images]
-            for pil_images in predictions
-        ]
-
-        return [
-            [dif_score(reference, prediction) for prediction in row_predictions]
-            for reference, row_predictions in zip(references, predictions)
-        ]
-
-
 class MSEMetric(Metric):
     def __init__(self, *args, **kwargs):
         import torchvision.transforms as transforms
@@ -555,7 +528,6 @@ agnostic_metric_map = {
     "LPIPS": LPIPSMetric,
     "psnr": PSNRMetric,
     "msssim": MSSSIMMetric,
-    "imageDiff": ImageDiffMetric,
     "MSE": MSEMetric,
 }
 non_agnostic_metric_map = {
@@ -582,7 +554,7 @@ def instantiate_agnostic_metrics(metric_names: list[str]) -> list[Metric]:
         ]
     )
     logger.info(
-        f"loading metrics : " + str([type(metric).__name__ for metric in metrics])
+        f"loading metrics : " + str([metric.__name__ for metric in metrics])
     )
     if set([ClipImageMetric, ClipTextMetric]) & metrics:
         clip_comparer = ClipComparer()
@@ -611,7 +583,7 @@ def instantiate_non_agnostic_metrics(
     )
     logger.warning(dataset)
     logger.info(
-        f"loading metrics : " + str([type(metric).__name__ for metric in metrics])
+        f"loading non agnostic metrics : " + str([metric.__name__ for metric in metrics])
     )
     return [metric(dataset=dataset) for metric in metrics]
 
