@@ -31,10 +31,10 @@ class TexRenderer(Renderer):
         image = convert_from_path(pdf_path=output_file_name)[0]
         image.save(output)
         
-    def retry_error_callback(retry_state):
+    """ def retry_error_callback(retry_state):
         raise TexRendererException(f"! ==> Fatal error occurred. Renderer stuck, file: {retry_state.args}")
 
-    @retry(stop=stop_after_delay(20), retry_error_callback=retry_error_callback)    
+    @retry(stop=stop_after_delay(120), retry_error_callback=retry_error_callback)   """  
     def from_string_to_image(self, input_string: str) -> PIL.Image.Image:
         current_temp_file = str(uuid.uuid4()) + ".tex"
         tmp_file_path = os.path.join(self.cache_path, current_temp_file)

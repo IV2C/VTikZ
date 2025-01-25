@@ -67,6 +67,10 @@ class TestRenderers(unittest.TestCase):
         with self.assertRaises(RendererException) as context:
             compiler.from_string_to_image(tikzstring)
 
+        with open("test.txt","w") as testf:
+            testf.write(context.exception.extract_error())
+        
+        
         self.assertEqual(
             context.exception.extract_error(),
             """! Extra }, or forgotten \\endgroup.
