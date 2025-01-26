@@ -148,7 +148,7 @@ class GroqApi(ChatApi):
         self.structured_client = instructor.from_groq(
             Groq(api_key=api_key), mode=instructor.Mode.JSON
         )
-        self.client = OpenAI(base_url=api_url, api_key=api_key,timeout=1200.0)
+        self.client = OpenAI(base_url=api_url, api_key=api_key, timeout=2400.0)
         super().__init__(temperature, n, model_name)
 
     @CachedRequest
@@ -217,7 +217,7 @@ class OpenAIApi(ChatApi):
         api_url: str = "https://api.openai.com/v1",
         api_key: str = os.environ.get("OPENAI_API_KEY"),
     ) -> None:
-        self.client = OpenAI(base_url=api_url, api_key=api_key)
+        self.client = OpenAI(base_url=api_url, api_key=api_key, timeout=2400.0)
         super().__init__(temperature, n, model_name)
 
     @CachedRequest
@@ -372,5 +372,7 @@ class VLLMApi(OpenAIApi):
     ) -> Iterable[Iterable[BaseModel]]:
         return [
             self.structured_request(message, response_format)
-            for message in tqdm(messages, desc="Structured request batch with custom api")
+            for message in tqdm(
+                messages, desc="Structured request batch with custom api"
+            )
         ]

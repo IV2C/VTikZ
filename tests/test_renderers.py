@@ -68,7 +68,7 @@ class TestRenderers(unittest.TestCase):
             compiler.from_string_to_image(tikzstring)
 
         with open("test.txt","w") as testf:
-            testf.write(context.exception.extract_error())
+            testf.write(context.exception.message)
         
         
         self.assertEqual(

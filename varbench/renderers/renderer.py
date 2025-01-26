@@ -3,10 +3,13 @@ import os
 
 import PIL.Image
 
+from varbench.utils.parsing import get_config
+
 
 class Renderer(ABC):
     def __init__(self):
         self.cache_path = os.path.join(os.environ.get("HOME"), ".cache/varbench")
+        self.rendering_timeout = get_config("RENDERER").get("timeout")
         if not os.path.exists(self.cache_path):
             os.mkdir(self.cache_path)
 
