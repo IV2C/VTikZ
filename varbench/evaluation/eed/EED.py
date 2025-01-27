@@ -3,7 +3,6 @@ import ctypes
 import os
 import sys
 
-print(sys.path)
 from varbench.evaluation.eed import util
 
 

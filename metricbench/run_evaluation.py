@@ -17,9 +17,6 @@ with open(".tmp/debug/original_code.tex","w") as original_code_file:
 original_image = renderer.from_string_to_image(original_code)
 new_image = renderer.from_string_to_image(new_code)
 
-print(original_image.size)
-print(new_image.size)
-
 
 original_image.save(".tmp/debug/original.png")
 new_image.save(".tmp/debug/new.png")

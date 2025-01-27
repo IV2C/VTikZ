@@ -1,5 +1,5 @@
 from varbench.api.chat_api import ChatApi
-from varbench.prompt_templates import (
+from varbench.utils.prompts.simple_templates import (
     CODE_CORRECTOR_IT_PROMPT,
     CODE_CORRECTOR_SYSTEM_PROMPT,
 )

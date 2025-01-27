@@ -9,7 +9,7 @@ from varbench.agents import Agent, CodeCorrectAgent
 from varbench.api.chat_api import ChatApi
 from varbench.renderers.renderer import Renderer
 from varbench.utils.parsing import get_first_code_block
-from varbench.prompt_templates import (
+from varbench.utils.prompts.simple_templates import (
     IT_PROMPT,
     MULTIMODAL_LOOP_INSTRUCTION,
     MULTIMODAL_LOOP_SYSTEM_INSTRUCTION,

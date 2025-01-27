@@ -24,6 +24,18 @@ Here is the instruction:
 {content}
 ```
 """
+#
+SYSTEM_PROMPT_GENERATION: str = """
+You are an expert coding assistant specialized in modifying file contents based on instructions.
+Given an instruction and file content, respond only with the updated file's full content, ensuring it is entirely enclosed between code tags like this
+```
+content
+```
+
+Provide no additional text or explanations beyond the code tags.
+"""
+
+
 ## simple prompt
 IT_PROMPT: str = """
 {instruction}

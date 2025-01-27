@@ -13,7 +13,7 @@ from .api_generation import (
 import os
 from datasets import Dataset, Features, Sequence, Value, Image
 from loguru import logger
-from ..prompt_templates import (
+from ..utils.prompts.simple_templates import (
     SYSTEM_PROMPT_GENERATION,
     SYSTEM_PROMPT_INSTRUCTIONS_SYNTHETIC,
     IT_PROMPT,

@@ -6,14 +6,14 @@ from loguru import logger
 from openai.types.chat import ChatCompletionMessageParam
 
 from varbench.agents import Agent
-from varbench.api.chat_api import ChatApi
 from varbench.utils.prompts.simple_templates import IT_PROMPT, SYSTEM_PROMPT_GENERATION
-from varbench.renderers.renderer import Renderer, RendererException
-from varbench.utils.parsing import get_first_code_block
+
 
 
 class SimpleLLMAgent(Agent):
-    """Simple LLM agent that uses only the "reading" capabilities of the models tested"""
+    """Simple LLM agent that uses only the "reading" capabilities of the models tested,
+    instead of sending the full code back, this agent
+    only returns a list of blocks to replace"""
 
     def compute(
         self, instruction: str, code: str, image: Image.Image = None, **kwargs

@@ -72,3 +72,21 @@ def get_config(config_name: str):
         key: make_numerical(value) for key, value in config[config_name].items()
     }
     return config_k
+
+
+def apply_far_edit(content:str,far_edit:str):
+    # Split the instructions on '---' and '+++', so that we capture find and replace parts
+    changes = far_edit.strip().split('---')[1:]  # Skip the first empty part caused by the first '---'
+    
+    for change in changes:
+        # Split the change into before (find) and after (replace) based on the '+++' marker
+        parts = change.split('+++')
+        
+        if len(parts) == 2:
+            before_change = parts[0].strip()
+            after_change = parts[1].strip()
+
+            # Apply the find and replace to the original text
+            new_content = content.replace(before_change, after_change)
+    
+    return new_content

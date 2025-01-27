@@ -2,7 +2,7 @@ import datasets
 
 from varbench.evaluation.metrics import Metric
 from varbench.utils.patches import patches
-from ..prompt_templates import *
+from ..utils.prompts.simple_templates import *
 from ..agents.agent import Agent
 from ..renderers import Renderer, RendererException
 from PIL import Image
