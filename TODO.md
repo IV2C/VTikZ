@@ -1,6 +1,6 @@
 # TODO
 
-- [X] either make a script to add an entry in the dataset or just doucemnt the command to do it.
+- [X] either make a script to add an entry in the dataset or just document the command to do it.
 - [X] patch computation
 - [X] Make the dataset with a python script
 - [X] refactor dataset creation
@@ -61,12 +61,12 @@
 - [X] Add a default seed to the apis? 
 - [X] create a multimodal loop model(give the model the image he generated and iterate)
 - [X] create a multimodal vision loop agent that is similar to the LLM+VLM but that has a more complex vision instruction(see the prompt templates)
+- [X] IoU metric
 
-- [ ] IoU metric
+- [ ] add multimodal input to faragent
 - [ ] Test LLM-only models then compare with Multimodal with image in input
 - [ ] test llm-vlm loop on the test dataset
 - [ ] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches)
-- [ ] Create synthetic data and then verify
 
 
 Eventually

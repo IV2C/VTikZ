@@ -10,73 +10,72 @@ Here are the instructions on how to generate the correct format:
 INPUT:
 Replace 'Berry' with 'Raspberry'
 ```
-Berry  
-Apple  
-Banana  
+Berry
+Apple
+Banana
 ```
 
 Response:
 ```
 ---  
-Berry  
+Berry
 +++  
-Raspberry  
+Raspberry
 ```
 
 INPUT:
 Add 'Strawberry' between 'Apple' and 'Banana'
 ```
-Apple  
-Banana  
+Apple
+Banana
 ```
 
 RESPONSE:
 ```
 ---  
-Apple  
-Banana  
-+++  
-Apple  
-Strawberry  
-Banana  
+Apple
+Banana
++++
+Apple
+Strawberry
+Banana
 ```
 INPUT:
 Remove 'Banana'
 ```
-Apple  
-Banana  
-Cherry  
+Apple
+Banana
+Cherry
 ```
 RESPONSE:
 ```
 ---  
-Apple  
-Banana  
-Cherry  
-+++  
-Apple  
-Cherry  
+Apple
+Banana
+Cherry
++++
+Apple
+Cherry
 ```
 
 INPUT:
 Replace 'Apple' with 'Mango' and 'Banana' with 'Peach'
 ```
-Apple  
-  Orange  
-Grapes  
- Banana  
+Apple
+  Orange
+Grapes
+ Banana
 ```
 RESPONSE
 ```
 ---  
-Apple  
-+++  
-Mango  
-
+Apple
++++
+Mango
 ---  
- Banana  
-+++  
- Peach  
+ Banana
++++
+ Peach
 ```
 
 ## Formatting:

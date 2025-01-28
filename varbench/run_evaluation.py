@@ -14,14 +14,17 @@ from varbench.agents import instantiate_agent
 
 from datasets import Dataset
 
-#Logging setup
+# Logging setup
 from varbench.utils.parsing import get_config
 import sys
 from loguru import logger
 from tqdm import tqdm
 
-logger.remove()#removes the default loguru logger
-logger.add(lambda msg: tqdm.write(msg, end=""), level=get_config("MAIN").get("log_level") or "INFO")
+logger.remove()  # removes the default loguru logger
+logger.add(
+    lambda msg: tqdm.write(msg, end=""),
+    level=get_config("MAIN").get("log_level") or "INFO",
+)
 
 
 # login(token=os.environ.get("HF_TOKEN"))
@@ -68,7 +71,7 @@ parser.add_argument(
     "-a",
     type=str,
     help="Name of the agent to use",
-    choices=["simpleLLM", "simpleLMM", "loopVLMLLM", "loopLMM"],
+    choices=["simpleLLM", "simpleLMM", "loopVLMLLM", "loopLMM", "FAR"],
     default="simpleLLM",
     required=True,
 )
@@ -187,7 +190,7 @@ interaction_amount: int = args.interaction_amount
 # result path creation
 if not os.path.exists("./results"):
     os.mkdir("./results")
-split_used = "benchmark"  # "test"  #   # #
+split_used = "test"  # "benchmark"  # "test"  #   # #
 full_config_name = (
     args.agent
     + "_"

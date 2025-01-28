@@ -30,23 +30,30 @@ def parse_openai_jsonl(input_data: str) -> dict[str, str]:
 
 
 def get_first_code_block(text):
-    # Regular expression to find the first code block, ignoring the language specifier
-    match = re.search(r"```[a-zA-Z]*\n(.*?)```", text, re.DOTALL)
+    # Regular expression to handle spaces and optional language specifier
+    match = re.search(r"```(?:[a-zA-Z]*\n)?([^`]*?)```", text, re.DOTALL)
     return match.group(1).strip() if match else None
 
-
 def replace_first_code_block(text, replacement):
-    # Regex to match the first code block
-    pattern = r"(```[a-zA-Z]*\n.*?```)"
-    # Split the text into parts at the code block
-    parts = re.split(pattern, text, flags=re.DOTALL)
-
-    # Replace the first code block (index 1 will always be the first code block)
-    if len(parts) > 1:
-        parts[1] = f"```\n{replacement}\n```"
-
-    # Reconstruct the text by joining the parts back together
-    return "".join(parts)
+   pattern = r"^```(?:[a-zA-Z]*\n)?(.+?)^```$"
+   
+   try:
+       match = re.search(pattern, text, flags=re.MULTILINE | re.DOTALL)
+       
+       if match:
+           full_match = match.group(0)
+           lang_match = re.match(r"```([a-zA-Z]*)\n", full_match)
+           lang = lang_match.group(1) if lang_match else ""
+           
+           replacement_block = f"```{lang}\n{replacement}\n```"
+           
+           return text.replace(full_match, replacement_block, 1)
+           
+       return text
+       
+   except re.error as e:
+       print(f"Regex error: {e}")
+       return text
 
 
 def make_numerical(string_value: str) -> float | int | str | bool:

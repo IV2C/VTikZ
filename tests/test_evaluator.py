@@ -42,7 +42,6 @@ class TestEvaluator(unittest.TestCase):
             self.input_tex, [_get_first_code_block(self.ref_tex)]
         )[0]
         self.wrong_patch = "@@ -375 +375 @@"
-        print(self.ref_patch)
         self.dummyMetric: Metric = [PatchMetric()]
 
         return super().setUp()

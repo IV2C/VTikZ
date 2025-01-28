@@ -4,7 +4,7 @@ from .LMM_loop_agent import LMMLoopAgent
 from .simple_LLM_agent import SimpleLLMAgent
 from .LMM_agent import LMMAgent
 from .VLLM_loop_agent import VLLMLoopAgent
-
+from .FAR_LLM_Agent import FARAgent
 
 def instantiate_agent(
     agent_str: str,
@@ -18,6 +18,7 @@ def instantiate_agent(
         "simpleLMM": LMM_agent,
         "loopVLMLLM": VLLMLoopAgent,
         "loopLMM": LMMAgent,
+        "FAR": FARAgent
     }
 
     key_args = {}

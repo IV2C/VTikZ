@@ -29,6 +29,5 @@ class TestAgentLMMLoopOpenAI(unittest.TestCase):
         response = multimodal_openai_agent.compute(
             self.instruction, self.squid_tikz, self.squid_image
         )
-        print(response)
 
         
