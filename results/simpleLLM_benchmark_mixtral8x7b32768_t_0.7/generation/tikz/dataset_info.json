@@ -36,6 +36,13 @@
     "image_input": {
       "_type": "Image"
     },
+    "original_predictions": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
     "predictions": {
       "feature": {
         "dtype": "string",

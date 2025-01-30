@@ -14,7 +14,8 @@ from varbench.utils.parsing import apply_far_edit, get_first_code_block
 class FARAgent(Agent):
     """Simple LLM agent that uses only the "reading" capabilities of the models tested,
     instead of sending the full code back, this agent
-    only returns a list of blocks to replace"""
+    only returns a list of blocks to replace, replaced with a find-and-replace function
+    """
 
     def compute(
         self, instruction: str, code: str, image: Image.Image = None, **kwargs
@@ -28,9 +29,9 @@ class FARAgent(Agent):
             apply_far_edit(code, parsed_edits) for parsed_edits in parsed_all_edits
         ]
         return [
-            r"```tikz\n" + edited_response + r"\n```\n"
-            for edited_response in all_edited_codes
-        ]
+            edits.replace("`", "") + "```tikz\n" + edited_response + "\n```\n"
+            for edited_response, edits in zip(all_edited_codes, all_edits)
+        ]# we return the full thought process of the LLM, by adding back its original response in the message
 
     def batchCompute(
         self,

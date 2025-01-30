@@ -94,6 +94,6 @@ def apply_far_edit(content:str,far_edit:str):
             after_change = parts[1].strip()
 
             # Apply the find and replace to the original text
-            new_content = content.replace(before_change, after_change)
+            content = content.replace(before_change, after_change)
     
-    return new_content
+    return content

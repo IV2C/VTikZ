@@ -190,7 +190,8 @@ interaction_amount: int = args.interaction_amount
 # result path creation
 if not os.path.exists("./results"):
     os.mkdir("./results")
-split_used = "test"  # "benchmark"  # "test"  #   # #
+split_used = "benchmark"
+#split_used = "test" 
 full_config_name = (
     args.agent
     + "_"

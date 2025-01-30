@@ -21,44 +21,54 @@
 \end{scope}}\end{scope}}
 
 \tikzset{
-dog/.pic={
+donkey/.pic={
 \begin{scope}[x=3cm/480,y=3cm/480]
-\useasboundingbox (-256, -256) (256, 256);
-\reflect[split=Brown400 and Brown500]{
-  \fill [fill color] (0,-64) ellipse [x radius=160, y radius=144];
-  \fill [fill color] (0, 32) ellipse [x radius=128, y radius=112];
-  \fill [fill color] (32,96)
-  .. controls ++( 75:128) and ++(105:128) .. ++(192,  0)
-  .. controls ++(285: 96) and ++(285: 96) .. ++(-80,-32)
-  .. controls ++(105: 64) and ++( 75: 32) .. cycle;
+\reflect[
+  on left ={color alias=ears as BlueGrey500},
+  on right={color alias=ears as BlueGrey700},
+  outer ear/.style={fill=ears}, inner ear/.style={fill=BlueGrey900}
+]{
+  \foreach \s [count=\j from 0] in {outer ear, inner ear}
+  \fill [style=\s]
+  [shift={(88,120)}, rotate=75, scale=9/10-\j/3, xscale=2/2]
+  (-72,0)
+  .. controls ++( 90: 8) and ++(180:16) .. ( 0, 48)
+  .. controls ++(  0:16) and ++( 90:12) .. (88,  0)
+  .. controls ++(270:12) and ++(  0: 8) .. ( 0,-48)
+  .. controls ++(180: 8) and ++(270: 8) .. cycle;
 }
-\reflect[split={Grey100 and Grey200}]{
-  \clip (0,-64) ellipse [x radius=160, y radius=144];
-  \fill [fill color](0,-224) 
-    .. controls ++(  0:64) and ++(270:64) .. ++(96,64)
-    .. controls ++( 90:64) and ++(270:64) .. ++(-96,192)
-    .. controls ++(270:64) and ++( 90:64) .. ++(-96,-192)
-    .. controls ++(270:64) and ++(180:64) .. cycle;
+\reflect[split=BlueGrey500 and BlueGrey700]{%
+  \fill [fill color] (-56,-160)
+  .. controls ++( 90:112) and ++(270: 128) .. (-112,  48)
+  arc (180:0:112 and 96)
+  .. controls ++(270: 128) and ++( 90:112) .. (  56,-160) -- cycle;
 }
-\reflect[split={Pink100 and Pink200}]{
-  \fill [fill color](0,-192) ellipse [x radius=28, y radius=32];
+\reflect[split=Grey500 and Grey600]{%
+  \fill [fill color] (0,-164) ellipse [x radius=56, y radius=56];
 }
-\reflect[split={BlueGrey800 and BlueGrey900}]{
-  \fill [fill color](0,-144) 
-    .. controls ++(  0:20) and ++(315:20) .. ++( 40,64)
-    .. controls ++(135:20) and ++( 45:20) .. ++(-80, 0)
-    .. controls ++(225:20) and ++(180:20) .. cycle;
-  \fill [White] (56, 0) circle [radius=24];
-  \fill [BlueGrey900] (56, 0) circle [radius=20];
-  \fill [fill color] (-8,-112)
-  -- ++(16,0) -- ++(0,-32) arc (180:360:24)
-  arc (180:0:8) arc (360:180:40);
+\reflect[split=Grey700 and Grey800]{%
+  \fill [fill color] (0,-164) ellipse [x radius=48, y radius=40];
 }
+\reflect[split=Grey500 and Grey600]{%
+  \fill [fill color] (0,-144) ellipse [x radius=64, y radius=48];
+  \fill [fill color]  (36, -128) ellipse [x radius=24, y radius=40];
+  \fill [BlueGrey900] (36, -128) ellipse [x radius=12, y radius=24];
+}
+\fill [BlueGrey900]
+  (-72, 40) ellipse [radius=20]
+  ( 72, 40) ellipse [radius=20]
+  (-8,160)
+  to [bend left]  ++( 16, 32) to [bend right] ++( 16,-48)
+  to [bend left]  ++( 16, 32) to [bend right] ++( 16,-48)
+  to [bend right] ++(-32,-48) to [bend left]  ++(-16, 32)
+  to [bend right] ++(-32,-32) to [bend left]  ++(  0, 32)
+  to [bend right] ++(-32,-16) to [bend left]  ++( 16, 40)
+  to [bend right] ++(-16, 32) to [bend left]  cycle;
 \end{scope}}
 }
 \begin{document}
 \begin{tikzpicture}
 \fill [fill=LightBlue300] circle [radius=2];
-\pic {dog};
+\pic {donkey};
 \end{tikzpicture}
 \end{document}
