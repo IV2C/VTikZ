@@ -21,8 +21,6 @@ class MetricPolicy:
 
     def compute_best_prediction(row, computed_metrics_names: list[str]):
         """
-        Deprecated - now handled via the jupyter notebook
-
         Computes the best prediction out of arrays of metrics, according to a policy(arithmetic, geometrical, or harmonic mean)
 
         Args:
@@ -48,7 +46,7 @@ class MetricPolicy:
             scores_predictions_array.append(current_score_array)
 
         policy_applied_array = [
-            MetricPolicy.mathematical_average(current_scores)
+            MetricPolicy.mathematical_average(current_scores) if None not in current_scores else float('-inf')
             for current_scores in scores_predictions_array
         ]
 

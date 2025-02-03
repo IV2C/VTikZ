@@ -22,16 +22,14 @@ class FARAgent(Agent):
     ) -> Iterable[str]:
         messages = self._create_message(instruction, code)
         all_edits = self.api.chat_request(messages)
-        logger.warning(all_edits)
         parsed_all_edits = [get_first_code_block(edits) for edits in all_edits]
-        logger.warning(parsed_all_edits)
         all_edited_codes = [
             apply_far_edit(code, parsed_edits) for parsed_edits in parsed_all_edits
         ]
         return [
             edits.replace("`", "") + "```tikz\n" + edited_response + "\n```\n"
             for edited_response, edits in zip(all_edited_codes, all_edits)
-        ]# we return the full thought process of the LLM, by adding back its original response in the message
+        ]  # we return the full thought process of the LLM, by adding back its original response in the message
 
     def batchCompute(
         self,

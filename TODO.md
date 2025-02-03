@@ -62,11 +62,19 @@
 - [X] create a multimodal loop model(give the model the image he generated and iterate)
 - [X] create a multimodal vision loop agent that is similar to the LLM+VLM but that has a more complex vision instruction(see the prompt templates)
 - [X] IoU metric
+- [X] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches) => works via cachedrequests
 
-- [ ] add multimodal input to faragent
+
+- [X] Re-run for each model:
+  - [X] distillama
+  - [X] llama3.18b instant
+  - [X] llama3.370b versatile
+  - [X] llama370b
+  - [X] mixtral 8x7b
+- [ ] MetricBench
 - [ ] Test LLM-only models then compare with Multimodal with image in input
 - [ ] test llm-vlm loop on the test dataset
-- [ ] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches)
+- [ ] add multimodal input to faragent
 
 
 Eventually

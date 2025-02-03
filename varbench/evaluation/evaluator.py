@@ -7,7 +7,7 @@ from ..agents.agent import Agent
 from ..renderers import Renderer, RendererException
 from PIL import Image
 from ..utils.parsing import get_first_code_block
-
+from loguru import logger
 
 def generate(
     subset: datasets.Dataset, agent: Agent, renderer: Renderer
@@ -16,11 +16,13 @@ def generate(
     original_predictions = agent.batchCompute(
         subset["instruction"], subset["code"], subset["id"], subset["image_input"]
     )
-    
+
     subset_processed: datasets.Dataset = subset.add_column(
-        "original_predictions", original_predictions, feature=datasets.Sequence(datasets.Value("string"))
+        "original_predictions",
+        original_predictions,
+        feature=datasets.Sequence(datasets.Value("string")),
     )
-    
+
     # getting the code from the result predictions
     predictions = [
         [
@@ -36,7 +38,12 @@ def generate(
     )
 
     # computing the images out of the results
-    images_lists = _images(predictions, renderer)
+    indexes, images_lists = _images(predictions, renderer)
+    subset_processed: datasets.Dataset = subset_processed.add_column(
+        "image_result_indexes",
+        indexes,
+        feature=datasets.Sequence(datasets.Value("int32")),
+    )
     subset_processed: datasets.Dataset = datasets.concatenate_datasets(
         [
             subset_processed,
@@ -49,6 +56,7 @@ def generate(
         ],
         axis=1,
     )  # add_column does not support image lists, so using concatenation
+    logger.debug(subset)
     return subset_processed
 
 
@@ -96,26 +104,59 @@ def evaluate(subset: datasets.Dataset, metrics: list[Metric]) -> datasets.Datase
             feature=datasets.Sequence(datasets.Value("float")),
         )
 
+    subset: datasets.Dataset = _extend_metric_computations(subset, pass_size)
     return subset
+
+
+def _extend_metric_computations(
+    dataset: datasets.Dataset, passk: int
+) -> datasets.Dataset:
+    """The image-based metrics in the dataset are only computed for x out of y code generated, because some of the code can't compile.
+    During the compiling(method _images), we compute the indexes of the images that did compute and put it in an array.
+    This method takes as input the dataset, find the names of the columns that contains image-based metrics, and extends the computed
+    list with Nones in the places where the code could not render(be compiled into) an image
+    """
+
+    metrics_names = [name for name in dataset.column_names if "Metric" in name]
+    potential_image_metrics_names = [
+        name for name in metrics_names if any(len(row) < passk for row in dataset[name])
+    ]  # named potential because if all images have been compiled without error we skip the process completely
+
+    def _ext_none(row, col_name: str, passk: int):
+        "Extends the row with nones at unreferenced indexes"
+        initial = [None] * passk
+        for index, ar_value in zip(row["image_result_indexes"], row[col_name]):
+            initial[index] = ar_value
+        row[col_name] = initial
+        return row
+
+    for metric_name in potential_image_metrics_names + ["images_result"]:
+        dataset = dataset.map(
+            _ext_none, fn_kwargs={"col_name": metric_name, "passk": passk}
+        )
+    return dataset
 
 
 def _images(
     predictions: list[list[str]], renderer: Renderer
-) -> list[list[Image.Image]]:
+) -> tuple[list[list[int]],list[list[Image.Image]]]:
 
     new_width = 300  # TODO make it a config parameter
     new_height = 300
 
+    output_images_indexes: list[list[int]] = []
     output_images: list[list[Image.Image]] = []
     for row_predictions in predictions:
         row_output_images = []
-        for prediction in row_predictions:
+        row_output_images_indexes = []
+        for id, prediction in enumerate(row_predictions):
             try:
                 result_image = renderer.from_string_to_image(prediction)
                 result_image = result_image.resize((new_width, new_height))
                 row_output_images.append(result_image)
+                row_output_images_indexes.append(id)
             except RendererException:
                 pass
         output_images.append(row_output_images)
-
-    return output_images
+        output_images_indexes.append(row_output_images_indexes)
+    return output_images_indexes, output_images

@@ -376,3 +376,34 @@ class VLLMApi(OpenAIApi):
                 messages, desc="Structured request batch with custom api"
             )
         ]
+    @CachedRequest
+    def chat_request(
+        self, messages: Iterable[ChatCompletionMessageParam]
+    ) -> Iterable[str]:
+        return [
+            self.client.chat.completions.create(
+                messages=messages,
+                model=self.model_name,
+                temperature=self.temperature,
+                n=1,
+                seed=self.seed,
+            )
+            .choices[-1]
+            .message.content
+            for _ in range(self.n)
+        ]
+
+    @CachedRequest
+    def structured_request(
+        self, messages: Iterable[ChatCompletionMessageParam], response_format: BaseModel
+    ) -> Iterable[BaseModel]:
+        return [
+            self.structured_client.chat.completions.create(
+                model=self.model_name,
+                response_model=response_format,
+                messages=messages,
+                temperature=self.temperature,
+                seed=self.seed,
+            )
+            for _ in range(self.n)
+        ]

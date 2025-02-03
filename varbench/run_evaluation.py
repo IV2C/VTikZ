@@ -198,6 +198,8 @@ full_config_name = (
     + split_used
     + "_"
     + key_args["model_name"].replace("/", "_").replace("-", "").replace(":", "")
+    +"_pk_"
+    + str(key_args["n"])
     + "_t_"
     + str(key_args["temperature"])
     + (

@@ -4,13 +4,15 @@ import timeout_decorator
 from varbench.api.chat_api import ChatApi, VLLMApi
 from varbench.evaluation.metrics import Metric, PatchMetric
 from varbench.renderers import Renderer, TexRenderer
-from varbench.evaluation.evaluator import evaluate
+from varbench.evaluation.evaluator import evaluate, _extend_metric_computations
 from varbench.agents import Agent
 from unittest.mock import MagicMock
 from datasets import Dataset
 from PIL import Image
 import difflib
 import re
+from PIL import Image
+
 
 from varbench.utils.parsing import get_first_code_block
 
@@ -146,6 +148,41 @@ class TestEvaluator(unittest.TestCase):
             evaluate(dummy_dataset, self.dummyMetric)["PatchMetric"],
             expected,
         )
+
+    def test_extend_metric_computations(self):
+        dummy_image = Image.new(mode="RGB", size=(200, 200))
+        data = {
+            "image_result_indexes": [[0, 2], [1]],
+            "images_result": [
+                [dummy_image, dummy_image],
+                [dummy_image],
+            ],
+            "someMetric": [[0.5, 0.8], [0.6]],
+            "otherColumn": [1, 2],
+        }
+        ds = Dataset.from_dict(data)
+        passk = 3
+        ds = _extend_metric_computations(ds, passk)
+
+        expected_data = {
+            "image_result_indexes": [[0, 2], [1]],
+            "images_result": [
+                [dummy_image, None, dummy_image],
+                [None, dummy_image, None],
+            ],
+            "someMetric": [
+                [0.5, None, 0.8],
+                [None, 0.6, None],
+            ],
+            "otherColumn": [1, 2],
+        }
+        expected_ds = Dataset.from_dict(expected_data)
+
+        for row, expected_row in zip(ds, expected_ds):
+            self.assertEqual(row["someMetric"], expected_row["someMetric"],
+                             f"Expected {expected_row['someMetric']}, got {row['someMetric']}")
+            self.assertEqual(row["images_result"], expected_row["images_result"],
+                             f"Expected {expected_row['images_result']}, got {row['images_result']}")
 
 
 if __name__ == "__main__":
