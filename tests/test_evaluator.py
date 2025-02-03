@@ -60,6 +60,7 @@ class TestEvaluator(unittest.TestCase):
                 "result_description": [
                     "a line going from the top left to the bottom right"
                 ],
+                "image_result_indexes": [[0]],
                 "predictions": [[get_first_code_block(self.ref_tex)]],
                 "images_result": [
                     [Image.open("tests/resources/images/reference.jpeg")]
@@ -90,6 +91,7 @@ class TestEvaluator(unittest.TestCase):
                     "a line going from the top left to the bottom right"
                 ],
                 "predictions": [["wrong patch"]],
+                "image_result_indexes": [[0]],
                 "images_result": [
                     [Image.open("tests/resources/images/reference.jpeg")]
                 ],
@@ -129,6 +131,7 @@ class TestEvaluator(unittest.TestCase):
                     Image.open("tests/resources/images/reference.jpeg"),
                     Image.open("tests/resources/images/reference.jpeg"),
                 ],
+                "image_result_indexes": [[0],[0]],
                 "image_input": [
                     Image.open("tests/resources/images/reference.jpeg"),
                     Image.open("tests/resources/images/reference.jpeg"),
@@ -179,10 +182,16 @@ class TestEvaluator(unittest.TestCase):
         expected_ds = Dataset.from_dict(expected_data)
 
         for row, expected_row in zip(ds, expected_ds):
-            self.assertEqual(row["someMetric"], expected_row["someMetric"],
-                             f"Expected {expected_row['someMetric']}, got {row['someMetric']}")
-            self.assertEqual(row["images_result"], expected_row["images_result"],
-                             f"Expected {expected_row['images_result']}, got {row['images_result']}")
+            self.assertEqual(
+                row["someMetric"],
+                expected_row["someMetric"],
+                f"Expected {expected_row['someMetric']}, got {row['someMetric']}",
+            )
+            self.assertEqual(
+                row["images_result"],
+                expected_row["images_result"],
+                f"Expected {expected_row['images_result']}, got {row['images_result']}",
+            )
 
 
 if __name__ == "__main__":
