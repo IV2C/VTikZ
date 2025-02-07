@@ -155,6 +155,7 @@ class TestEvaluator(unittest.TestCase):
     def test_extend_metric_computations(self):
         dummy_image = Image.new(mode="RGB", size=(200, 200))
         data = {
+            "predictions_patches":[["","",""],["","",""]],
             "image_result_indexes": [[0, 2], [1]],
             "images_result": [
                 [dummy_image, dummy_image],
@@ -164,8 +165,7 @@ class TestEvaluator(unittest.TestCase):
             "otherColumn": [1, 2],
         }
         ds = Dataset.from_dict(data)
-        passk = 3
-        ds = _extend_metric_computations(ds, passk)
+        ds = _extend_metric_computations(ds)
 
         expected_data = {
             "image_result_indexes": [[0, 2], [1]],
@@ -192,6 +192,49 @@ class TestEvaluator(unittest.TestCase):
                 expected_row["images_result"],
                 f"Expected {expected_row['images_result']}, got {row['images_result']}",
             )
+
+
+    def test_extend_metric_computations_parsing_err(self):
+        dummy_image = Image.new(mode="RGB", size=(200, 200))
+        data = {
+            "predictions_patches":[["","",""],["",""]],
+            "image_result_indexes": [[0, 2], [1]],
+            "images_result": [
+                [dummy_image, dummy_image],
+                [dummy_image],
+            ],
+            "someMetric": [[0.5, 0.8], [0.6]],
+            "otherColumn": [1, 2],
+        }
+        ds = Dataset.from_dict(data)
+        ds = _extend_metric_computations(ds)
+
+        expected_data = {
+            "image_result_indexes": [[0, 2], [1]],
+            "images_result": [
+                [dummy_image, None, dummy_image],
+                [None, dummy_image],
+            ],
+            "someMetric": [
+                [0.5, None, 0.8],
+                [None, 0.6],
+            ],
+            "otherColumn": [1, 2],
+        }
+        expected_ds = Dataset.from_dict(expected_data)
+
+        for row, expected_row in zip(ds, expected_ds):
+            self.assertEqual(
+                row["someMetric"],
+                expected_row["someMetric"],
+                f"Expected {expected_row['someMetric']}, got {row['someMetric']}",
+            )
+            self.assertEqual(
+                row["images_result"],
+                expected_row["images_result"],
+                f"Expected {expected_row['images_result']}, got {row['images_result']}",
+            )
+
 
 
 if __name__ == "__main__":

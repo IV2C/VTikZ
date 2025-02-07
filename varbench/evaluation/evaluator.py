@@ -109,7 +109,7 @@ def evaluate(subset: datasets.Dataset, metrics: list[Metric]) -> datasets.Datase
 
 
 def _extend_metric_computations(
-    dataset: datasets.Dataset, passk: int
+    dataset: datasets.Dataset
 ) -> datasets.Dataset:
     """The image-based metrics in the dataset are only computed for x out of y code generated, because some of the code can't compile.
     During the compiling(method _images), we compute the indexes of the images that did compute and put it in an array.
@@ -117,14 +117,15 @@ def _extend_metric_computations(
     list with Nones in the places where the code could not render(be compiled into) an image
     """
 
+    
     metrics_names = [name for name in dataset.column_names if "Metric" in name]
     potential_image_metrics_names = [
-        name for name in metrics_names if any(len(row) < passk for row in dataset[name])
+        name for name in metrics_names if any(len(row) < len(parsed) for row,parsed in zip(dataset[name],dataset["predictions_patches"]))
     ]  # named potential because if all images have been compiled without error we skip the process completely
 
-    def _ext_none(row, col_name: str, passk: int):
+    def _ext_none(row, col_name: str):
         "Extends the row with nones at unreferenced indexes"
-        initial = [None] * passk
+        initial = [None] * len(row["predictions_patches"])
         for index, ar_value in zip(row["image_result_indexes"], row[col_name]):
             initial[index] = ar_value
         row[col_name] = initial
@@ -132,7 +133,7 @@ def _extend_metric_computations(
 
     for metric_name in potential_image_metrics_names + ["images_result"]:
         dataset = dataset.map(
-            _ext_none, fn_kwargs={"col_name": metric_name, "passk": passk}
+            _ext_none, fn_kwargs={"col_name": metric_name}
         )
     return dataset
 
