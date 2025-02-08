@@ -104,7 +104,7 @@ def evaluate(subset: datasets.Dataset, metrics: list[Metric]) -> datasets.Datase
             feature=datasets.Sequence(datasets.Value("float")),
         )
 
-    subset: datasets.Dataset = _extend_metric_computations(subset, pass_size)
+    subset: datasets.Dataset = _extend_metric_computations(subset)
     return subset
 
 

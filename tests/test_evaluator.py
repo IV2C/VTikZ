@@ -16,9 +16,6 @@ from PIL import Image
 
 from varbench.utils.parsing import get_first_code_block
 
-# @@ -7 +7 @@\n-\begin{tikzpicture} \draw (0,0) -- (1,1); \end{tikzpicture}+\begin{tikzpicture} \draw (0,1) -- (1,0); \end{tikzpicture}
-
-
 class TestEvaluator(unittest.TestCase):
 
     def setUp(self) -> None:
