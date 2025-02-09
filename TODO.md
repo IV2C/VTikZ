@@ -71,7 +71,7 @@
   - [X] llama3.370b versatile
   - [X] llama370b
   - [X] mixtral 8x7b
-- [ ] MetricBench
+- [X] MetricBench
 - [ ] Test LLM-only models then compare with Multimodal with image in input
 - [ ] test llm-vlm loop on the test dataset
 - [ ] add multimodal input to faragent

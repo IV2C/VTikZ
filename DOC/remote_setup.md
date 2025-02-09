@@ -35,7 +35,7 @@ sh NVIDIA-Linux-x86_64-470.82.01.run -s --no-install-compat32-libs
 
 
 git clone git@github.com:VarBench-SE/VarBench.git
-#TODO verify
+#Migh not work => to check
 cd VarBench
 git checkout dev
 

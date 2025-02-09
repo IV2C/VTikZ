@@ -149,7 +149,7 @@ python3 -m varbench.dataset_workflow.create_dataset [-h] --dataset DATASET
 The script will first compute the patches for each entry, then will add, commit, and push the changes to get a commit id and create the dataset with the instruction, the repo, the id of the commit, and the patch.
 
 # Synthetic data generation
-TODO: fix the script and Add documentation for the synthetic data generation
+WIP: fix the script and Add documentation for the synthetic data generation
 
 ### Additional Notes
 - **Environment Variables**: If `--api_key` is not provided, the script uses `OPENAI_API_KEY`.
