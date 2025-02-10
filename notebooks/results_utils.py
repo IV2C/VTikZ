@@ -1,5 +1,7 @@
 import math
-
+import pandas as pd
+from datasets import Dataset
+from datasets.formatting.formatting import LazyRow
 
 class MetricPolicy:
     @staticmethod
@@ -19,7 +21,14 @@ class MetricPolicy:
     def harmonic_mean(values: list[float]) -> float:
         return len(values) / sum(1 / v for v in values)
 
-    def compute_best_prediction(row, computed_metrics_names: list[str]):
+    @staticmethod
+    def metric_priority(df: pd.DataFrame, metric_priority_order: list[str]) -> float:
+        df = df.sort_values(metric_priority_order,ascending=False)
+        print(df)
+        pass
+
+    @staticmethod
+    def compute_best_prediction(row: LazyRow):
         """
         Computes the best prediction out of arrays of metrics, according to a policy(arithmetic, geometrical, or harmonic mean)
 
@@ -28,38 +37,52 @@ class MetricPolicy:
             metrics (list[Metric]): the list of metrics to compute the best prediction on
 
         """
+
+        print(type(row))
+        
+        
+        computed_metrics_names = [
+            metric_name
+            for metric_name in row.keys
+            if metric_name.endswith("Metric")
+        ]
+
         if row["compiling_score"] == 0:
             # nothing was able to be computed from the predictions
-            row["var_score"] = 0
             row["index_best_prediction"] = -1
             for metric_name in computed_metrics_names:
                 row[f"best_{metric_name}"] = 0
             return row
         scores_predictions_array = []
-        computed_metric_amount = len(
-            row[computed_metrics_names[0]]
-        )  # assuming all metrics computed the same amount of scores
-        for i in range(computed_metric_amount):
-            current_score_array = []
-            for metric_name in computed_metrics_names:
-                current_score_array.append(row[metric_name][i])
-            scores_predictions_array.append(current_score_array)
+        df_scores = row.to_pandas().explode(computed_metrics_names)
+
+        # TODO Update with metric_analysis output
+        most_important_metrics = ["PatchMetric", "LineMetric"]
+        metric_priority_order = most_important_metrics + (
+            computed_metrics_names - most_important_metrics
+        )
 
         policy_applied_array = [
-            MetricPolicy.mathematical_average(current_scores) if None not in current_scores else float('-inf')
+            (
+                MetricPolicy.metric_priority(df_scores, metric_priority_order)
+                if None not in current_scores
+                else float("-inf")
+            )
             for current_scores in scores_predictions_array
         ]
 
         max_value = max(policy_applied_array)
         index_max_value = policy_applied_array.index(max_value)
-        row["var_score"] = max_value
         row["index_best_prediction"] = index_max_value
         for metric_name in computed_metrics_names:
             row[f"best_{metric_name}"] = row[metric_name][index_max_value]
         return row
 
+
 import pandas as pd
-def flatten_metrics(df,metric_names):
+
+
+def flatten_metrics(df, metric_names):
     expanded_rows = []
 
     other_columns = df.columns.difference(metric_names)
@@ -74,5 +97,4 @@ def flatten_metrics(df,metric_names):
             new_row.extend(row[other_columns])
             expanded_rows.append(new_row)
 
-
-    return pd.DataFrame(expanded_rows, columns=list(metric_names)+list(other_columns))
+    return pd.DataFrame(expanded_rows, columns=list(metric_names) + list(other_columns))
