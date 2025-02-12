@@ -2,6 +2,10 @@
   "citation": "",
   "description": "",
   "features": {
+    "difficulty_ast": {
+      "dtype": "float32",
+      "_type": "Value"
+    },
     "id": {
       "dtype": "string",
       "_type": "Value"
@@ -78,49 +82,28 @@
       },
       "_type": "Sequence"
     },
-    "PSNRMetric": {
+    "TERPatchMetric": {
       "feature": {
         "dtype": "float32",
         "_type": "Value"
       },
       "_type": "Sequence"
     },
-    "LineMetric": {
+    "ChrfMetric": {
       "feature": {
         "dtype": "float32",
         "_type": "Value"
       },
       "_type": "Sequence"
     },
-    "ClipImageMetric": {
+    "ClipTextMetric": {
       "feature": {
         "dtype": "float32",
         "_type": "Value"
       },
       "_type": "Sequence"
     },
-    "MSEMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "TERMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "ChrfPatchMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
-    "BleuPatchMetric": {
+    "BleuMetric": {
       "feature": {
         "dtype": "float32",
         "_type": "Value"
@@ -148,13 +131,6 @@
       },
       "_type": "Sequence"
     },
-    "ClipTextMetric": {
-      "feature": {
-        "dtype": "float32",
-        "_type": "Value"
-      },
-      "_type": "Sequence"
-    },
     "MSSSIMMetric": {
       "feature": {
         "dtype": "float32",
@@ -162,21 +138,49 @@
       },
       "_type": "Sequence"
     },
-    "TERPatchMetric": {
+    "ClipImageMetric": {
       "feature": {
         "dtype": "float32",
         "_type": "Value"
       },
       "_type": "Sequence"
     },
-    "ChrfMetric": {
+    "TERMetric": {
       "feature": {
         "dtype": "float32",
         "_type": "Value"
       },
       "_type": "Sequence"
     },
-    "BleuMetric": {
+    "ChrfPatchMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "BleuPatchMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "PSNRMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "LineMetric": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "MSEMetric": {
       "feature": {
         "dtype": "float32",
         "_type": "Value"

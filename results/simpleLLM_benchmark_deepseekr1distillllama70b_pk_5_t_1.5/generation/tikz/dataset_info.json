@@ -2,6 +2,10 @@
   "citation": "",
   "description": "",
   "features": {
+    "difficulty_ast": {
+      "dtype": "float32",
+      "_type": "Value"
+    },
     "id": {
       "dtype": "string",
       "_type": "Value"

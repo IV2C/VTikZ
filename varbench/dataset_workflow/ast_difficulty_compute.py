@@ -1,11 +1,43 @@
-from pylatexenc.latexwalker import LatexEnvironmentNode, LatexWalker
+from TexSoup import TexSoup, TexNode
+from TexSoup.tokens import Token
+import zss
 
 
-original_tex = open("dataset/tikz/bee_eyes/input.tex").read()
-solution_tex = open("dataset/tikz/bee_eyes/solutions/solution1.tex").read()
+class SoupNode(object):
 
-original_w = LatexWalker(original_tex)
-solution_w = LatexWalker(solution_tex)
+    def __init__(self, label):
+        self.my_label = label
+        self.my_children = list()
 
-(nodelist, pos, len_) = original_w.get_latex_nodes(pos=0)
-print(nodelist[10])
+    @staticmethod
+    def get_children(node: TexNode | Token) -> list[TexNode | Token]:
+        if isinstance(node, TexNode):
+            return node.contents
+        return []
+
+    @staticmethod
+    def get_label(node: TexNode | Token) -> str:
+        if isinstance(node, TexNode):
+            return node.name
+        return node
+
+
+def TED_tikz(original, modified):
+    """Tree edit distance, using the ZSS and TexSoup library
+    Costs are 2 for addition/suppression of a node, and 1 for renaming
+
+    Args:
+        original (str): original LaTeX string
+        modified (str): modified LaTeX string
+
+    Returns:
+        float: the TED between the AST of the original and modified code
+    """
+    return zss.distance(
+        TexSoup(original),
+        TexSoup(modified),
+        SoupNode.get_children,
+        lambda _: 2,
+        lambda _: 2,
+        lambda node1, node2: SoupNode.get_label(node1) != SoupNode.get_label(node2),
+    )

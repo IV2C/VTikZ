@@ -72,6 +72,7 @@
   - [X] llama370b
   - [X] mixtral 8x7b
 - [X] MetricBench
+- [ ] If ever changing from only tikz to multiple languages, need to add a TED measure with another langauge parser
 - [ ] Test LLM-only models then compare with Multimodal with image in input
 - [ ] test llm-vlm loop on the test dataset
 - [ ] add multimodal input to faragent
