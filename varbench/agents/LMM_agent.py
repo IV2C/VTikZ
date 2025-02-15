@@ -7,9 +7,10 @@ from openai.types.chat import ChatCompletionMessageParam
 
 from varbench.agents import Agent
 from varbench.api.chat_api import ChatApi
-from varbench.utils.prompts.simple_templates import MULTIMODAL_INSTRUCTION
+from varbench.utils.prompts.simple_templates import IT_PROMPT, SYSTEM_PROMPT_GENERATION
 from varbench.renderers.renderer import Renderer, RendererException
 from varbench.utils.parsing import get_first_code_block
+
 
 class LMMAgent(Agent):
     """LMM(Large Multimodal Model) agent that uses both the "reading" and "vision" capabilities of the models tested"""
@@ -43,15 +44,14 @@ class LMMAgent(Agent):
 
         # Some multimodal models do not support system prompts, so we only use the user prompt as input
 
-        user_instruction = MULTIMODAL_INSTRUCTION.format(
-            instruction=instruction, content=code
-        )
+        user_instruction = IT_PROMPT.format(instruction=instruction, content=code)
 
         buffered = BytesIO()
         image.save(buffered, format="JPEG")
         img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
 
         messages = [
+            {"role": "system", "content": SYSTEM_PROMPT_GENERATION},
             {
                 "role": "user",
                 "content": [

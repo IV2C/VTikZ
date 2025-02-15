@@ -15,7 +15,7 @@ def instantiate_agent(
 ) -> Agent:
     agent_map = {
         "simpleLLM": SimpleLLMAgent,
-        "simpleLMM": LMM_agent,
+        "simpleLMM": LMMAgent,
         "loopVLMLLM": VLLMLoopAgent,
         "loopLMM": LMMAgent,
         "FAR": FARAgent
