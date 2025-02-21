@@ -4,8 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-class SvgFilters:
-
+class SvgUtils:
     def statistics(dataset: Dataset):
         tags = [
             "<circle ",
@@ -61,37 +60,109 @@ class SvgFilters:
 
         plt.tight_layout()
         plt.show()
+    class Filters:
 
-    def noAnimations(row: str):
-        return all(
-            anim_tag not in row["Svg"]
-            for anim_tag in [
-                "<animate ",
-                "<animateMotion ",
-                "<animateTransform ",
-                "<set ",
-            ]
+        def noAnimations(row):
+            return all(
+                anim_tag not in row["Svg"]
+                for anim_tag in [
+                    "<animate ",
+                    "<animateMotion ",
+                    "<animateTransform ",
+                    "<set ",
+                ]
+            )
+
+        def noText(row):
+            return all(text_tag not in row["Svg"] for text_tag in ["<text>", "<tspan>"])
+
+        def hasBasicShape(row):
+            return any(
+                shape_tag in row["Svg"]
+                for shape_tag in [
+                    "<circle ",
+                    "<rect ",
+                    "<ellipse ",
+                    "<polygon ",
+                    "<polyline ",
+                    "<line ",
+                ]
+            )
+
+        def maxCharacters(row):
+            return  len(row["Svg"]) < 4000 and len(row["Svg"]) > 500
+
+import numpy as np
+
+class TikzUtils:
+    def statistics(dataset: Dataset):
+        dataset = dataset.map(
+            lambda row: {"num_characters": len(row["code"]),"num_lines": len(row["code"].splitlines())},
+            desc="computing length of the code",
         )
+        df = dataset.to_pandas()
 
-    def noText(row: str):
-        return all(text_tag not in row["Svg"] for text_tag in ["<text>", "<tspan>"])
+        # Compute IQR
+        Q1 = np.percentile(df["num_characters"], 25)
+        Q3 = np.percentile(df["num_characters"], 75)
+        IQR = Q3 - Q1
 
-    def hasBasicShape(row: str):
-        return any(
-            shape_tag in row["Svg"]
-            for shape_tag in [
-                "<circle ",
-                "<rect ",
-                "<ellipse ",
-                "<polygon ",
-                "<polyline ",
-                "<line ",
-            ]
-        )
+        # Define outlier bounds
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
 
-    def maxCharacters(row: str):
-        return  len(row["Svg"]) < 4000 and len(row["Svg"]) > 500
+        print(lower_bound)
+        print(upper_bound)
+        
+        # Filter out outliers
+        df_filtered = df[(df["num_characters"] >= lower_bound) & (df["num_characters"] <= upper_bound)]
 
+        plt.figure(figsize=(12, 6))
+        sns.histplot(x=df_filtered["num_characters"], color="lightgreen")
 
-class TikzFilters:
-    pass
+        # Set title and labels
+        plt.title('Histogram of Number of Characters (Outliers Removed)')
+        plt.xlabel("Number of Characters")
+        plt.show()
+        
+        sns.histplot(x=df_filtered["num_lines"], color="lightgreen")
+
+        # Set title and labels
+        plt.title('Histogram of number of lines')
+        plt.xlabel("Lines")
+        plt.show()
+        
+        sns.histplot(y=df_filtered["origin"], color="lightgreen")
+
+        # Set title and labels
+        plt.title('Histogram of number of origins')
+        plt.ylabel("Origin")
+        plt.show()
+        
+
+    class Filters:
+        def characterLength(row):
+            return  len(row["code"]) < 3570 and len(row["code"]) > 700
+        def lineLength(row):
+            code_line_length = row["code"].splitlines()
+            return  len(code_line_length) > 50 and len(code_line_length) < 80    
+        def noLLMorigin(row):
+            return row["origin"] != "gpt4" and row["origin"] != "chatgpt"
+        def hasBasicShape(row):
+            return sum(
+                row["code"].count(shape_tag)
+                for shape_tag in [
+                    "\\fill",
+                    "\\draw"
+                ]
+            ) > 3
+        def oneTikzPicture(row):
+            return row["code"].count("\\begin{tikzpicture}") == 1
+        
+        def hasComments(row):
+            return bool(re.search(r'(?<!\\)%[^\s%].*', row["code"]))
+    class Modifications:
+        def removeComments(row):
+            row["full_code"] = row["code"]
+            row["code"] = "\n".join([re.split(r'(?<!\\)%', line)[0] for line in row["code"].splitlines()])
+            return row

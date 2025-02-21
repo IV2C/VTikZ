@@ -161,3 +161,4 @@ def _images(
         output_images.append(row_output_images)
         output_images_indexes.append(row_output_images_indexes)
     return output_images_indexes, output_images
+

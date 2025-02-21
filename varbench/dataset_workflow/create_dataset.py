@@ -11,7 +11,6 @@ import pandas as pd
 import os
 import argparse
 
-
 from .ast_difficulty_compute import TED_tikz
 from varbench.renderers import Renderer, SvgRenderer, TexRenderer
 from .patchcompute import patch_compute
@@ -57,7 +56,6 @@ for subset in os.listdir(dataset_path):
 
         # computing image input
         image_input = renderer.from_string_to_image(input_code)
-
         image_input = image_input.resize((300, 300))  # TODO make a parameter
 
         # getting the annotations of the current row
