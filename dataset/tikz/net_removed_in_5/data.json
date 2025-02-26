@@ -3,5 +3,5 @@
   "result_description": "A neural network, with 4 inputs.",
   "difficulty": "medium",
   "type": "scientific",
-  "modif_type": "medium"
+  "modif_type": "remove"
 }

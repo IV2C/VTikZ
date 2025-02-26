@@ -1,7 +1,7 @@
 {
   "instruction": "Remove the second gray container and its content.",
   "result_description": "A technical diagram, with five gray dotted areas.",
-  "difficulty": "remove",
+  "difficulty": "hard",
   "type": "scientific",
-  "modif_type": "hard"
+  "modif_type": "remove"
 }
