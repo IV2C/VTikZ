@@ -1,0 +1,7 @@
+{
+  "instruction": "Increase the size of S, so that the B_DP node and the node over it are also contained in S. ",
+  "result_description": "a graph with all but one node contained in a green or a red blob.",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "update"
+}

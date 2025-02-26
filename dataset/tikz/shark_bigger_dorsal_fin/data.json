@@ -1,5 +1,7 @@
 {
   "instruction": "Make the dorsal fin of the shark longer and pointy",
   "result_description": "A shark with a long and pointy dorsal fin",
-  "difficulty": "medium"
+  "difficulty": "medium",
+  "type": "animal",
+  "modif_type": "update"
 }

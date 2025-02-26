@@ -1,0 +1,71 @@
+\documentclass[tikz,border=5]{standalone}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\usepackage{pgfplots}
+\pgfplotsset{width=8cm,compat=newest}
+\pgfplotsset{every tick label/.append style={font=\small}}
+
+\begin{document}
+
+\begin{tikzpicture}
+        \begin{axis}[
+            height=3.5cm,
+            width=9.5cm,
+            ybar=0pt,
+            bar width=8pt,
+            xtick=data,
+            xtick style= {draw=none},
+            ylabel=Speedup,
+            enlarge x limits = 0.2,
+            y label style={font=\footnotesize,yshift=-2mm},
+            x label style={font=\footnotesize},
+            ymax=30,
+            ymin=0,
+            axis line style={draw=none},
+            ytick={0,5,10,15,20,25,30},
+            ytick style={font=\scriptsize},
+            yticklabels={0,5,10,15,20,25,30},
+            ymajorgrids=true,
+            tick pos=left,
+            yticklabel style={font=\scriptsize},
+            nodes near coords,
+            every node near coord/.append style={font=\scriptsize,rotate=90, anchor=west,xshift=-1mm},
+            symbolic x coords={VecSum,Stencil, MatMult},
+            legend style = {font=\scriptsize, at={(0.4,1)}, anchor=south},
+            legend image code/.code={
+                \draw[#1, draw=none, fill=black] (-0.01cm,-0.11cm) rectangle (0.31cm,0.11cm);
+                \draw[#1, draw=none] (0cm,-0.1cm) rectangle (0.3cm,0.1cm);
+            },
+            legend style = {
+                legend columns=-1,
+                draw={none},
+                text depth=0pt,
+                % default spacing:
+                % the space between legend image and text:
+                /tikz/every odd column/.append style={column sep=0cm}
+                },
+            legend image post style={scale=0.5},
+            point meta=explicit symbolic
+        ]
+        \addlegendimage{empty legend},
+        \addplot [black,/tikz/fill=white] coordinates {(Stencil,2.74)[2.74] (VecSum,7.18)[7.18] (MatMult, 3.70)[3.70]}; % 32K
+        \addplot [black,/tikz/fill=black!40!white] coordinates {(Stencil,2.75)[2.75] (VecSum,7.18)[7.18] (MatMult, 26.48)[26.48]}; %64K
+        \addplot [black,/tikz/fill=black!60!white] coordinates {(Stencil,3.42)[3.42] (VecSum,7.27)[7.27] (MatMult, 26.48)[26.48]}; %128K
+        \addplot [black,/tikz/fill=black] coordinates {(Stencil,3.44)[3.44] (VecSum,7.17)[7.17] (MatMult, 26.47)[26.47]}; %256K
+
+        
+        \addlegendentry{\hspace{-.6cm}\textbf{VIMA Cache Size:}};
+        \addlegendentry{32KB};
+        \addlegendentry{64KB};
+        \addlegendentry{128KB};
+        \addlegendentry{256KB};
+        \end{axis}
+        \draw (0,0.1) -- +(0,-0.2);
+        \draw (2.53,0.1) -- +(0,-0.2);
+        \draw (5.4,0.1) -- +(0,-0.2);
+        \draw (7.93,0.1) -- +(0,-0.2);
+        
+    \end{tikzpicture}
+
+\end{document}

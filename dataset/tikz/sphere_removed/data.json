@@ -1,0 +1,7 @@
+{
+  "instruction": "Remove the leftmost and rightmost spheres.",
+  "result_description": "Two spheres with an arrow in between",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "remove"
+}

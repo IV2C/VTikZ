@@ -1,5 +1,7 @@
 {
   "instruction": "Change the color of the chimpanzee's fur to blue",
   "result_description": "A chimpanzee with blue fur",
-  "difficulty": "easy"
+  "difficulty": "easy",
+  "type": "animal",
+  "modif_type": "update"
 }

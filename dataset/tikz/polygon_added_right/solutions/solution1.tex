@@ -1,0 +1,53 @@
+\documentclass[tikz,border=5]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{tkz-euclide}
+
+\newcommand{\polygon}[2]{%#1 number of sides, #2--numbers to go in spinner
+
+    \draw (0,0) coordinate (X) ;
+
+    \pgfmathsetmacro{\angle}{360/#1}
+    \foreach \i in {0,1,2,...,#1}{
+        \draw(X)--++(\angle*\i:2.5) coordinate (A\i);
+    }
+    
+    \foreach \i in {0,...,\fpeval{#1-1}}{
+        \pgfmathsetmacro{\k}{100*\i/#1}
+        \pgfmathtruncatemacro{\j}{\i+1}
+   
+        % add line join=bevel to avoid bits of fill sticking outside the frame        
+        \filldraw[red!\k,line join=bevel] (X)--(A\i)--(A\j)--cycle;
+    }
+
+    % draw border as single path to improve joins
+    \draw (A0) foreach \i in {1,...,\fpeval{#1-1}}{ -- (A\i) } -- cycle;
+
+    \foreach \i in {0,...,#1}{
+        \draw(X)--(A\i);
+    }
+
+    \foreach [count=\i] \txt in {#2}
+    {
+    \path (X)-- ++({(\i+0.5)*\angle}:1)  node (B\i) {\txt};
+     }
+
+    \filldraw (X) circle [radius=3pt];
+
+ }%
+
+\begin{document}
+\begin{tikzpicture}[line width =0.7mm]
+
+% First polygon at (0,0)
+\begin{scope}[shift={(0,0)}]
+    \polygon{4}{1,2,3,4}
+\end{scope}
+
+% Second polygon shifted to the right
+\begin{scope}[shift={(5,0)}]
+    \polygon{5}{1,2,3,4,5}
+\end{scope}
+
+\end{tikzpicture}
+\end{document}

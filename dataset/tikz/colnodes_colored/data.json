@@ -1,0 +1,7 @@
+{
+  "instruction": "Color the nodes of the graph in the color of the zone it is in. If a node is contained in multiple zones,  color it with the color of each zone (half of each color if in two zones, a third if in three, etc).",
+  "result_description": "A graph, with nodes colored depending on the area they are in.",
+  "difficulty": "hard",
+  "type": "scientific",
+  "modif_type": "update"
+}

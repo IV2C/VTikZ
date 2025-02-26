@@ -1,0 +1,7 @@
+{
+  "instruction": "Move the gpu and the section under it(all the bottom content) to the right of the OpenCL Program. Put the   \"Execute\" arrow to the right so that it does not interfere with the compile arrow.",
+  "result_description": "Diagram of the execution of a openCL program, with the GPU diagram placed on the right.",
+  "difficulty": "hard",
+  "type": "scientific",
+  "modif_type": "update"
+}

@@ -1,5 +1,7 @@
 {
   "instruction": "Make the horns of the cow longer",
   "result_description": "A cow with long horns",
-  "difficulty": "medium"
+  "difficulty": "medium",
+  "type": "animal",
+  "modif_type": "update"
 }

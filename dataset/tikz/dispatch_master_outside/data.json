@@ -1,0 +1,7 @@
+{
+  "instruction": "Move the master oustide the dashed box.",
+  "result_description": "Architecture diagram of a master-slave system, with Master outside of the dashed box",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "update"
+}

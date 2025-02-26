@@ -1,5 +1,7 @@
 {
   "instruction": "Add a third pair of wings to the bee",
   "result_description": "A bee with three sets of wings",
-  "difficulty": "medium"
+  "difficulty": "medium",
+  "type": "animal",
+  "modif_type": "add"
 }

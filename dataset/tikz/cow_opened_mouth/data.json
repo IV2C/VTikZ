@@ -1,5 +1,7 @@
 {
-  "instruction": "Make the mouth of the cow very open",
+  "instruction": "Make the mouth of the cow wide open vertically",
   "result_description": "A cow with its mouth opened",
-  "difficulty": "medium"
+  "difficulty": "medium",
+  "type": "animal",
+  "modif_type": "update"
 }

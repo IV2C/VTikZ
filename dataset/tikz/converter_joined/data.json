@@ -1,0 +1,7 @@
+{
+  "instruction": "Join the two converters by moving the bottom one on the right of the top one, the output of the first one should enter in the input of the second one.",
+  "result_description": "Two ac/dc and dc/ac converter linked.",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "update"
+}

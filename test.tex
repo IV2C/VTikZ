@@ -1,74 +1,66 @@
-\documentclass[tikz,border=5]{standalone}
-\usepackage[prefix=]{xcolor-material}
+\documentclass[10pt,conference,a4paper]{IEEEtran}
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{arrows.meta, decorations.pathreplacing, fit, positioning}
 
-\tikzset{
-  half clip/.code={
-    \clip (0, -256) rectangle (256, 256);
-  },
-  color/.code=\colorlet{fill color}{#1},
-  color alias/.code args={#1 as #2}{\colorlet{#1}{#2}},
-  on left/.style={.. on left/.style={#1}},
-  on right/.style={.. on right/.style={#1}},
-  split/.style args={#1 and #2}{
-    on left ={color alias=fill color as #1},
-    on right={color alias=fill color as #2, half clip}
-  }
-}
-\newcommand\reflect[2][]{
-\begin{scope}[#1]\foreach \side in {-1, 1}{\begin{scope}
-\ifnum\side=-1 \tikzset{.. on left/.try}\else\tikzset{.. on right/.try}\fi
-\begin{scope}[xscale=\side]#2\end{scope}
-\end{scope}}\end{scope}}
-
-\tikzset{
-donkey/.pic={
-\begin{scope}[x=3cm/480,y=3cm/480]
-\reflect[
-  on left ={color alias=ears as BlueGrey500},
-  on right={color alias=ears as BlueGrey700},
-  outer ear/.style={fill=ears}, inner ear/.style={fill=BlueGrey900}
-]{
-  \foreach \s [count=\j from 0] in {outer ear, inner ear}
-  \fill [style=\s]
-  [shift={(88,120)}, rotate=75, scale=9/10-\j/3, xscale=2/2]
-  (-72,0)
-  .. controls ++( 90: 8) and ++(180:16) .. ( 0, 48)
-  .. controls ++(  0:16) and ++( 90:12) .. (88,  0)
-  .. controls ++(270:12) and ++(  0: 8) .. ( 0,-48)
-  .. controls ++(180: 8) and ++(270: 8) .. cycle;
-}
-\reflect[split=BlueGrey500 and BlueGrey700]{%
-  \fill [fill color] (-56,-160)
-  .. controls ++( 90:112) and ++(270: 128) .. (-112,  48)
-  arc (180:0:112 and 96)
-  .. controls ++(270: 128) and ++( 90:112) .. (  56,-160) -- cycle;
-}
-\reflect[split=Grey500 and Grey600]{%
-  \fill [fill color] (0,-164) ellipse [x radius=56, y radius=56];
-}
-\reflect[split=Grey700 and Grey800]{%
-  \fill [fill color] (0,-164) ellipse [x radius=48, y radius=40];
-}
-\reflect[split=Grey500 and Grey600]{%
-  \fill [fill color] (0,-144) ellipse [x radius=64, y radius=48];
-  \fill [fill color]  (36, -128) ellipse [x radius=24, y radius=40];
-  \fill [BlueGrey900] (36, -128) ellipse [x radius=12, y radius=24];
-}
-\fill [BlueGrey900]
-  (-72, 40) ellipse [radius=20]
-  ( 72, 40) ellipse [radius=20]
-  (-8,160)
-  to [bend left]  ++( 16, 32) to [bend right] ++( 16,-48)
-  to [bend left]  ++( 16, 32) to [bend right] ++( 16,-48)
-  to [bend right] ++(-32,-48) to [bend left]  ++(-16, 32)
-  to [bend right] ++(-32,-32) to [bend left]  ++(  0, 32)
-  to [bend right] ++(-32,-16) to [bend left]  ++( 16, 40)
-  to [bend right] ++(-16, 32) to [bend left]  cycle;
-\end{scope}}
-}
 \begin{document}
-\begin{tikzpicture}
-\fill [fill=LightBlue300] circle [radius=2];
-\pic {donkey};
-\end{tikzpicture}
+
+\begin{tikzpicture}[node distance=.2cm, align=center, base/.style = {rectangle, draw=black, minimum width=2.2cm, minimum height=.15cm, text centered, font=\sffamily\scriptsize},
+  inout/.style = {base, rounded corners=3pt},
+  layer/.style = {base}]
+    \node (img) [inout]{\(\hat{\mathbf{I}}\)};
+    \node (conv1) [layer, below=of img] {Conv1 (3, 3, 64)};
+    \node (pool1) [layer, left=of conv1] {MaxPool1 (2, 2)};
+    \node (conv2) [layer, below=of pool1] {Conv2 (3, 3, 64)};
+    \node (conv3) [layer, below=of conv2] {Conv3 (3, 3, 64)};
+    \node (pool2) [layer, left= of conv3] {MaxPool2 (2, 2)};
+    \node (conv4) [layer, below=of pool2] {Conv4 (3, 3, 64)};
+    \node (up1) [layer, below=of conv4] {UpSample1};
+    \node (conv5) [layer, below=of up1] {Conv5 (3, 3, 64)};
+    \node (conv6) [layer, below=of conv5] {Conv6 (3, 3, 64)};
+    \node (concat1) [layer, right=of conv6, fill=cyan] {Concat1};
+    \node (up2) [layer, below=of concat1] {UpSample2};
+    \node (conv7) [layer, below=of up2] {Conv7 (3, 3, 64)};
+    \node (conv8) [layer, below=of conv7] {Conv8 (3, 3, 64)};
+    \node (concat2) [layer, right=of conv8, fill=cyan] {Concat2};
+    \node (conv9) [layer, below=of concat2] {Conv9 (3, 3, 64)};
+    \node (conv10) [layer, below=of conv9] {Conv10 (3, 3, 64)};
+    \node (fc1) [layer, below=of conv10] {ReLU( FC (128) )};
+    \node (fc2) [layer, below=of fc1] {FC (\(K\))};
+    \node (output) [layer, below=of fc2] {P};
+    \node (convLayer) [layer, below left=of conv8] {ConvJ (M, N, K)};
+    \node (convolution) [layer, below=of convLayer] {Convolve (M, N, K)};
+    \node (relu) [layer, below=of convolution] {ReLU};
+    \node (descr) [font=\sffamily\scriptsize, below=of relu] {M: kernel width\\N: kernel height\\K: \# of kernels};
+    \node [fit=(convLayer)(convolution)(relu)(descr), draw, gray, dashed]{};
+    \begin{scope}[all/.style={width=2mm, length=2mm}]
+      \draw[->] (img) -- (conv1);
+      \draw[->] (conv1) -- (pool1);
+      \draw[->] (conv1) -- (concat2);
+      \draw[->] (pool1) -- (conv2);
+      \draw[->] (conv2) -- (conv3);
+      \draw[->] (conv3) -- (pool2);
+      \draw[->] (conv3) -- (pool2);
+      \draw[->] (conv3) -- (concat1);
+      \draw[->] (pool2) -- (conv4);
+      \draw[->] (conv4) -- (up1);
+      \draw[->] (up1) -- (conv5);
+      \draw[->] (conv5) -- (conv6);
+      \draw[->] (conv6) -- (concat1);
+      \draw[->] (concat1) -- (up2);
+      \draw[->] (up2) -- (conv7);
+      \draw[->] (conv7) -- (conv8);
+      \draw[->] (conv8) -- (concat2);
+      \draw[->] (concat2) -- (conv9);
+      \draw[->] (conv9) -- (conv10);
+      \draw[->] (conv10) -- (fc1);
+      \draw[->] (fc1) -- (fc2);
+      \draw[->] (fc2) -- (output);
+      \draw[->] (convolution) -- (relu);
+      \draw[decorate, decoration={brace, mirror, amplitude=5pt}] (convLayer.south west) -- (convLayer.south east);
+    \end{scope}
+  \end{tikzpicture}
+
 \end{document}

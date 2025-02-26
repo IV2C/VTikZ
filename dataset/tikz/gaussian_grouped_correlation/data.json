@@ -1,0 +1,7 @@
+{
+  "instruction": "Add a dashed rectangle containing uC1 and uCC, and everything over and under these nodes, with a label \"Correlation\" on the bottom right. This rectangle essentialy contains everything on the left side of the image.",
+  "result_description": "Technical diagram, with the first nodes contained in a correlation dashed rectangle",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "add"
+}

@@ -1,0 +1,7 @@
+{
+  "instruction": "Add a third force F3 between F2 and F1, and the corresponding annotations.",
+  "result_description": "A mechanical diagram representing three forces, F1, F2 anf F3",
+  "difficulty": "hard",
+  "type": "scientific",
+  "modif_type": "add"
+}

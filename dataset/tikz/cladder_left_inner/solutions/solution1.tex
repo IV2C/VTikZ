@@ -1,0 +1,47 @@
+\documentclass[tikz,border=5]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{eqnarray, amsmath}
+\usepackage{xcolor}
+
+\begin{document}
+
+\begin{tikzpicture}
+%CLOSE LADDER
+%two basic circles
+\draw[black, thick, domain=25:340] plot[smooth] ({-0.75 + 0.5*cos(\x)}, {0.5*sin(\x)});
+\draw[black, thick, domain=15:350] plot[smooth] ({1.5*cos(\x)}, {1.5*sin(\x)});
+%dots
+\filldraw[color=black, thin] (-0.15,0) circle (0.65pt);
+\filldraw[color=black, thin] (0.25,0) circle (0.65pt);
+\filldraw[color=black, thin] (0.65,0) circle (0.65pt);
+%points 1 circle (shifted left)
+\filldraw[color=black] (-0.44,0.38) circle (2pt);
+\filldraw[color=black] (-0.72,0.49) circle (2pt);
+\filldraw[color=black] (-1.01,0.42) circle (2pt);
+\filldraw[color=black] (-1.21,0.18) circle (2pt);
+\filldraw[color=black] (-1.23,-0.12) circle (2pt);
+\filldraw[color=black] (-1.06,-0.38) circle (2pt);
+\filldraw[color=black] (-0.78,-0.49) circle (2pt);
+\filldraw[color=black] (-0.49,-0.42) circle (2pt);
+%points 2 circle (unchanged)
+\filldraw[color=black] (0.95,1.15) circle (2pt);
+\filldraw[color=black] (0.09,1.49) circle (2pt);
+\filldraw[color=black] (-0.80,1.26) circle (2pt);
+\filldraw[color=black] (-1.39,0.55) circle (2pt);
+\filldraw[color=black] (-1.45,-0.37) circle (2pt);
+\filldraw[color=black] (-0.95,-1.15) circle (2pt);
+\filldraw[color=black] (-0.09,-1.49) circle (2pt);
+\filldraw[color=black] (0.80,-1.26) circle (2pt);
+%connection lines (updated for inner points)
+\draw[black, thick] (-0.44,0.38) -- (0.95,1.15);
+\draw[black, thick] (-0.72,0.49) -- (0.09,1.49);
+\draw[black, thick] (-1.01,0.42) -- (-0.80,1.26);
+\draw[black, thick] (-1.21,0.18) -- (-1.39,0.55);
+\draw[black, thick] (-1.23,-0.12) -- (-1.45,-0.37);
+\draw[black, thick] (-1.06,-0.38) -- (-0.95,-1.15);
+\draw[black, thick] (-0.78,-0.49) -- (-0.09,-1.49);
+\draw[black, thick] (-0.49,-0.42) -- (0.80,-1.26);
+\end{tikzpicture}
+
+\end{document}

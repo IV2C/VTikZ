@@ -1,0 +1,7 @@
+{
+  "instruction": "Increase the width of the copper-colored box on the top, so that its right side aligns with the right side of the box under it.",
+  "result_description": "A technical diagram, with a red layer that has its right side aligned with the right side of the green box under it",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "update"
+}

@@ -1,5 +1,7 @@
 {
-  "instruction": "Remove the spots on the forehead of the squid's face",
+  "instruction": "Remove the spots on the forehead of the squid",
   "result_description": "a red squid with no spots on its forehead",
-  "difficulty": "easy"
+  "difficulty": "easy",
+  "type": "animal",
+  "modif_type": "remove"
 }

@@ -1,5 +1,7 @@
 {
   "instruction": "Change the position of the tail to the other side of the cat",
   "result_description": "A cat, with its tail on the right",
-  "difficulty": "hard"
+  "difficulty": "hard",
+  "type": "animal",
+  "modif_type": "update"
 }

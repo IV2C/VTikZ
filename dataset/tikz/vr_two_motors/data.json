@@ -1,0 +1,7 @@
+{
+  "instruction": "Split the motors into two motors next to eachother(lMotor 1 and Motor 2), that are linked to the robot controller the same way motors was. update the containers accordingly",
+  "result_description": "Functionnal diagram of a system with two motors.",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "add"
+}

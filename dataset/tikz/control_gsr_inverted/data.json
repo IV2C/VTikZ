@@ -1,0 +1,7 @@
+{
+  "instruction": "Invert the system and the controller.",
+  "result_description": "A flowchart, with the node Gs before the node Gr",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "update"
+}

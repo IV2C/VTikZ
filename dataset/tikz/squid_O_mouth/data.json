@@ -1,5 +1,7 @@
 {
   "instruction": "Change the shape of the squid's mouth to a circle",
   "result_description": "A squid with a circular mouth",
-  "difficulty": "medium"
+  "difficulty": "medium",
+  "type": "animal",
+  "modif_type": "update"
 }

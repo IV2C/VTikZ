@@ -1,5 +1,7 @@
 {
-  "instruction": "Add a duckling on the bottom left side of the frame, essentially a copy of the existing duck",
+  "instruction": "Add a duckling on the bottom left side of the frame, essentially a smaller copy of the existing duck",
   "result_description": "A duck with a smaller copy of it on its bottom left side",
-  "difficulty": "medium"
+  "difficulty": "medium",
+  "type": "animal",
+  "modif_type": "add"
 }

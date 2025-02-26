@@ -1,5 +1,7 @@
 {
   "instruction": "Make the donkey white",
   "result_description": "A white donkey",
-  "difficulty": "easy"
+  "difficulty": "easy",
+  "type": "animal",
+  "modif_type": "update"
 }

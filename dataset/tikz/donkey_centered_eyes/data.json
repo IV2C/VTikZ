@@ -1,5 +1,7 @@
 {
   "instruction": "Center the eyes of the donkey",
   "result_description": "A donkey with its eyes centered",
-  "difficulty": "easy"
+  "difficulty": "easy",
+  "type": "animal",
+  "modif_type": "update"
 }

@@ -1,0 +1,7 @@
+{
+  "instruction": "Add a second polygon on the right side of the first one.",
+  "result_description": "A square and a pentagon next to eachother.",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "add"
+}

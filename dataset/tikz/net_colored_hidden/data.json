@@ -1,0 +1,7 @@
+{
+  "instruction": "Color the hidden layer nodes in red",
+  "result_description": "A neural network, with redd hiden layer nodes",
+  "difficulty": "hard",
+  "type": "scientific",
+  "modif_type": "update"
+}

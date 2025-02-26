@@ -1,0 +1,7 @@
+{
+  "instruction": "Increase the size of the hole in the torus",
+  "result_description": "A diagram witha torus with a large hole on the right.",
+  "difficulty": "hard",
+  "type": "scientific",
+  "modif_type": "update"
+}

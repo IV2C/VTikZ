@@ -1,5 +1,7 @@
 {
   "instruction": "Add another set of pectoral fin to the shark, lower on its body",
   "result_description": "A shark with two sets of pectoral fins",
-  "difficulty": "hard"
+  "difficulty": "hard",
+  "type": "animal",
+  "modif_type": "add"
 }

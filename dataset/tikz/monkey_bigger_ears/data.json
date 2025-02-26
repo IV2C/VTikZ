@@ -1,5 +1,7 @@
 {
   "instruction": "Increase the size of the monkey's ears by a lot",
   "result_description": "A monkey with big ears",
-  "difficulty": "easy"
+  "difficulty": "easy",
+  "type": "animal",
+  "modif_type": "update"
 }

@@ -1,0 +1,7 @@
+{
+  "instruction": "Add a label k_n to each filled black rectangle on their \"above right\", with n=1,2,3,4 (top-left, top-right, bottom-left, bottom-right) ",
+  "result_description": "Workflow diagram with black boxes names from k1 to k4",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "add"
+}

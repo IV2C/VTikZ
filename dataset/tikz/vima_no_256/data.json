@@ -1,0 +1,7 @@
+{
+  "instruction": "Remove the measurements for 256kb",
+  "result_description": "Scientific diagram with speedup measures for 32, 64 and 128kb.",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "remove"
+}

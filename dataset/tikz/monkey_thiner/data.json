@@ -1,5 +1,7 @@
 {
   "instruction": "Make the face of the monkey thinner",
   "result_description": "A monkey with a thin face",
-  "difficulty": "medium"
+  "difficulty": "medium",
+  "type": "animal",
+  "modif_type": "update"
 }

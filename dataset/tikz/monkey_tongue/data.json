@@ -1,5 +1,7 @@
 {
   "instruction": "Make the monkey stick out his tongue, on the right side of his mouth",
   "result_description": "A monkey with its tongue sticking out of the right side of his mouth",
-  "difficulty": "medium"
+  "difficulty": "medium",
+  "type": "animal",
+  "modif_type": "add"
 }

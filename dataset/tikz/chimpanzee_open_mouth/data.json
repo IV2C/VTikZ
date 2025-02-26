@@ -1,5 +1,7 @@
 {
   "instruction": "Increase the size of the chimpanzee's mouth, making its smile bigger",
   "result_description": "A chimpanzee with a big smile",
-  "difficulty": "easy"
+  "difficulty": "easy",
+  "type": "animal",
+  "modif_type": "update"
 }

@@ -1,0 +1,7 @@
+{
+  "instruction": "Remove the entire bottom section of the diagram, where the nodes f and g are.",
+  "result_description": "Workflow diagram with two main branches going from left to right.",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "remove"
+}

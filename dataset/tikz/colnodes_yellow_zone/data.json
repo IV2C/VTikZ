@@ -1,0 +1,7 @@
+{
+  "instruction": "Add a new yellow zone, that contains the two remaining nodes.",
+  "result_description": "A graph, with nodes contained in red, green, blue and yellow areas.",
+  "difficulty": "hard",
+  "type": "scientific",
+  "modif_type": "add"
+}

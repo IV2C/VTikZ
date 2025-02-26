@@ -1,5 +1,7 @@
 {
   "instruction": "Change the color of the squid to yellow",
   "result_description": "A yellow squid",
-  "difficulty": "easy"
+  "difficulty": "easy",
+  "type": "animal",
+  "modif_type": "update"
 }

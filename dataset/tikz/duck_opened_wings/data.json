@@ -1,5 +1,7 @@
 {
   "instruction": "Make the duck open its wings",
   "result_description": "A duck with its wings opened",
-  "difficulty": "hard"
+  "difficulty": "hard",
+  "type": "animal",
+  "modif_type": "update"
 }

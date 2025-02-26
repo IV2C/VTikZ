@@ -1,0 +1,7 @@
+{
+  "instruction": "Center the zoom at the green intersection point.",
+  "result_description": "A right angled triang, with a zoom centered right on a green dot",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "update"
+}
