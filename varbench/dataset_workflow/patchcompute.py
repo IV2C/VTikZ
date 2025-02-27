@@ -8,22 +8,29 @@ import os
 import argparse
 
 import difflib
+import re
 
-
-def patch_compute(folder: str) -> list[str]:
+def patch_compute(folder: str)  -> tuple[str, str, str, str]:
     """
-    Compute the differences between the 'input' and 'solutions' for each subset in the given folder.
+    Computes the differences between the 'input' and 'solutions' for each subset in the given folder.
 
     Parameters:
-        folder (str): The path to the folder containing the input and solution(the entry in the dataset).
+        folder (str): Path to the folder containing the 'input' and 'solutions' files.
 
     Returns:
-        None
+        tuple:
+            - str: The computed differences (unified diff format, without context).
+            - str: The solution code (without comments).
+            - str: The input code (without comments).
+            - str: The original input file content (with comments).
 
-    This function iterates over each subset and set in the given folder. For each set, it computes the differences between the 'input' and 'solutions'.
+    This function:
+    - Identifies the 'input' and 'solutions' files in the given folder.
+    - Removes comments from both files.
+    - Computes a unified diff between the 'input' and 'solutions' files.
 
     Example usage:
-        diffcompute('/path/to/folder')
+        diff, solution, input_code, raw_input = patch_compute('/path/to/folder')
     """
 
     solution_folder = os.path.join(folder, "solutions")
@@ -34,15 +41,16 @@ def patch_compute(folder: str) -> list[str]:
 
 
     with open(input_path) as input_file:
-        input = input_file.read().splitlines()
-
+        commented_input = input_file.read()
+        input = [re.split(r"(?<!\\)%", line)[0] for line in commented_input.splitlines() if not line.strip().startswith("%")]#removing comments
+        input_code = "\n".join(input)
         with open(os.path.join(solution_folder, solution_path)) as solution_file:
 
-            solution = solution_file.read()
+            solution = "\n".join([re.split(r"(?<!\\)%", line)[0] for line in solution_file.read().splitlines() if not line.strip().startswith("%")])#removing comments
             
             solution_dif = solution.splitlines()
             current_diff = "".join(
                 list(difflib.unified_diff(input, solution_dif, n=0))[2:]
             )  # getting the current diff without context
 
-    return current_diff, solution
+    return current_diff, solution,input_code,commented_input

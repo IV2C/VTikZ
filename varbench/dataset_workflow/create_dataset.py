@@ -10,11 +10,12 @@ from huggingface_hub import login
 import pandas as pd
 import os
 import argparse
-
+import re
 from .ast_difficulty_compute import TED_tikz
 from varbench.renderers import Renderer, SvgRenderer, TexRenderer
 from .patchcompute import patch_compute
 import json
+from loguru import logger
 
 login(token=os.environ.get("HF_TOKEN"))
 
@@ -38,21 +39,11 @@ for subset in os.listdir(dataset_path):
         case "svg":
             renderer: Renderer = SvgRenderer()
     for entry in os.listdir(os.path.join(dataset_path, subset)):
-
         entry_path = os.path.join(dataset_path, subset, entry)
+        logger.info(f"adding {entry_path}")
         # getting input code
-        input_code = open(
-            os.path.join(
-                dataset_path,
-                subset,
-                entry,
-                [
-                    filename
-                    for filename in os.listdir(entry_path)
-                    if "input" in filename
-                ][0],
-            )
-        ).read()
+        
+        patch, solution,input_code,commented_code = patch_compute(entry_path)
 
         # computing image input
         image_input = renderer.from_string_to_image(input_code)
@@ -62,7 +53,6 @@ for subset in os.listdir(dataset_path):
         data = open(os.path.join(entry_path, "data.json")).read()
         data = json.loads(data)
 
-        patch, solution = patch_compute(entry_path)
 
         # Computing image solution
         solution_path = os.path.join(
@@ -70,19 +60,20 @@ for subset in os.listdir(dataset_path):
             "solutions",
             os.listdir(os.path.join(entry_path, "solutions"))[0],
         )
-        with open(solution_path, "r") as solution_image_text:
-            str_solution_code = solution_image_text.read()
-            image_solution: PIL.Image.Image = renderer.from_string_to_image(
-                str_solution_code
+        
+
+        image_solution: PIL.Image.Image = renderer.from_string_to_image(
+                solution
             )
-            image_solution = image_solution.resize((300, 300))  # TODO make parameter
-            ted = TED_tikz(input_code, str_solution_code)
+        image_solution = image_solution.resize((300, 300))  # TODO make parameter
+        ted = TED_tikz(input_code, solution)
 
         current_subset.append(
             {
                 "difficulty_ast": ted,
                 "id": entry,
                 "code": input_code,
+                "commented_code": commented_code,
                 "instruction": data["instruction"],
                 "result_description": data["result_description"],
                 "difficulty": data["difficulty"],
@@ -104,6 +95,7 @@ features = Features(
         "difficulty": Value("string"),
         "id": Value("string"),
         "code": Value("string"),
+        "commented_code": Value("string"),
         "instruction": Value("string"),
         "result_description": Value("string"),
         "patch": Value("string"),
