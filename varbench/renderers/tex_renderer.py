@@ -4,6 +4,7 @@ from . import Renderer
 import os
 import subprocess
 from pdf2image import convert_from_path
+from pdf2image.exceptions import PDFPageCountError
 from loguru import logger
 from .renderer import RendererException
 
@@ -68,12 +69,22 @@ class TexRenderer(Renderer):
             for ext in ["pdf", "tex", "aux", "log"]:
                 todel_file = output_file_name.replace("pdf", ext)
                 os.path.exists(todel_file) and os.remove(todel_file)
-            raise TexRendererException(
-                output.stderr.decode() + "|" + output.stdout.decode()
-            )
-
+            if output:
+                raise TexRendererException(
+                    output.stderr.decode() + "|" + output.stdout.decode()
+                )
+            else :
+                raise TexRendererException(
+                    "Timeout reached"
+                )
         logger.debug(f"converting {tmp_file_path} to png")
-        to_return_image = convert_from_path(pdf_path=output_file_name)[0]
+        try:    
+            to_return_image = convert_from_path(pdf_path=output_file_name)[0]
+        except PDFPageCountError as pe:
+            for ext in ["pdf", "tex", "aux", "log"]:
+                todel_file = output_file_name.replace("pdf", ext)
+                os.path.exists(todel_file) and os.remove(todel_file)
+            raise ImageRenderingException(repr(pe))
         for ext in ["pdf", "tex", "aux", "log"]:
             os.remove(output_file_name.replace("pdf", ext))
         return to_return_image
@@ -105,3 +116,7 @@ class TexRendererException(RendererException):
                     continue
                 error_lines.append(line.strip())
         return "\n".join(error_lines)
+
+class ImageRenderingException(TexRendererException):
+    def extract_error(self) -> str:
+        return self.message
