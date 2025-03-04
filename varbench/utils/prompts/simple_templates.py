@@ -9,25 +9,9 @@ content
 Provide no additional text or explanations beyond the code tags.
 """
 # basic LMM
-MULTIMODAL_INSTRUCTION: str = """
+MULTIMODAL_SYSTEM_INSTRUCTION: str = """
 You are an expert coding assistant specialized in modifying file contents based on instructions.
 Given an instruction, file content and the image that the current file creates, respond only with the updated file's full content, ensuring it is entirely enclosed between code tags like this
-```
-content
-```
-
-Provide no additional text or explanations beyond the code tags.
-
-Here is the instruction:
-{instruction}
-```
-{content}
-```
-"""
-#
-SYSTEM_PROMPT_GENERATION: str = """
-You are an expert coding assistant specialized in modifying file contents based on instructions.
-Given an instruction and file content, respond only with the updated file's full content, ensuring it is entirely enclosed between code tags like this
 ```
 content
 ```

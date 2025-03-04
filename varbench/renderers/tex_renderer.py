@@ -69,13 +69,13 @@ class TexRenderer(Renderer):
             for ext in ["pdf", "tex", "aux", "log"]:
                 todel_file = output_file_name.replace("pdf", ext)
                 os.path.exists(todel_file) and os.remove(todel_file)
-            if output:
+            if timeout:
                 raise TexRendererException(
-                    output.stderr.decode() + "|" + output.stdout.decode()
+                    "Timeout reached"
                 )
             else :
                 raise TexRendererException(
-                    "Timeout reached"
+                    output.stderr.decode() + "|" + output.stdout.decode()
                 )
         logger.debug(f"converting {tmp_file_path} to png")
         try:    

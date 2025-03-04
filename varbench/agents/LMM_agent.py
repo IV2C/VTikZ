@@ -7,7 +7,7 @@ from openai.types.chat import ChatCompletionMessageParam
 
 from varbench.agents import Agent
 from varbench.api.chat_api import ChatApi
-from varbench.utils.prompts.simple_templates import IT_PROMPT, SYSTEM_PROMPT_GENERATION
+from varbench.utils.prompts.simple_templates import IT_PROMPT, MULTIMODAL_SYSTEM_INSTRUCTION
 from varbench.renderers.renderer import Renderer, RendererException
 from varbench.utils.parsing import get_first_code_block
 
@@ -51,7 +51,7 @@ class LMMAgent(Agent):
         img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
 
         messages = [
-            {"role": "system", "content": SYSTEM_PROMPT_GENERATION},
+            {"role": "system", "content": MULTIMODAL_SYSTEM_INSTRUCTION},
             {
                 "role": "user",
                 "content": [
