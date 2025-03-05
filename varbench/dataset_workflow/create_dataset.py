@@ -13,9 +13,9 @@ import argparse
 import re
 from .ast_difficulty_compute import TED_tikz
 from varbench.renderers import Renderer, SvgRenderer, TexRenderer
-from .patchcompute import patch_compute
 import json
 from loguru import logger
+from .utils import unify_code, patch_compute, create_default
 
 login(token=os.environ.get("HF_TOKEN"))
 
@@ -38,50 +38,77 @@ for subset in os.listdir(dataset_path):
             renderer: Renderer = TexRenderer()
         case "svg":
             renderer: Renderer = SvgRenderer()
-    for entry in os.listdir(os.path.join(dataset_path, subset)):
+    for entry in sorted(os.listdir(os.path.join(dataset_path, subset)))[:2]:
         entry_path = os.path.join(dataset_path, subset, entry)
         logger.info(f"adding {entry_path}")
         # getting input code
-        
-        patch, solution,input_code,commented_code = patch_compute(entry_path)
+        input_path = os.path.join(
+            entry_path,
+            [filename for filename in os.listdir(entry_path) if "input" in filename][0],
+        )
+        commented_input_code = open(input_path).read()
+        unified_input_code = unify_code(commented_input_code)
+        # getting solution codes
+        solution_folder = os.path.join(entry_path, "solutions")
+        solution_paths = [
+            os.path.join(solution_folder, sol_name)
+            for sol_name in os.listdir(solution_folder)
+        ]
+
+        commented_solution_codes = [
+            open(sol_path).read() for sol_path in solution_paths
+        ]
+        uncommented_template_solution_codes = [
+            unify_code(commented_solution_code)
+            for commented_solution_code in commented_solution_codes
+        ]  # uncommenting
+        unified_solution_codes = [
+            create_default(uncommented_template_solution_code)
+            for uncommented_template_solution_code in uncommented_template_solution_codes
+        ]  # creating the default implementations
+
+        # Computing the patches
+        patches = [
+            patch_compute(unified_input_code, unified_solution_code)
+            for unified_solution_code in unified_solution_codes
+        ]
 
         # computing image input
-        image_input = renderer.from_string_to_image(input_code)
+        image_input = renderer.from_string_to_image(unified_input_code)
         image_input = image_input.resize((300, 300))  # TODO make a parameter
 
         # getting the annotations of the current row
         data = open(os.path.join(entry_path, "data.json")).read()
         data = json.loads(data)
 
-
-        # Computing image solution
-        solution_path = os.path.join(
-            entry_path,
-            "solutions",
-            os.listdir(os.path.join(entry_path, "solutions"))[0],
-        )
-        
-
-        image_solution: PIL.Image.Image = renderer.from_string_to_image(
-                solution
-            )
-        image_solution = image_solution.resize((300, 300))  # TODO make parameter
-        ted = TED_tikz(input_code, solution)
+        # Computing images solution
+        images_solution: list[PIL.Image.Image] = [
+            renderer.from_string_to_image(unified_solution_code)
+            for unified_solution_code in unified_solution_codes
+        ]
+        images_solution = [
+            image_solution.resize((300, 300)) for image_solution in images_solution
+        ]  # TODO make parameter
+        ted: list[int] = [
+            TED_tikz(unified_input_code, unified_solution_code)
+            for unified_solution_code in unified_solution_codes
+        ]
 
         current_subset.append(
             {
                 "difficulty_ast": ted,
                 "id": entry,
-                "code": input_code,
-                "commented_code": commented_code,
+                "code": unified_input_code,
+                "commented_code": commented_input_code,
                 "instruction": data["instruction"],
                 "result_description": data["result_description"],
                 "difficulty": data["difficulty"],
                 "modification_type": data["modif_type"],
                 "type": data["type"],
-                "patch": patch,
-                "code_solution": solution,
-                "image_solution": image_solution,
+                "patch": patches,
+                "template_solution_code": uncommented_template_solution_codes,
+                "code_solution": unified_solution_codes,
+                "image_solution": images_solution,
                 "image_input": image_input,
             }
         )
@@ -91,18 +118,19 @@ for subset in os.listdir(dataset_path):
 
 features = Features(
     {
-        "difficulty_ast": Value("float"),
+        "difficulty_ast": Sequence(Value("float")),
         "difficulty": Value("string"),
         "id": Value("string"),
         "code": Value("string"),
         "commented_code": Value("string"),
+        "template_solution_code": Sequence(Value("string")),
         "instruction": Value("string"),
         "result_description": Value("string"),
-        "patch": Value("string"),
+        "patch": Sequence(Value("string")),
         "modification_type": Value("string"),
         "type": Value("string"),
-        "code_solution": Value("string"),
-        "image_solution": Image(),
+        "code_solution": Sequence(Value("string")),
+        "image_solution": Sequence(Image()),
         "image_input": Image(),
     }
 )
@@ -110,9 +138,11 @@ features = Features(
 for subset in dataset_dict:
     current_subset = pd.DataFrame(dataset_dict[subset])
     dataset = Dataset.from_dict(pd.DataFrame(current_subset), features=features)
-    dataset.push_to_hub("CharlyR/varbench", config_name=subset, split="benchmark")
+    dataset.push_to_hub(
+        "CharlyR/varbench", config_name=subset, split="test"
+    )  # split="benchmark")
 
-    dataset_test = dataset.filter(lambda row: row["difficulty"] == "medium").select(
-        [6, 7]
-    )
-    dataset_test.push_to_hub("CharlyR/varbench", config_name=subset, split="test")
+    # dataset_test = dataset.filter(lambda row: row["difficulty"] == "medium").select(
+    #    [6, 7]
+    # )
+    # dataset_test.push_to_hub("CharlyR/varbench", config_name=subset, split="test")
