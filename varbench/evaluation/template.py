@@ -1,62 +1,177 @@
+import ast
 import re
+from varbench.dataset_workflow.utils import create_default
 
-EXIST_REG = r"\§exist\((-?\d+),(-?\d+)\)\{\|(.+?)\|\}"  # Captures all parameters inside §exist()
-EQUAL_REG = r"\§equal\((-?\d*\.?\d+)\)"  # Captures single parameter inside §equal()
-DEF_REG = r"\§def\([^#$%&_{}~^,\\]\)"  # Captures single parameter inside §def()
-RANGE_REG = r"\§range\((-?\d*\.?\d+),(-?\d*\.?\d+),(-?\d*\.?\d+)\)"  # Captures three numerical parameters (floats or integers) inside §range()
+FLOAT_REG = r"(-?\d*\.?\d+)"
+INTEGER_REG = r"(-?\d+)"
+NON_RESERVED_LATEX_REG = r"([^#$%&_{}~^,\\\(\)]+)"
+DEF_REG = (
+    r"\§def\(" + NON_RESERVED_LATEX_REG + r"\)"
+)  # Captures single parameter inside §def()
+EQUAL_REG = (
+    r"\§equal\(" + FLOAT_REG + r"\)"
+)  # Captures single parameter inside §equal()
+RANGE_REG = (
+    r"\§range\(" + FLOAT_REG + r"," + FLOAT_REG + r"," + FLOAT_REG + r"\)"
+)  # Captures three numerical parameters (floats or integers) inside §range()
 RANGEI_REG = (
-    r"\§rangei\((-?\d+),(-?\d+)\)"  # Captures two integer parameters inside §rangei()
+    r"\§rangei\("
+    + FLOAT_REG
+    + r","
+    + FLOAT_REG
+    + r"\)"  # Captures two integer parameters inside §rangei()
 )
+
 CHOICE_REG = (
     r"\§choice\(\[([^]]+)\],([^)]+)\)"  # Captures list and selected value in §choice()
 )
-OPTIONAL_REG = r"§optional\{\|(.*?)\|\}"  # Captures content in optional
 PATTERNS = {
-    "equal": EQUAL_REG,
-    "def": DEF_REG,
     "range": RANGE_REG,
     "rangei": RANGEI_REG,
     "choice": CHOICE_REG,
-    "optional": OPTIONAL_REG,
+    "def": DEF_REG,
 }
+
+
 math_pattern = r"([+-]?\d*\.?\d+(?:[+-\/*^]\d*\.?\d+)*)"
 
 
 def evaluate_match(match):
     expr = match.group(1)
     try:
-        result = str(eval(expr))
+        result = str(round(eval(expr), 2))
         return result
     except:
         return match.group(0)
+
+
+def handle_rangei(
+    prediction: int, start: int, end: int, args: tuple, all_matches: str
+) -> tuple[str, str, list[tuple]]:
+    return handle_range(
+        prediction,
+        start,
+        end,
+        (
+            str(float(args[0]) - float(args[1])),
+            str(float(args[0]) + float(args[1])),
+            str(float(args[0])),
+        ),
+        all_matches,
+    )
+
+def handle_choice(
+    prediction: int, start: int, end: int, args: tuple, all_matches: str
+) -> tuple[str, str, list[tuple]]:
+    replace_id = args[1]
+    choices = [str(val) for val in ast.literal_eval(args[0])]
+    prediction_def_start = prediction[start:]
+    match = re.search(
+        NON_RESERVED_LATEX_REG, prediction_def_start
+    )  # matching the first non-latex expresssion in the prediction code
+    if not match:
+        return None, None, False
+    match_value = match.group(1)
+    if match_value in choices:
+        prediction = (
+            prediction[:start] + replace_id + prediction_def_start[match.end() :]
+        )
+        all_matches = update_matches(all_matches, end - start - len(replace_id), start)
+        return prediction, all_matches, True
+    else:
+        return None, None, False
+
+
+
+def handle_range(
+    prediction: int, start: int, end: int, args: tuple, all_matches: str
+) -> tuple[str, str, list[tuple]]:
+    replace_id = args[2]
+    prediction_def_start = prediction[start:]
+    match = re.search(
+        FLOAT_REG, prediction_def_start
+    )  # matching the first non-latex expresssion in the prediction code
+    if not match:
+        return None, None, False
+    match_value = float(match.group(1))
+    if float(args[0]) <= match_value and float(args[1]) >= match_value:
+        prediction = (
+            prediction[:start] + replace_id + prediction_def_start[match.end() :]
+        )
+        all_matches = update_matches(all_matches, end - start - len(replace_id), start)
+        return prediction, all_matches, True
+    else:
+        return None, None, False
+
+
+def handle_def(
+    prediction: str,
+    start: int,
+    end: int,
+    args: tuple,
+    all_matches: list[tuple],
+) -> tuple[str, str, list[tuple]]:
+    """handles ref command
+
+    Args:
+        template (str): original template code file
+        prediction (str): initial prediction code file
+        start (int): start of the template match
+        end (int): end of the template match
+        args (tuple): arguments from the match group
+        all_matches (list[tuple]): all matches in the current template
+
+    Returns:
+        tuple[str,str,list[tuple]]: _description_
+    """
+    replace_id = args[0]
+    prediction_def_start = prediction[start:]
+    match = re.search(
+        NON_RESERVED_LATEX_REG, prediction_def_start
+    )  # matching the first non-latex expresssion in the prediction code
+    if not match:
+        return None, None, False
+    var_name_prediction = match.group(1)
+    all_matches = update_matches(all_matches, end - start - len(replace_id), start)
+    prediction = prediction[:start] + replace_id + prediction_def_start[match.end() :].replace(var_name_prediction,replace_id)
+
+    return prediction, all_matches, True
+
+
+def update_matches(
+    all_matches: list[tuple], len_to_ajust: int, found_index: int
+) -> list[tuple]:
+    return [
+        (
+            (start, end, key, args)
+            if start < found_index
+            else (start - len_to_ajust, end - len_to_ajust, key, args)
+        )
+        for (start, end, key, args) in all_matches
+    ]
+
+
+handle_map = {
+    "range": handle_range,
+    "rangei": handle_rangei,
+    "choice": handle_choice,
+    "def": handle_def,
+}
 
 
 def template_valid(template_code: str, prediction: str):
     prediction = re.sub(
         math_pattern, evaluate_match, prediction
     )  # evaluates mathematical expressions
-
-    # handling exists first, as they can be at different locations in the code
-
-    exist_matches = re.findall(EXIST_REG, template_code, flags=re.DOTALL)
-    template_code, prediction, valid = handle_exists(
-        exist_matches, template_code, prediction
-    )
-    if not valid:
-        return False
-    matches = {}
-
+    matches = []
     for key, pattern in PATTERNS.items():
+
         for match in re.finditer(pattern, template_code, flags=re.DOTALL):
             start = match.start()
             groups = match.groups()
             end = match.end()
-            if key == "exist":
-                matches.append(
-                    (start, end, key, (groups[0], groups[1], groups[2]))
-                )  # l1, l2, Content
-            elif key in {"equal", "def", "optional"}:
-                matches.append((start, end, key, (groups[0])))  # Single captured value
+            if key in  "def":
+                matches.append((start, end, key, [groups[0]]))  # Single captured value
             elif key == "range":
                 matches.append(
                     (start, end, key, (groups[0], groups[1], groups[2]))
@@ -71,99 +186,17 @@ def template_valid(template_code: str, prediction: str):
                 )  # option, default
 
     # handling other matches ordered
-    ordered_matches = [
-        match for match in sorted(matches, key=lambda x: x[0]) if match[2] != "exist"
-    ]
-    for start, end, key, args in ordered_matches:
-        match key:
-            case "range":
-                handle_range()
+    ordered_matches = sorted(matches, key=lambda x: x[0])
+    for i in range(len(ordered_matches)):
+        start, end, key, args = ordered_matches[i]
+        prediction, ordered_matches, ok = handle_map[key](
+            prediction, start, end, args, ordered_matches
+        )
+        if not ok:
+            return False
+        i += 1  # Move to the next item
 
-
-def handle_exists(matches: list, template_code: str, prediction: str):
-    splitted_prediction = prediction.splitlines()
-    for start, end, _, (l1, l2, content) in matches:
-        reduced_prediction = "\n".join(splitted_prediction[l1 - 1 : l2 - 1])
-        splitted_prediction = find_and_replace_def_in_exist(content,prediction,reduced_prediction)#start by replacing all defs by the default value
-        reduced_prediction = "\n".join(splitted_prediction[l1 - 1 : l2 - 1])
-        regex = create_regex_from_exist(content)#no more def, no groups found
-        match_list = list(re.finditer(regex, reduced_prediction))
-        if len(match_list) == 0:
-            return None, None, False
-        else:
-            match = match_list[0]
-            template_code = template_code[:start] + template_code[end:]
-            reduced_prediction = (
-                reduced_prediction[: match.start()] + reduced_prediction[match.end() :]
-            )
-            splitted_prediction = (
-                splitted_prediction[: l1 - 1]
-                + reduced_prediction.splitlines()
-                + splitted_prediction[l2 - 1 :]
-            )
-            removed_length = match.end() - match.start()
-            matches = [
-                (s - removed_length, e - removed_length, k, args)
-                for s, e, k, args in matches
-            ]
-
-    return template_code, "\n".join(splitted_prediction), True
-
-
-EQUAL_REG = r"\§equal\(-?\d*\.?\d+\)"
-DEF_REG = r"\§def\([^#$%&_{}~^,\\])"
-RANGE_REG = r"\§range\(-?\d*\.?\d+,-?\d*\.?\d+,(?\d*\.?\d+\)"
-RANGEI_REG = r"\§rangei\(-?\d+,-?\d+\)"
-CHOICE_REG = r"\§choice\(\[[^]]+\],[^)]+\)"
-
-
-def find_and_replace_def_in_exist(content: str, prediction: str, reduced_prediction: str)->list[str]:
-    """Finds definitions of variables in a exist command, and replace it in all the rest of the code
-
-    Args:
-        content (str): content in the exist
-        prediction (str): entire prediction code
-        reduced_prediction (str): prediction where the match can occur
-
-    Returns:
-        list[str]: _description_
-    """
-    found_def_identifiers = re.findall(DEF_REG, content)
-    ex_regex = create_regex_from_exist(content)
-    match = list(re.finditer(ex_regex, reduced_prediction))[0]
-    if len(match.groups()) > 0:  # found a def
-        for id, group in zip(found_def_identifiers, match.groups()):
-            prediction = (
-                prediction.replace(group, id)
-            )
-    return prediction.splitlines()
-
-
-def create_regex_from_exist(content: str):
-    reg = content
-    reg = re.sub(EQUAL_REG, r"-?\d*\.?\d+", reg)
-    reg = re.sub(DEF_REG, r"([^#$%&_{}~^,\\])", reg)
-    reg = re.sub(RANGE_REG, r"-?\d*\.?\d+", reg)
-    reg = re.sub(RANGEI_REG, r"-?\d*\.?\d+", reg)
-    reg = re.sub(CHOICE_REG, r"[^#$%&_{}~^,\\]", reg)
-    return reg
-
-
-def handle_range(
-    index: int, start: int, end: int, default: str, prediction: str, template_code: str
-) -> str:
-    pass
-
-    # remove the optional if exists
-    # create a regex to find the pattern of the code inside the exist within the line args
-    # if exists remove the pattern from both the template and prediction and iterate until either no more exist or pattern not found => return false
-    # do re.match for any command:
-    # get the index of the match(Match.start())
-    # verify that the expression in the prediction at that index matches the command => yes replace with default in both template_code and prediction / no return false
-    # §def(value) => replace in the rest of the entire prediction code the value defined in the prediction by the value of the template
-    # §range(low,hi,default) => find expression at index with regex,evaluate expression at index, then if >low <high replace with default else false
-    # §rangei(value,interval) => find expression at index with regex,evaluate expression at index, then if >value-interval <value+interval replace with default else false
-    # §choice([a,b,..],default)) => find expression at index with regex, not there false, there replace with default
-    # §equal(exp) => evaluate expression at index , = exp is replace with exp
-    # redo until no more command
-    # once no more command strict equality between both codes
+    if prediction == create_default(template_code):
+        return True
+    else:
+        return False

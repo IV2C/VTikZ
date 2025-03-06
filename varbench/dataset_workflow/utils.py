@@ -22,13 +22,13 @@ templated_code => code with :
     §select(id){} 
     + all the parameterized
 parameterized => code with:
-    §optional(id){|optional code|} : code that serves no purpose but can still be there
     §range(lower,high,default): (math expr are evaluated)
     §rangei(value,interval) : defaults to value (math expr are evaluated)
     §choice([a,b,c],default)
     §def(var): defines var as a variable, can be reused elsewhere
-    §exist(l1,l2){|ex|}: ex can exist between the lines provided in the file, whereas the other have to be at a specific place(must only be a single line)
     §equal(var): ensure any math expr is equal to the one specified(migh not be usefull) 
+    REMOVED: §optional(id){|optional code|} : code that serves no purpose but can still be there
+    REMOVED: §exist(l1,l2){|ex|}: ex can exist between the lines provided in the file, whereas the other have to be at a specific place(must only be a single line)
 """
 
 def create_default(parameterized_code: str) -> str:
@@ -41,16 +41,11 @@ def create_default(parameterized_code: str) -> str:
     Returns:
         str: parameterized code with default values
     """
-    
     #simple default replacements
-    parameterized_code = re.sub(r"§equal\((.*?)\)", r"\1", parameterized_code)
-    parameterized_code = re.sub(r"§exist\([^,]+,[^)]+\)\{\|(.+?)\|\}", r"\1", parameterized_code, flags=re.DOTALL)
     parameterized_code = re.sub(r"§def\((.*?)\)", r"\1", parameterized_code)
     parameterized_code = re.sub(r"§range\([^,]+,[^,]+,([^)]+)\)", r"\1", parameterized_code)
     parameterized_code = re.sub(r"§rangei\(([^,]+),[^)]+\)", r"\1", parameterized_code)
-    parameterized_code = re.sub(r"§choice\(\[[^]]+\],([^)]+)\)", r"\1", parameterized_code)
-    
-    default_code = re.sub(r'§optional\{\|.*?\|\}', '', parameterized_code, flags=re.DOTALL)
+    default_code = re.sub(r"§choice\(\[[^]]+\],([^)]+)\)", r"\1", parameterized_code)
     
     return default_code
 

@@ -39,6 +39,12 @@ class PatchMetric(Metric):
         return individual_patches_scores
 
 
+class TemplateMetric(Metric):
+    def compute(self, dataset:Dataset):
+        
+        pass
+
+
 class LineMetric(Metric):
     def compute(self, dataset: Dataset) -> list[list[float]]:
         logger.info("Computing line_score")
