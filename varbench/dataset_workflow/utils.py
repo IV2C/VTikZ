@@ -48,6 +48,3 @@ def create_default(parameterized_code: str) -> str:
     default_code = re.sub(r"§choice\(\[[^]]+\],([^)]+)\)", r"\1", parameterized_code)
     
     return default_code
-
-with open("/home/creux/Documents/AI/VariabilityBenchmark/dataset/tikz/bee_eyes/solutions/solution1.tex") as pt:
-    print(create_default(pt.read()))
