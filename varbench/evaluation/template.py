@@ -33,7 +33,7 @@ PATTERNS = {
 }
 
 
-math_pattern = r"([+-]?\d*\.?\d+(?:[+-\/*^]\d*\.?\d+)*)"
+math_pattern = r"([+-]?\d*\.?\d+(?:[+\-\/*^]\d*\.?\d+)*)"
 
 
 def evaluate_match(match):

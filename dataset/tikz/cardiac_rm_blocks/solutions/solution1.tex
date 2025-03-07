@@ -15,8 +15,8 @@
 
 
 % blocks1
-\begin{scope}[shift={(0,7)}]
-\draw[thick,blue](-1,-0) rectangle (4,3.25);
+\begin{scope}[shift={(0,§rangei(7.25,0.75))}]
+\draw[thick,blue](-1,§rangei(0,0.5)) rectangle (4,3.25);
 \node at (0.5,2.75) {\bf{OpenCL Program}};
 \block(E, 0.0, 1, Block 3)
 \block(F, 1.5, 1, Block 4)
@@ -28,10 +28,10 @@
 
 %arrows
 \begin{scope}[shift={(2,1.25)}]
-\draw[->,thick,blue] (0.0,4) to (0.0,+0.25);
-\draw[->,thick,blue] (1.5,4) to (1.5,+0.25); 
-\draw[->,thick,blue] (3.0,4) to (3.0,+1.25); 
-\draw[->,thick,blue] (4.5,4) to (4.5,+1.25); 
+\draw[->,thick,blue] (0.0,4) to (0.0,§rangei(0.25,0.25));
+\draw[->,thick,blue] (1.5,4) to (1.5,0.25); 
+\draw[->,thick,blue] (3.0,4) to (3.0,§rangei(1.25,0.25)); 
+\draw[->,thick,blue] (4.5,4) to (4.5,§rangei(1.25,0.25)); 
 \end{scope}
 
 % gpu
@@ -47,7 +47,7 @@
 
 % blocks2
 \begin{scope}[shift={(2,1.25)}]
-\draw[thick,black](-1,0) rectangle (5.5,2.75);
+\draw[thick,black](-1,§range(0,-1,0)) rectangle (5.5,2.75);
 \block(A, 0.0, 2, Block 0)
 \block(B, 1.5, 2, Block 1)
 \block(C, 3.0, 2, Block 2)
@@ -58,7 +58,7 @@
 
 %arrows
 \draw[->,black,thick,out=0,in=90] (4.25,9) to node [midway,above,black,anchor=west] {\bf{Compile}} (6,6.5) ;
-\draw[->,black,thick] (0.5,5) to node [midway,above,black,anchor=east] {\bf{Execute}} (0.5,1.5) ;
+\draw[->,black,thick] (0.5,5) to node [midway,above,black,anchor=east] {\bf{Execute}} (0.5,§range(0.5,1.5,1.5)) ;
 
 \end{tikzpicture}
 

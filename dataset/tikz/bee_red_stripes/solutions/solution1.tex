@@ -22,8 +22,8 @@
 bee/.pic={
 \begin{scope}[x=3cm/480,y=3cm/480, rotate=-45, shift=(270:48)]
 \reflect[
-  on left= {colors alias={body as BlueGrey800, stripes as Red500}},
-  on right={colors alias={body as BlueGrey900, stripes as Red700}, half clip},
+  on left= {colors alias={body as BlueGrey800, stripes as Red§range(200,700,500)}},
+  on right={colors alias={body as BlueGrey900, stripes as Red§range(400,900,700)}, half clip},
   lower wing/.style={fill=BlueGrey100}, upper wing/.style={fill=BlueGrey50}]{
   \fill [body] (0,-160)
     .. controls ++(120:64) and ++(270:64) .. (-88, -16)

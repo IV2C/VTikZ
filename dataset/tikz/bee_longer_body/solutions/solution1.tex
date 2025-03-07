@@ -25,7 +25,7 @@ bee/.pic={
   on left= {colors alias={body as BlueGrey800, stripes as Amber500}},
   on right={colors alias={body as BlueGrey900, stripes as Amber700}, half clip},
   lower wing/.style={fill=BlueGrey100}, upper wing/.style={fill=BlueGrey50}]{
-  \fill [body] (0,-220)
+  \fill [body] (0,§range(-260,-190,-220))
     .. controls ++(120:64) and ++(270:64) .. (-88, -16)
     .. controls ++( 90:64) and ++(225:64) .. (  0, 128)
     .. controls ++(315:64) and ++( 90:64) .. ( 88, -16)
@@ -36,7 +36,7 @@ bee/.pic={
     arc (90:180:64) -- cycle;
   \fill [body] (@) circle [radius=12];
   \begin{scope}
-    \clip (0,-220)
+    \clip (0,§range(-260,-190,-220))
       .. controls ++(120:64) and ++(270:64) .. (-88, -16)
       .. controls ++( 90:64) and ++(225:64) .. (  0, 128)
       .. controls ++(315:64) and ++( 90:64) .. ( 88, -16)
