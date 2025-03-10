@@ -15,7 +15,7 @@ from .ast_difficulty_compute import TED_tikz
 from varbench.renderers import Renderer, SvgRenderer, TexRenderer
 import json
 from loguru import logger
-from .utils import unify_code, patch_compute, create_default
+from .utils import uncomment_code, unify_code, patch_compute, create_default
 
 login(token=os.environ.get("HF_TOKEN"))
 
@@ -35,10 +35,10 @@ for subset in os.listdir(dataset_path):
     current_subset = []
     match (subset):
         case "tikz":
-            renderer: Renderer = TexRenderer()
+            renderer: Renderer = TexRenderer(debug=True)
         case "svg":
             renderer: Renderer = SvgRenderer()
-    for entry in sorted(os.listdir(os.path.join(dataset_path, subset)))[:2]:
+    for entry in sorted(os.listdir(os.path.join(dataset_path, subset)))[4:6]:#temporary for test
         entry_path = os.path.join(dataset_path, subset, entry)
         logger.info(f"adding {entry_path}")
         # getting input code
@@ -47,7 +47,7 @@ for subset in os.listdir(dataset_path):
             [filename for filename in os.listdir(entry_path) if "input" in filename][0],
         )
         commented_input_code = open(input_path).read()
-        unified_input_code = unify_code(commented_input_code)
+        unified_input_code = uncomment_code(commented_input_code)
         # getting solution codes
         solution_folder = os.path.join(entry_path, "solutions")
         solution_paths = [
@@ -59,7 +59,7 @@ for subset in os.listdir(dataset_path):
             open(sol_path).read() for sol_path in solution_paths
         ]
         uncommented_template_solution_codes = [
-            unify_code(commented_solution_code)
+            uncomment_code(commented_solution_code)
             for commented_solution_code in commented_solution_codes
         ]  # uncommenting
         unified_solution_codes = [
@@ -138,6 +138,7 @@ features = Features(
 for subset in dataset_dict:
     current_subset = pd.DataFrame(dataset_dict[subset])
     dataset = Dataset.from_dict(pd.DataFrame(current_subset), features=features)
+    dataset = dataset.filter(lambda row: row["id"] == "bee_three_wings" or row["id"] == "bee_red_stripes")#temporary for test
     dataset.push_to_hub(
         "CharlyR/varbench", config_name=subset, split="test"
     )  # split="benchmark")

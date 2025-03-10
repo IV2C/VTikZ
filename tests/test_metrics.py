@@ -10,19 +10,128 @@ from varbench.evaluation.metrics import (
     EEDMetric,
     EEDPatchMetric,
     FeatureMatchMetric,
+    ImageEqualityMetric,
     LPIPSMetric,
+    LineMetric,
     MSSSIMMetric,
     Metric,
     PSNRMetric,
     PatchMetric,
     TERMetric,
     TERPatchMetric,
-    MSEMetric
+    MSEMetric,
+    TemplateMetric,
 )
 from PIL import Image
 
 import datasets
 from loguru import logger
+
+
+class TestNewDatasetMetrics(unittest.TestCase):
+    @classmethod
+    def setUpClass(self) -> None:
+        # dataset for test purpose, columns relations not respected
+        dataset = {
+            "image_solution": [
+                [
+                    Image.open("tests/resources/images/dog.jpeg"),
+                    Image.open("tests/resources/images/dog-redeye.jpeg"),
+                ]
+            ],
+            "images_result": [
+                [
+                    Image.open("tests/resources/images/dog.jpeg"),
+                    Image.open("tests/resources/images/dog-redeye.jpeg"),
+                    Image.open("tests/resources/images/dog-rotated.jpeg"),
+                ]
+            ],
+            "code": ["@@ @@ @@ @@ Hello Hello Hello Hello"],
+            "patch": [
+                [
+                    "@@ -1 +1,2 @@ \n -Hello Word! \n +Hello World!",
+                    "@@ -1 +1 @@ \n -Hello Word! \n +Hello Worlds!",
+                ]
+            ],
+            "predictions_patches": [
+                [
+                    "@@ -1,0 +1,2 @@ \n -Hello Word! \n +Hello World!",
+                    "@@ -1 +1 @@ \n -Hello Word! \n +Hello Worlds!",
+                    "@@ -3 +3 @@ test",
+                ]
+            ],
+            "predictions": [
+                [
+                    """
+\\definecolor{blue}{rgb}{1}
+\\definecolor{blue}{rgb}{1}
+""",
+                    """
+\\definecolor{blue}{rgb}{5}
+\\definecolor{blue}{rgb}{6}
+""",
+                ]
+            ],
+            "template_solution_code": [
+                [
+                    """
+\\definecolor{blue}{rgb}{§choice([1,2],1)}
+\\definecolor{blue}{rgb}{§range(1,2,1)}
+""",
+                    """
+\\definecolor{blue}{rgb}{§choice([5,6],5)}
+\\definecolor{blue}{rgb}{§range(5,6,5)}
+""",
+                ]
+            ],
+        }
+        features = datasets.Features(
+            {
+                "image_solution": datasets.Sequence(datasets.Image()),
+                "images_result": datasets.Sequence(datasets.Image()),
+                "code": datasets.Value("string"),
+                "patch": datasets.Sequence(datasets.Value("string")),
+                "predictions_patches": datasets.Sequence(datasets.Value("string")),
+                "template_solution_code": datasets.Sequence(datasets.Value("string")),
+                "predictions": datasets.Sequence(datasets.Value("string")),
+            }
+        )
+        self.dataset = datasets.Dataset.from_dict(dataset, features=features)
+
+    def test_Image_equality(self):
+        image_equality_metric: Metric = ImageEqualityMetric()
+        result_scores = image_equality_metric.compute(self.dataset)
+        logger.info(result_scores)
+        self.assertEqual(result_scores[0], [[100, 0, 0], [0, 100, 0]])
+
+    def test_crystalbleu_patch_metrics(self):
+        ter_patch_metric: Metric = CrystalBleuPatchMetric(dataset=self.dataset)
+        result_scores = ter_patch_metric.compute(self.dataset)
+        logger.info(result_scores)
+        for i, row in enumerate(
+            [
+                [100.00000000000004, 79.85104, 0.0],
+                [79.85104, 100.00000000000004, 0.0],
+            ]
+        ):
+            for j, expected in enumerate(row):
+                self.assertAlmostEqual(result_scores[0][i][j], expected, places=5)
+
+    def test_line_metrics(self):
+        ter_patch_metric: Metric = LineMetric(dataset=self.dataset)
+        result_scores = ter_patch_metric.compute(self.dataset)
+        logger.info(result_scores)
+        for i, row in enumerate([[50.0, 50.0, 0.0], [0, 100.0, 0.0]]):
+            for j, expected in enumerate(row):
+                self.assertAlmostEqual(result_scores[0][i][j], expected, places=5)
+
+    def test_template_metrics(self):
+        ter_patch_metric: Metric = TemplateMetric(dataset=self.dataset)
+        result_scores = ter_patch_metric.compute(self.dataset)
+        logger.info(result_scores)
+        for i, row in enumerate([[100, 0], [0, 100]]):
+            for j, expected in enumerate(row):
+                self.assertAlmostEqual(result_scores[0][i][j], expected, places=5)
 
 
 class TestImageMetrics(unittest.TestCase):
@@ -77,10 +186,10 @@ class TestImageMetrics(unittest.TestCase):
         logger.info(result_scores)
         self.assertEqual(result_scores[0][0], 100.0)
         self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
-   
+
     def test_mse(self):
         mse_metric: Metric = MSEMetric()
-        
+
         result_scores = mse_metric.compute(self.dataset)
         logger.info(result_scores)
         self.assertEqual(result_scores[0][0], 100.0)
@@ -145,14 +254,6 @@ class TestPatchTextMetrics(unittest.TestCase):
         self.assertEqual(round(result_scores[0][0], 5), 100.0)
         self.assertEqual(round(result_scores[0][1], 5), 88.88889)
         self.assertEqual(round(result_scores[0][2], 5), 50.0)
-        self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
-
-    def test_crystalbleu_patch_metrics(self):
-        ter_patch_metric: Metric = CrystalBleuPatchMetric(dataset=self.dataset)
-        result_scores = ter_patch_metric.compute(self.dataset)
-        logger.info(result_scores)
-        self.assertEqual(round(result_scores[0][0], 5), 100.0)
-        self.assertEqual(round(result_scores[0][1], 5), 79.85104)
         self.assertTrue(sorted(result_scores[0], reverse=True) == result_scores[0])
 
     def test_EED_patch_metrics(self):

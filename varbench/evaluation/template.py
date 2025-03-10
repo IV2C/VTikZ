@@ -159,7 +159,16 @@ handle_map = {
 }
 
 
-def template_valid(template_code: str, prediction: str):
+def template_valid(template_code: str, prediction: str) -> bool:
+    """Evaluates if prediction is valide with regard to the template code
+
+    Args:
+        template_code (str): prediction code
+        prediction (str): template code
+
+    Returns:
+        bool: prediction valid or not.
+    """
     prediction = re.sub(
         math_pattern, evaluate_match, prediction
     )  # evaluates mathematical expressions

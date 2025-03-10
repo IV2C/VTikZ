@@ -5,13 +5,17 @@ def unify_code(code:str):
         input = [re.sub(r"\s+", " ", line).strip() for line in input if line.strip()]  # Removing extra spaces and empty lines
         unified_code = "\n".join(input)
         return unified_code
-
+def uncomment_code(code:str):
+        input = [re.split(r"(?<!\\)%", line)[0] for line in code.splitlines() if not line.strip().startswith("%")]#removing comments
+        unified_code = "\n".join(input)
+        return unified_code
 
 def patch_compute(input: str, solution: str) -> str:
-
+    solution = unify_code(solution)
+    input = unify_code(input)
     solution_split = solution.splitlines()
     input_split = input.splitlines()
-    current_diff = "".join(
+    current_diff = "\n".join(
         list(difflib.unified_diff(input_split, solution_split, n=0))[2:]
     )  # getting the current diff without context
 

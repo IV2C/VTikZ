@@ -45,6 +45,12 @@ parser.add_argument(
     type=str,
     help="Name of the metric(s) to evaluate on the output of the model",
     default=[
+        "Template",
+        "ImageEquality",
+        "line",
+        "crystalBleuPatch",
+    ],
+    choices=[
         "patch",
         "line",
         "clipImage",
@@ -62,7 +68,9 @@ parser.add_argument(
         "psnr",
         "msssim",
         "MSE",
-    ],
+        "Template",
+        "ImageEquality",
+    ]
 )
 
 
@@ -190,15 +198,15 @@ interaction_amount: int = args.interaction_amount
 # result path creation
 if not os.path.exists("./results"):
     os.mkdir("./results")
-split_used = "benchmark"
-#split_used = "test" 
+#split_used = "benchmark"
+split_used = "test"
 full_config_name = (
     args.agent
     + "_"
     + split_used
     + "_"
     + key_args["model_name"].replace("/", "_").replace("-", "").replace(":", "")
-    +"_pk_"
+    + "_pk_"
     + str(key_args["n"])
     + "_t_"
     + str(key_args["temperature"])

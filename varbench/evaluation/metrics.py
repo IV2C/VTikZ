@@ -14,17 +14,106 @@ class Metric:
         """instantiates a metric"""
         pass
 
-    def compute(self, dataset: Dataset) -> list[list[float]]:
+    def compute(self, dataset: Dataset) -> list[list[list[float]]]:
         """computes the metric using the dataset
         The dataset should have columns: id,code,code_solution,predictions,predictions_patches,patches,result_description,image_solution,image_input,images_result
 
         Args:
-            dataset (Dataset): The dataset used to copute the metric on
+            dataset (Dataset): The dataset used to compute the metric on
 
         Returns:
-            a list of list of metrics evaluated on the instances in the dataset
+            a list rows, each row containing a list of comparisons of generated with references codes.
         """
         pass
+
+
+# NEW
+from .template import template_valid
+
+
+class TemplateMetric(Metric):
+    def compute(self, dataset: Dataset):
+        logger.info("Computing template_score")
+        template_solution_code = dataset["template_solution_code"]
+        predictions = dataset["predictions"]
+        individual_template_scores = [
+            [[100*int(template_valid(tem, pred)) for pred in preds] for tem in templates]
+            for templates, preds in zip(template_solution_code, predictions)
+        ]
+        return individual_template_scores
+
+
+class ImageEqualityMetric(Metric):
+    def __init__(self, *args, **kwargs):
+        import torchvision.transforms as transforms
+
+        self.to_tensor = transforms.ToTensor()
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+
+        def equality(hyp, ref):
+            return 100 if torch.equal(hyp, ref) else 0
+
+        references = dataset["image_solution"]
+        predictions = dataset["images_result"]
+        references = [
+            [self.to_tensor(pil_image.convert("RGB")) for pil_image in pil_images]
+            for pil_images in references
+        ]
+        predictions = [
+            [self.to_tensor(pil_image.convert("RGB")) for pil_image in pil_images]
+            for pil_images in predictions
+        ]
+
+        return [
+            [
+                [equality(reference, prediction) for prediction in row_predictions]
+                for reference in refs
+            ]
+            for refs, row_predictions in zip(references, predictions)
+        ]
+
+
+class LineMetric(Metric):
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+        logger.info("Computing line_score")
+        patch = dataset["patch"]
+        individual_patches = dataset["predictions_patches"]
+        individual_lines_scores = compute_line_score(individual_patches, patch)
+
+        return individual_lines_scores
+
+
+class CrystalBleuPatchMetric(Metric):
+    def __init__(self, dataset: Dataset, *args, **kwargs) -> None:
+        from .crystal_bleu import CrystalBLEU
+
+        full_corpus: list[str] = dataset["code"]
+
+        self.crystal_bleu = CrystalBLEU(
+            effective_order=True, max_ngram_order=8, full_corpus=full_corpus, k=500
+        )
+        super().__init__(*args, **kwargs)
+
+    def compute(self, dataset: Dataset) -> list[list[float]]:
+        logger.info("Computing crystalbleu_patch_score")
+        patches = dataset["patch"]
+        prediction_patches = dataset["predictions_patches"]
+        bleu_patch_scores = [
+            [
+                [
+                    self.crystal_bleu.sentence_score(row_patch, [ref_patch]).score
+                    for row_patch in computed_patches
+                ]
+                for ref_patch in reference_patches
+            ]
+            for computed_patches, reference_patches in zip(prediction_patches, patches)
+        ]
+        return bleu_patch_scores
+
+
+# FORMER
 
 
 class PatchMetric(Metric):
@@ -37,24 +126,6 @@ class PatchMetric(Metric):
             for i, p in zip(individual_patches, patch)
         ]
         return individual_patches_scores
-
-
-class TemplateMetric(Metric):
-    def compute(self, dataset:Dataset):
-        
-        pass
-
-
-class LineMetric(Metric):
-    def compute(self, dataset: Dataset) -> list[list[float]]:
-        logger.info("Computing line_score")
-        inputs = dataset["code"]
-        predictions = dataset["predictions"]
-        patch = dataset["patch"]
-        individual_patches = [patches(i, p) for i, p in zip(inputs, predictions)]
-        individual_lines_scores = compute_line_score(individual_patches, patch)
-
-        return individual_lines_scores
 
 
 class BleuMetric(Metric):
@@ -262,31 +333,6 @@ class CrystalBleuMetric(Metric):
         ]
 
         return bleu_scores
-
-
-class CrystalBleuPatchMetric(Metric):
-    def __init__(self, dataset: Dataset, *args, **kwargs) -> None:
-        from .crystal_bleu import CrystalBLEU
-
-        full_corpus: list[str] = dataset["code"]
-
-        self.crystal_bleu = CrystalBLEU(
-            effective_order=True, max_ngram_order=8, full_corpus=full_corpus, k=500
-        )
-        super().__init__(*args, **kwargs)
-
-    def compute(self, dataset: Dataset) -> list[list[float]]:
-        logger.info("Computing crystalbleu_patch_score")
-        patches = dataset["patch"]
-        individual_patches = dataset["predictions_patches"]
-        bleu_patch_scores = [
-            [
-                self.crystal_bleu.sentence_score(row_patch, [reference_patch]).score
-                for row_patch in computed_patches
-            ]
-            for computed_patches, reference_patch in zip(individual_patches, patches)
-        ]
-        return bleu_patch_scores
 
 
 ########################################Image based metrics########################################
@@ -535,6 +581,8 @@ agnostic_metric_map = {
     "psnr": PSNRMetric,
     "msssim": MSSSIMMetric,
     "MSE": MSEMetric,
+    "Template": TemplateMetric,
+    "ImageEquality": ImageEqualityMetric,
 }
 non_agnostic_metric_map = {
     "crystalBleu": CrystalBleuMetric,
@@ -543,7 +591,7 @@ non_agnostic_metric_map = {
 
 
 def instantiate_agnostic_metrics(metric_names: list[str]) -> list[Metric]:
-    """isntantiates the appropriate metrics, given alist of strings
+    """instantiates the appropriate metrics, given alist of strings
 
     Args:
         metric_names (list[str]): list of the metrics' names
@@ -559,13 +607,13 @@ def instantiate_agnostic_metrics(metric_names: list[str]) -> list[Metric]:
             if m_name in agnostic_metric_map
         ]
     )
-    logger.info(
-        f"loading metrics : " + str([metric.__name__ for metric in metrics])
-    )
-    if set([ClipImageMetric, ClipTextMetric]) & metrics:
+    logger.info(f"loading metrics : " + str([metric.__name__ for metric in metrics]))
+    hasClip = set([ClipImageMetric, ClipTextMetric]) & metrics
+    if hasClip:
         clip_comparer = ClipComparer()
-    return [metric(clip_comparer) for metric in metrics]
-
+        return [metric(clip_comparer) for metric in metrics]
+    else:
+        return [metric() for metric in metrics]
 
 def instantiate_non_agnostic_metrics(
     metric_names: list[str], dataset: Dataset
@@ -589,7 +637,8 @@ def instantiate_non_agnostic_metrics(
     )
     logger.warning(dataset)
     logger.info(
-        f"loading non agnostic metrics : " + str([metric.__name__ for metric in metrics])
+        f"loading non agnostic metrics : "
+        + str([metric.__name__ for metric in metrics])
     )
     return [metric(dataset=dataset) for metric in metrics]
 

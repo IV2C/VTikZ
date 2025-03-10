@@ -13,7 +13,8 @@ from tenacity import retry, stop_after_delay
 
 class TexRenderer(Renderer):
 
-    def __init__(self):
+    def __init__(self, debug=False):
+        self.debug = debug
         super().__init__()
         pass
 
@@ -66,19 +67,18 @@ class TexRenderer(Renderer):
             self.cache_path, os.path.basename(tmp_file_path).replace("tex", "pdf")
         )
         if timeout or output.returncode != 0:
-            for ext in ["pdf", "tex", "aux", "log"]:
-                todel_file = output_file_name.replace("pdf", ext)
-                os.path.exists(todel_file) and os.remove(todel_file)
+            if not self.debug:
+                for ext in ["pdf", "tex", "aux", "log"]:
+                    todel_file = output_file_name.replace("pdf", ext)
+                    os.path.exists(todel_file) and os.remove(todel_file)
             if timeout:
-                raise TexRendererException(
-                    "Timeout reached"
-                )
-            else :
+                raise TexRendererException("Timeout reached")
+            else:
                 raise TexRendererException(
                     output.stderr.decode() + "|" + output.stdout.decode()
                 )
         logger.debug(f"converting {tmp_file_path} to png")
-        try:    
+        try:
             to_return_image = convert_from_path(pdf_path=output_file_name)[0]
         except PDFPageCountError as pe:
             for ext in ["pdf", "tex", "aux", "log"]:
@@ -116,6 +116,7 @@ class TexRendererException(RendererException):
                     continue
                 error_lines.append(line.strip())
         return "\n".join(error_lines)
+
 
 class ImageRenderingException(TexRendererException):
     def extract_error(self) -> str:

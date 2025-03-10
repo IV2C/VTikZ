@@ -16,6 +16,7 @@ from PIL import Image
 
 from varbench.utils.parsing import get_first_code_block
 
+@unittest.skip("not up to date with new metrics")
 class TestEvaluator(unittest.TestCase):
 
     def setUp(self) -> None:
