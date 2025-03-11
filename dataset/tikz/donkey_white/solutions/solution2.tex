@@ -24,8 +24,8 @@
 donkey/.pic={
 \begin{scope}[x=3cm/480,y=3cm/480]
 \reflect[
-  on left ={color alias=ears as Grey§choice([100,200,300,400],200)},
-  on right={color alias=ears as Grey§choice([100,200,300,400],300)},
+  on left ={color alias=ears as White},
+  on right={color alias=ears as White},
   outer ear/.style={fill=ears}, inner ear/.style={fill=BlueGrey900}
 ]{
   \foreach \s [count=\j from 0] in {outer ear, inner ear}
@@ -37,7 +37,7 @@ donkey/.pic={
   .. controls ++(270:12) and ++(  0: 8) .. ( 0,-48)
   .. controls ++(180: 8) and ++(270: 8) .. cycle;
 }
-\reflect[split=Grey§choice([100,200,300,400],200) and Grey§choice([100,200,300,400],300)]{%
+\reflect[split=White and White]{%
   \fill [fill color] (-56,-160)
   .. controls ++( 90:112) and ++(270: 128) .. (-112,  48)
   arc (180:0:112 and 96)

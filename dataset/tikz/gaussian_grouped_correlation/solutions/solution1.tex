@@ -38,9 +38,9 @@
 		\node[vertex] (yM2) at  (11,4) {$y_{M_2}$};
 		\node[vertex_text] (fdots2) at  (9,2) {$\dots$};
             % Correlation group
-	    \draw[dashed] (-1.5,-1) rectangle (6,5);
-            \node[anchor=south east] at (6,-1) {Correlation};
-            %edges
+			\draw[dashed] (§range(-1.5,-2.5,-1.5),§range(-1,-2,-1)) rectangle (§rangei(6,0.25),§rangei(5,0.25));
+      \node[anchor=south east] at (6,-1) {Correlation};
+          	%edges
 		\draw[edge] (x1) to node [font=\small,left]{} (f1);
 		\draw[edge] (f1) to node [font=\small,right]{$\sigma_{C1}^j$} (y1);
 		\draw[edge] (x2) to node [font=\small,left]{} (f2);

@@ -43,8 +43,6 @@ tip angle = 0.75}%
     \draw[myline,blue!70] (P7) -- (P8) -- (P9);
     \draw[myline,red!70] (P3) -- (P4) -- (P10);
     \draw[myline,green!70!black] (P1) -- (P9) -- (P2);
-    \draw[myline] (P5) -- (P10);
-    \draw[myline] (P6) -- (P7);
     \draw[myline] (P2) -- (P3);
 
     %% Drawing the shapes
@@ -62,10 +60,8 @@ tip angle = 0.75}%
     -- ($(P9)+(70:.2)$) arc (70:215:.2)
     -- ($(P7)+(215:.2)$) arc (215:315:.2);
 
-    \draw[yellow!70, very thick] ($(P5)+(70:.2)$) arc (§rangei(70, 10):§rangei(250, 10):.2)
-    -- ($(P6)+(250:.2)$) arc (§rangei(250, 10):§rangei(430, 10):.2) -- cycle;
     %% Drawing the node
-    \foreach \n in {1,...,10}{
+    \foreach \n in {1,2,3,4,7,8,9,10}{
         \fill (P\n) circle (.1);
     }
     

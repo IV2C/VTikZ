@@ -1,5 +1,5 @@
 {
-  "instruction": "Change the layout, so that the memory and storage are above the CPU, and the input is on the left. Adapt the arrow so that they don't overlap with elements. ",
+  "instruction": "Change the layout, so that the memory and storage are above the CPU, and the input is on the left of it. Adapt the arrow so that they don't overlap with elements.",
   "result_description": "A diagram of a computer system, with storage and memory displayed at the top",
   "difficulty": "hard",
   "type": "scientific",

@@ -4,7 +4,7 @@ from varbench.dataset_workflow.utils import create_default
 
 FLOAT_REG = r"(-?\d*\.?\d+)"
 INTEGER_REG = r"(-?\d+)"
-NON_RESERVED_LATEX_REG = r"([^#$%&_{}~^,\\\(\)]+)"
+NON_RESERVED_LATEX_REG = r"([^#$%&_{}~^,\\\[\]\(\)]+)"
 DEF_REG = (
     r"\§def\(" + NON_RESERVED_LATEX_REG + r"\)"
 )  # Captures single parameter inside §def()
@@ -39,8 +39,8 @@ math_pattern = r"([+-]?\d*\.?\d+(?:[+\-\/*^]\d*\.?\d+)*)"
 def evaluate_match(match):
     expr = match.group(1)
     try:
-        result = str(round(eval(expr), 2))
-        return result
+        result = round(eval(expr), 2)
+        return str(int(result)) if result.is_integer() else str(result)
     except:
         return match.group(0)
 
@@ -55,7 +55,7 @@ def handle_rangei(
         (
             str(float(args[0]) - float(args[1])),
             str(float(args[0]) + float(args[1])),
-            str(float(args[0])),
+            str(args[0]),
         ),
         all_matches,
     )
@@ -86,7 +86,7 @@ def handle_choice(
 def handle_range(
     prediction: int, start: int, end: int, args: tuple, all_matches: str
 ) -> tuple[str, str, list[tuple]]:
-    replace_id = args[2]
+    replace_id = str(args[2])
     prediction_def_start = prediction[start:]
     match = re.search(
         FLOAT_REG, prediction_def_start

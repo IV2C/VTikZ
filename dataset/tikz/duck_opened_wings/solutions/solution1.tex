@@ -49,8 +49,8 @@ duck/.pic={
 \fill [Grey100] (57,68) rectangle +(20,4);
 \end{scope}
 \fill [BlueGrey50]
-  (30,60)
-  .. controls (-15,40) and (32,21) .. (53,21)
+  (§rangei(30,5),§rangei(60,5))
+  .. controls (§rangei(-15,5),§rangei(40,10)) and (32,21) .. (53,21)
   .. controls (55,21) and (57,21) .. (61,22)
   .. controls (81,27) and (92,36) .. (92,48)
   -- cycle;
@@ -59,7 +59,7 @@ duck/.pic={
   .. controls (84,26) and (92,36) .. (92,48)
   .. controls (92,60) and (82,65) .. (76,68)
   -- cycle;
-\fill [BlueGrey400 , rotate=-40, shift={(-50,25)}] (56,64)
+\fill [BlueGrey400 , rotate=§rangei(-40,5), shift={(§rangei(-50,4),§rangei(25,5))}] (56,64)
   .. controls (45,64) and (40,60) .. (32,56)
   .. controls (24,52) and ( 8,52) .. ( 8,48)
   .. controls (8, 44) and (24,36) .. (40,36)

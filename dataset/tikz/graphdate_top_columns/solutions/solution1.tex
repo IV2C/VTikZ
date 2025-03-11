@@ -10,13 +10,13 @@
         
         %- X - Axis (Months). Separation of two coordinates between months.
         % Months 2020
-        \node[align=center] (Jan20) at (0,11) {Jan \\ 2020}; 
-        \node[] (Apr20)  at (2,11) {Apr};
-        \node[] (Jul20)   at (4,11) {Jul};
-        \node[] (Oct20) at (6,11) {Oct};
+        \node[align=center] (Jan20) at (0,§range(11,12,11)) {Jan \\ 2020}; 
+        \node[] (Apr20)  at (2,§range(11,12,11)) {Apr};
+        \node[] (Jul20)   at (4,§range(11,12,11)) {Jul};
+        \node[] (Oct20) at (6,§range(11,12,11)) {Oct};
         % Months 2021
-        \node[align=center] (Jan21) at (8,11) {Jan \\ 2021}; 
-        \draw[-latex] (9.5,11.25) -- ++(1,0) node[midway,below] () {Apr};
+        \node[align=center] (Jan21) at (8,§range(11,12,11)) {Jan \\ 2021}; 
+        \draw[-latex] (9.5,§range(11.25,12.25,11.25)) -- ++(1,0) node[midway,below] () {Apr};
         
         %- Corresponding other nodes
         % Column 1 (Jan 2020)

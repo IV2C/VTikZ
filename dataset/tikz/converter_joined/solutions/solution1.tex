@@ -49,8 +49,8 @@ background=
       convert from={AC}, convert to={DC}}] (2,0);
       
     % Second converter (DC -> AC) positioned to the right
-    \draw (2,0) to [converter={info'={DC$\rightarrow$AC},
-      convert from={DC}, convert to={AC}}] (4,0);
+    \draw (§rangei(2, 0.5),0) to [converter={info'={DC$\rightarrow$AC},
+      convert from={DC}, convert to={AC}}] (§rangei(4, 1),0);
 
 \end{tikzpicture}
 

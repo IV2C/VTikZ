@@ -28,9 +28,9 @@ dog/.pic={
   \fill [fill color] (0,-64) ellipse [x radius=160, y radius=144];
   \fill [fill color] (0, 32) ellipse [x radius=128, y radius=112];
   \fill [fill color] (32,96)
-  .. controls ++( 75:160) and ++(105:190) .. ++(210,  -100)
-  .. controls ++(285: 96) and ++(285: 96) .. ++(-70,-32)
-  .. controls ++(105: 140) and ++( 75: 75) .. cycle;
+  .. controls ++( 75:§rangei(160, 50)) and ++(105:190) .. ++(§rangei(210, 10),  §rangei(-100, 40))
+  .. controls ++(285: 96) and ++(285: 96) .. ++(§rangei(-70, 10),-32)
+  .. controls ++(105: 140) and ++( 75: §rangei(75, 20)) .. cycle;
 }
 \reflect[split={Grey100 and Grey200}]{
   \clip (0,-64) ellipse [x radius=160, y radius=144];

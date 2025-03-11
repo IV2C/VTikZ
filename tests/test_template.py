@@ -161,6 +161,7 @@ test blue
 \\definecolor{blue}{rgb}{§rangei(0.9,0.1), 0.13, 0.13}
 """
         self.assertFalse(template_valid(template, prediction))
+
     def test_template_choice(self):
         prediction = """
 \\definecolor{blue}{rgb}{0.9, 0.13, 0.13}
@@ -176,6 +177,24 @@ test blue
 """
         template = """
 \\definecolor{blue}{rgb}{§choice([0.9,1.1],1.1), 0.13, 0.13}
+"""
+        self.assertFalse(template_valid(template, prediction))
+
+    def test_template_choice_str(self):
+        prediction = """
+\\definecolor{blue}{rgb}{valid}
+"""
+        template = """
+\\definecolor{blue}{rgb}{§choice(["valid","vali","alid"],alid)}
+"""
+        self.assertTrue(template_valid(template, prediction))
+
+    def test_template_choice_invalid_str(self):
+        prediction = """
+\\definecolor{blue}{rgb}{invalid}
+"""
+        template = """
+\\definecolor{blue}{rgb}{§choice(["valid","vali","alid"],alid)}
 """
         self.assertFalse(template_valid(template, prediction))
 
@@ -201,6 +220,18 @@ test blue
 """
         self.assertFalse(template_valid(template, prediction))
 
+    def test_template_choice_range_str(self):
+        prediction = """
+\\definecolor{blue}{rgb}{valid}
+\\definecolor{blue}{rgb}{1.1, 0.13, 0.13}
+"""
+        template = """
+\\definecolor{blue}{rgb}{§choice(["valid","vali","alid"],alid)}
+\\definecolor{blue}{rgb}{§range(0.9,1.1,1), 0.13, 0.13}
+"""
+        self.assertTrue(template_valid(template, prediction))
+
+
     def test_template_range_rangei(self):
         prediction = """
 \\definecolor{blue}{rgb}{0.9, 0.13, 0.13}
@@ -222,8 +253,7 @@ test blue
 \\definecolor{blue}{rgb}{§rangei((0.9,0.1),1.1), 0.13, 0.13}
 """
         self.assertFalse(template_valid(template, prediction))
-        
-        
+
     def test_template_def_range(self):
         prediction = """
 \\definecolor{red}{rgb}{0.9, 0.13, 0.13}
@@ -245,8 +275,7 @@ test blue
 \\fill{blue}{§range(0.9,1.1,1), 0.13, 0.13}
 """
         self.assertFalse(template_valid(template, prediction))
-        
-        
+
     def test_template_complex(self):
         prediction = """
 \definecolor{laserG}{rgb}{0.2, 0.6, 0.1}
@@ -270,4 +299,10 @@ test blue
 \draw [fill = laserGreen, draw = laserRed] (-1,8) circle [radius=0.1];
 \draw [fill = laserBlue, draw = laserBlue] (-1,8) circle [radius=0.1];
 """
+        self.assertTrue(template_valid(template, prediction))
+
+
+    def test_template_full_file(self):
+        template = open("tests/resources/tikz/template/pupils_dog_template.tex").read()
+        prediction = open("tests/resources/tikz/template/valid_to_template.tex").read()
         self.assertTrue(template_valid(template, prediction))
