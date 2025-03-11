@@ -1,5 +1,5 @@
 {
-  "instruction": "Add a second treatment names \"second treatment\", with nodes names B. The existing treatment should be renamed \"first treatment\". The new added treatment should be between first treatment and outcome, and the nodes Bt and Bt+1 must be linked the same way the nodes At and At+1 are.",
+  "instruction": "Add a second treatment named \"second treatment\", with nodes named B, and with the same color as the first treatment. The existing treatment should be renamed \"first treatment\". The new added treatment should be between first treatment and outcome, and the nodes Bt and Bt+1 must be linked the same way the nodes At and At+1 are.",
   "result_description": "a diagram, with two treatments first and second",
   "difficulty": "hard",
   "type": "scientific",

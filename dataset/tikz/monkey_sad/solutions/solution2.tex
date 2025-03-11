@@ -44,9 +44,10 @@ monkey/.pic={%
   \fill [BlueGrey900] (40, 64) circle [radius=24];
   \fill [Pink300]     (24,-16) circle [radius=16];
 }
-\fill [Pink300]
-  (-96,§rangei(-110,10)) arc (180:0:96 and 32) arc (0:180:96 and 56);
-
+\begin{scope}[yscale=-1]
+    \fill [Pink300]
+      (-96,110) arc (180:360:96 and 32) arc (360:180:96 and 56);
+\end{scope}
 \end{scope}
 }
 }

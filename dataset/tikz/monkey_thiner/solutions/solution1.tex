@@ -30,15 +30,15 @@ monkey/.pic={%
 ]{
   \fill [skin] (140, 80) circle  [radius=56];
   \fill [ears] (140, 80) circle  [radius=32];
-  \fill [skin] (  0, 72) ellipse [x radius=120, y radius=112];
-  \fill [skin] (  0,-64) ellipse [x radius=150, y radius=112];
+  \fill [skin] (  0, 72) ellipse [x radius=§rangei(120,15), y radius=112];
+  \fill [skin] (  0,-64) ellipse [x radius=§rangei(150,15), y radius=112];
 }
 \reflect[
   on left ={color alias/.list={face as Pink100}},
   on right={color alias/.list={face as Pink200}, half clip}
   ]{
-  \fill [face] (0,-64) ellipse [x radius=110, y radius=88];
-  \fill [face] (30,64) ellipse [radius=64];
+  \fill [face] (0,-64) ellipse [x radius=§rangei(110,15), y radius=88];
+  \fill [face] (40,64) ellipse [radius=64];
 }
 \reflect{
   \fill [BlueGrey900] (40, 64) circle [radius=24];

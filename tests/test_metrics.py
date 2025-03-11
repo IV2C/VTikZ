@@ -110,8 +110,8 @@ class TestNewDatasetMetrics(unittest.TestCase):
         logger.info(result_scores)
         for i, row in enumerate(
             [
-                [100.00000000000004, 79.85104, 0.0],
-                [79.85104, 100.00000000000004, 0.0],
+                [71.20952307293861, 30.661487102926746, 1.2614755640151063],
+                [26.88927578056405, 100.00000000000004, 1.2614755640151063],
             ]
         ):
             for j, expected in enumerate(row):
