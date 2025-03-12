@@ -40,12 +40,10 @@
 \begin{tikzpicture}[line width =0.7mm]
 
 % First polygon at (0,0)
-\begin{scope}[shift={(0,0)}]
-    \polygon{4}{1,2,3,4}
-\end{scope}
+\polygon{4}{1,2,3,4}
 
 % Second polygon shifted to the right
-\begin{scope}[shift={(5,0)}]
+\begin{scope}[shift={(§range(5,6,5),0)}]
     \polygon{5}{1,2,3,4,5}
 \end{scope}
 

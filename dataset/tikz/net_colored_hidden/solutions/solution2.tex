@@ -20,6 +20,9 @@ line/.style={draw}
       draw=none,
       fill=none,
       },
+    §def(hidden)/.style={
+      fill=red,
+    },
     net/.style={
       matrix of nodes,
      nodes={
@@ -30,12 +33,7 @@ line/.style={draw}
   nodes in empty cells,
   column sep=2cm,
   row sep=-9pt
-  },§def(hidden)/.style={
-      draw,
-      circle,
-      fill=red,
-      inner sep=10pt
-    },
+  },
  >=latex
  ]
 \matrix[net] (mat)

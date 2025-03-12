@@ -27,15 +27,15 @@
 		
 		% Rays
 		\draw[color = lust, line width = 0.7, midarrow1] (-1,8) -- (4,8);
-		\draw[color = lust, line width = 0.7, midarrow2] (4,8) -- +(3*24/50,-5*24/50) coordinate (C);
+		\draw[color = lust, line width = 0.7, midarrow2] (4,8) -- +(§rangei(1.44,0.1),§rangei(-2.4,0.1)) coordinate (C);
 		
 		% Guide and Lens
 		%% Top
 		\path[fill = richelectricblue!40] (2,8.25) ..controls +(0.1,0) and +(0.1,0).. ++(0,-0.5) ;
 		\draw[line width = 0.5] (0, 8.1) -- (0,8.25) -- ++(2,0) ..controls +(0.1,0) and +(0.1,0).. ++(0,-0.5) -- ++(-2,0) -- +(0, 0.15);
 		%% Bottom
-		\path[fill = richelectricblue!40, rotate = 121] (4,-7.3) ..controls +(0.1,0) and +(0.1,0).. ++(0,-0.5) ;
-		\draw[line width = 0.5, rotate = 121] (2,-7.3) -- ++(2,0) ..controls +(0.1,0) and +(0.1,0).. ++(0,-0.5) -- ++(-2,0) -- +(0,0.50);
+		\path[fill = richelectricblue!40, rotate = 121] (§rangei(4,0.25),-7.3) ..controls +(0.1,0) and +(0.1,0).. ++(0,-0.5) ;
+		\draw[line width = 0.5, rotate = 121] (§rangei(2,0.25),-7.3) -- ++(2,0) ..controls +(0.1,0) and +(0.1,0).. ++(0,-0.5) -- ++(-2,0) -- +(0,0.50);
 		
 		% Source		
 		\draw [fill = lust, draw = lust] (-1,8) circle [radius=0.1];
@@ -50,7 +50,7 @@
 		\node[above] at (-1,8.2) {\scriptsize Source};
 		\node[above] at (1,8.5) {\scriptsize Guide};
 		\node at (4,9) {\scriptsize Barrier};
-		\node[rotate=32] at (5.6,5.3) {\scriptsize Observer}; 
+		\node[rotate=32] at (§rangei(5.6,0.5),§rangei(5.3,0.5)) {\scriptsize Observer}; 
 	\end{tikzpicture}
 	
 \end{document}

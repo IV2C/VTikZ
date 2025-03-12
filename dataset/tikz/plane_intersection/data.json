@@ -1,5 +1,5 @@
 {
-  "instruction": "Add a second plane Pi _2, parallel to the x-y-plane, their intersection should cross the z-axis.",
+  "instruction": "Add a second plane Pi_2, parallel to the x-y-plane. This plane should intersect with the existing plane, and their intersection should cross the z-axis.",
   "result_description": "Two planes intersecting in a 3-dimensional diagram.",
   "difficulty": "hard",
   "type": "scientific",

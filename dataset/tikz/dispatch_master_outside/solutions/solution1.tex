@@ -48,7 +48,7 @@ shapes.symbols,
 server/.style={cylinder, shape border rotate=90, aspect=0.35, minimum height=9mm, minimum width=10.5mm, draw=black, inner sep=0pt},
 client/.style={rectangle, minimum height=6mm, minimum width=11.25mm, draw=black, inner sep=0pt},
 router/.style={circle, minimum size=11mm, draw=black, fill=gray!40, text width=3.25em, text centered, inner sep=0pt},
-system/.style={rectangle, rounded corners=1.5mm, minimum height=§rangei(30, 5)mm, minimum width=62.25mm, draw=black, dashed}
+system/.style={rectangle, rounded corners=1.5mm, minimum height=§rangei(30,5)mm, minimum width=62.25mm, draw=black, dashed}
 ]
 
 %MySQL system
@@ -57,7 +57,7 @@ system/.style={rectangle, rounded corners=1.5mm, minimum height=§rangei(30, 5)m
 \node[server](S2) at (0,0) {Slave2};
 \node[server](S3) at (12.75mm,0) {Slave3};
 \node[router](R) at (-30mm,7.5mm) {Dispatcher};
-\node[system](MySQL) at (-8.625mm,§rangei(2.25, 2)mm) {};
+\node[system](MySQL) at (-8.625mm,§rangei(2.25,2)mm) {};
 
 %Clients
 \node[client](C1) at (-52.5mm,15mm) {Clients};
