@@ -1,0 +1,11 @@
+config,TemplateMetric,ImageEqualityMetric,LineMetric,CrystalBleuPatchMetric,SuccessCustomizationMetric,LocationMetric
+simpleLLM_deepseekr1distillllama70b_pk_1_t_0.7,0.0,0.0,40.0,18.13905143737793,0.0,0.0
+simpleLLM_deepseekr1distillllama70b_pk_5_t_0.7,0.0,0.0,75.0,20.167287826538086,0.0,0.0
+simpleLLM_deepseekr1distillllama70b_pk_5_t_1.5,0.0,0.0,75.73529434204102,22.711877822875977,0.0,0.0
+simpleLLM_gpt4o20240806_pk_5_t_0.7,0.0,0.0,100.0,60.476802825927734,0.0,100.0
+simpleLLM_llama3.18binstant_pk_1_t_0.7,0.0,0.0,0.0,4.863325119018555,0.0,0.0
+simpleLLM_llama3.370bversatile_pk_1_t_0.7,0.0,0.0,52.77777862548828,29.604783058166504,0.0,0.0
+simpleLLM_llama3.370bversatile_pk_5_t_0.7,0.0,0.0,66.66666412353516,29.40840721130371,0.0,0.0
+simpleLLM_llama370b8192_pk_1_t_0.7,0.0,0.0,40.0,14.763720035552979,0.0,0.0
+simpleLLM_mixtral8x7b32768_pk_1_t_0.7,0.0,0.0,0.0,4.681603908538818,0.0,0.0
+simpleLMM_gpt4o20240806_pk_5_t_0.7,0.0,0.0,100.0,62.59675407409668,0.0,100.0

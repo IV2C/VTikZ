@@ -17,7 +17,7 @@ def instantiate_agent(
         "simpleLLM": SimpleLLMAgent,
         "simpleLMM": LMMAgent,
         "loopVLMLLM": VLLMLoopAgent,
-        "loopLMM": LMMAgent,
+        "loopLMM": LMMLoopAgent,
         "FAR": FARAgent
     }
 

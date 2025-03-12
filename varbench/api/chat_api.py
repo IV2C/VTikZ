@@ -230,6 +230,7 @@ class OpenAIApi(ChatApi):
             temperature=self.temperature,
             n=self.n,
             seed=self.seed,
+            max_completion_tokens=4096
         )
         return [choice.message.content for choice in completion.choices]
 
@@ -264,6 +265,7 @@ class OpenAIApi(ChatApi):
                     model=self.model_name,
                     temperature=self.temperature,
                     seed=self.seed,
+                    max_tokens=8192
                 ).to_json()
                 for message, id in zip(messages, ids)
             ]

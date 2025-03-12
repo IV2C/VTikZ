@@ -306,3 +306,8 @@ test blue
         template = open("tests/resources/tikz/template/pupils_dog_template.tex").read()
         prediction = open("tests/resources/tikz/template/valid_to_template.tex").read()
         self.assertTrue(template_valid(template, prediction))
+
+    def test_no_param_template(self):
+        template = open("tests/resources/tikz/template/no_param_template.tex").read()
+        self.assertTrue(template_valid(template, template))
+        

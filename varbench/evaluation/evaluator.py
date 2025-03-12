@@ -25,7 +25,7 @@ def generate(
         feature=datasets.Sequence(datasets.Value("string")),
     )
 
-    # unify input codes
+    # unify codes
     def unify_solutions(row):
         row["template_solution_code"] = [
             unify_code(templated_code)

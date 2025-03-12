@@ -172,6 +172,9 @@ def template_valid(template_code: str, prediction: str) -> bool:
     prediction = re.sub(
         math_pattern, evaluate_match, prediction
     )  # evaluates mathematical expressions
+    template_code = re.sub(
+        math_pattern, evaluate_match, template_code
+    )  # evaluates mathematical expressions
     matches = []
     for key, pattern in PATTERNS.items():
 

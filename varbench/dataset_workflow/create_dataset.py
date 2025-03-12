@@ -38,7 +38,7 @@ for subset in os.listdir(dataset_path):
             renderer: Renderer = TexRenderer(debug=True)
         case "svg":
             renderer: Renderer = SvgRenderer()
-    for entry in sorted(os.listdir(os.path.join(dataset_path, subset)))[4:6]:#temporary for test
+    for entry in sorted(os.listdir(os.path.join(dataset_path, subset))):
         entry_path = os.path.join(dataset_path, subset, entry)
         logger.info(f"adding {entry_path}")
         # getting input code
@@ -138,12 +138,11 @@ features = Features(
 for subset in dataset_dict:
     current_subset = pd.DataFrame(dataset_dict[subset])
     dataset = Dataset.from_dict(pd.DataFrame(current_subset), features=features)
-    dataset = dataset.filter(lambda row: row["id"] == "bee_three_wings" or row["id"] == "bee_red_stripes")#temporary for test
+    #dataset = dataset.filter(lambda row: row["id"] == "bee_three_wings" or row["id"] == "bee_red_stripes")#temporary for test
     dataset.push_to_hub(
-        "CharlyR/varbench", config_name=subset, split="test"
-    )  # split="benchmark")
+        "CharlyR/varbench", config_name=subset, split="benchmark")
 
-    # dataset_test = dataset.filter(lambda row: row["difficulty"] == "medium").select(
-    #    [6, 7]
-    # )
-    # dataset_test.push_to_hub("CharlyR/varbench", config_name=subset, split="test")
+    dataset_test = dataset.filter(lambda row: row["difficulty"] == "medium").select(
+       [6, 7]
+    )
+    dataset_test.push_to_hub("CharlyR/varbench", config_name=subset, split="test")
