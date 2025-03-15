@@ -67,7 +67,7 @@ def handle_choice(
     choices = [str(val) for val in ast.literal_eval(args[0])]
     prediction_def_start = prediction[start:]
     match = re.search(
-        NON_RESERVED_LATEX_REG, prediction_def_start
+        r"^"+NON_RESERVED_LATEX_REG, prediction_def_start
     )  # matching the first non-latex expresssion in the prediction code
     if not match:
         return None, None, False
@@ -89,7 +89,7 @@ def handle_range(
     replace_id = str(args[2])
     prediction_def_start = prediction[start:]
     match = re.search(
-        FLOAT_REG, prediction_def_start
+        r"^"+FLOAT_REG, prediction_def_start
     )  # matching the first non-latex expresssion in the prediction code
     if not match:
         return None, None, False
@@ -127,7 +127,7 @@ def handle_def(
     replace_id = args[0]
     prediction_def_start = prediction[start:]
     match = re.search(
-        NON_RESERVED_LATEX_REG, prediction_def_start
+        r"^"+NON_RESERVED_LATEX_REG, prediction_def_start
     )  # matching the first non-latex expresssion in the prediction code
     if not match:
         return None, None, False

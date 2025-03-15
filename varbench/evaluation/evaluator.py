@@ -138,9 +138,9 @@ def _extend_metric_computations(dataset: datasets.Dataset) -> datasets.Dataset:
         name
         for name in metrics_names
         if any(
-            len(row) < len(parsed)
-            for row, parsed in zip(dataset[name], dataset["predictions_patches"])
-        )
+            len(val) < len(parsed) 
+            for row, parsed in zip(dataset[name], dataset["predictions_patches"]) 
+            for val in row)
     ]  # named potential because if all images have been compiled without error we skip the process completely
 
     def _ext_none(row, col_name: str):

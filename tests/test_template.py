@@ -310,4 +310,8 @@ test blue
     def test_no_param_template(self):
         template = open("tests/resources/tikz/template/no_param_template.tex").read()
         self.assertTrue(template_valid(template, template))
-        
+
+    def test_template_with_origin(self):
+        original = open("tests/resources/tikz/template/chimp_original.tex").read()
+        template = open("tests/resources/tikz/template/chimp_template.tex").read()
+        self.assertFalse(template_valid(template, original))
