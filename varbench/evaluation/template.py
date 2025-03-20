@@ -4,7 +4,8 @@ from varbench.dataset_workflow.utils import create_default
 
 FLOAT_REG = r"(-?\d*\.?\d+)"
 INTEGER_REG = r"(-?\d+)"
-NON_RESERVED_LATEX_REG = r"([^#$%&_{}~^,\\\[\]\(\)]+)"
+NON_RESERVED_LATEX_REG = r"([^#$%&_{}~^, \\\[\]\(\)]+)"
+DEF_LATEX_REG = r"([^#$%&_{}~^,\\\[\]\(\)]+)"
 DEF_REG = (
     r"\§def\(" + NON_RESERVED_LATEX_REG + r"\)"
 )  # Captures single parameter inside §def()
@@ -127,7 +128,7 @@ def handle_def(
     replace_id = args[0]
     prediction_def_start = prediction[start:]
     match = re.search(
-        r"^"+NON_RESERVED_LATEX_REG, prediction_def_start
+        r"^"+DEF_LATEX_REG, prediction_def_start
     )  # matching the first non-latex expresssion in the prediction code
     if not match:
         return None, None, False

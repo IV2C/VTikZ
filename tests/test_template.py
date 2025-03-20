@@ -315,3 +315,7 @@ test blue
         original = open("tests/resources/tikz/template/chimp_original.tex").read()
         template = open("tests/resources/tikz/template/chimp_template.tex").read()
         self.assertFalse(template_valid(template, original))
+    def test_template_dig_gray(self):
+        generated = open("tests/resources/tikz/dog/llm_generated.tex").read()
+        template = open("tests/resources/tikz/dog/solution_template.tex").read()
+        self.assertTrue(template_valid(template, generated))
