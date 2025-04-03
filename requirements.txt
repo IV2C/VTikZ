@@ -6,6 +6,7 @@ instructor==1.7.8
 loguru==0.7.3
 lpips==0.1.4
 numpy==2.2.4
+open_clip_torch==2.30.0
 openai==1.70.0
 opencv_python==4.10.0.84
 opencv_python_headless==4.10.0.84
