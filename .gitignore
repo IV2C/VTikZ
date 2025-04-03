@@ -7,3 +7,4 @@ varbench_metric/
 .coverage
 .log/
 .cache/
+config-varbench.cfg

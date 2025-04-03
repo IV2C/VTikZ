@@ -1,16 +1,9 @@
-import base64
-from io import BytesIO
 from typing import Iterable
 from PIL import Image
-from loguru import logger
 from openai.types.chat import ChatCompletionMessageParam
 
 from varbench.agents import Agent
-from varbench.api.chat_api import ChatApi
 from varbench.utils.prompts.simple_templates import IT_PROMPT, SYSTEM_PROMPT_GENERATION
-from varbench.renderers.renderer import Renderer, RendererException
-from varbench.utils.parsing import get_first_code_block
-
 
 class SimpleLLMAgent(Agent):
     """Simple LLM agent that uses only the "reading" capabilities of the models tested"""

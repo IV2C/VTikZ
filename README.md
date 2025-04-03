@@ -28,19 +28,16 @@ python3 -m varbench.run_evaluation [-h] --subsets SUBSETS [SUBSETS ...] --metric
 
 ### Arguments
 
+> [!IMPORTANT]  
+> Agents are separated into two categories, internal and external, external agents can only be configured using the `config-varbench.cfg` file. see the [External Agent](#external-agents) section.
+
+
 #### Core Arguments
 - `--subsets`, `-s`: Subset(s) to evaluate the model on. Defaults to `["tikz"]`, futures subset could be "svg, p5js, pygame, etc".
-- `--metrics`, `-me`: List of metrics for evaluation. Defaults to `["patch","line","clipImage","clipText","bleu","bleuPatch","crystalBleu","crystalBleuPatch","chrf","chrfPatch","TER","TERPatch","featureMatch","LPIPS","psnr","msssim","MSE",]`.
-- `--agent`, `-a`: Name of the agent to use. **Required**. Choices: `["simpleLLM", "simpleLMM", "loopVLMLLM"]`.
+- `--metrics`, `-me`: List of metrics for evaluation. Defaults to `["Template","ImageEquality","line","crystalBleuPatch",]`.
+- `--agent`, `-a`: Name of the agent to use. **Required**. Choices: `["simpleLLM", "simpleLMM", "loopVLMLLM", "loopLMM", "FAR", "VIF"]`.
 - `--model`, `-m`: Name of the model to evaluate. **Required**.
-- `--run-model`, `-r`: Launch the model locally for evaluation. If used with `--api_url`, `api_url` is ignored.
-
-#### VLM Settings (for `loopVLMLLM` Agent)
-- `--vlm`, `-v`: Name of the VLM to use.
-- `--vlm_api_url`: URL of the OpenAI-compatible API for the VLM.
-- `--vlm_api_key`: API key for VLM authentication. Defaults to the environment variable `OPENAI_API_KEY`.
-- `--vlm-temperature`: Sampling temperature for the VLM. Defaults to `0`.
-- `--interaction-amount`: Number of interactions between the LLM and VLM. Defaults to `2`.
+- `--run-model`, `-r`: Launch the model locally for evaluation. If used with `--api_url`, `api_url`, it is ignored.
 
 #### API Settings
 - `--api_url`: URL of the OpenAI-compatible API.
@@ -48,6 +45,13 @@ python3 -m varbench.run_evaluation [-h] --subsets SUBSETS [SUBSETS ...] --metric
 - `--temperature`: Sampling temperature for the model. Defaults to `0.7`.
 - `--passk`: Number of responses per prompt for computing pass@k. Defaults to `1`.
 
+
+#### VLM Settings (for `loopVLMLLM` Agent)
+- `--vlm`, `-v`: Name of the VLM to use.
+- `--vlm_api_url`: URL of the OpenAI-compatible API for the VLM.
+- `--vlm_api_key`: API key for VLM authentication. Defaults to the environment variable `OPENAI_API_KEY`.
+- `--vlm-temperature`: Sampling temperature for the VLM. Defaults to `0`.
+- `--interaction-amount`: Number of interactions between the LLM and VLM. Defaults to `2`.
 ### Outputs
 
 - Results are saved in the `./results` directory under subfolders based on the model name. Each subset generates:
@@ -59,8 +63,29 @@ The datasets are analysed using this [notebooks](/home/creux/Documents/AI/Variab
 
 ## Additional Configuration
 
-Some additional configurations can be set up by modifying `config-varbench.cfg`
+Some additional configurations can be set up by adding a file `config-varbench.cfg` at the root of the project(An example of a configuration is provided [here](./config-varbench.dev.cfg)).
 Each section is described below.
+
+### External agents
+#### \[VIF\]
+Parameters for the VIF-Agent. See the documentation [here](https://github.com/VarBench-SE/VIFagent).
+| Parameter                | Description                                                 | Example Value                              |
+|--------------------------|-------------------------------------------------------------|--------------------------------------------|
+| `api_url`               | Base URL for the main model API.                            | `https://api.openai.com/v1`                |
+| `api_key`               | API key for authenticating requests to the main model.      | `your_api_key`                             |
+| `model`                 | Name of the main model to use.                              | `gpt-4`                                    |
+| `search_api_url`        | Base URL for the search model API (if used).               | `https://api.openai.com/v1`                |
+| `search_api_key`        | API key for authenticating requests to the search model.   | `your_search_api_key`                      |
+| `search_model`          | Name of the search model to use (if applicable).           | `gpt-4-turbo`                              |
+| `identification_api_url` | Base URL for the identification model API (if used).    | `https://api.openai.com/v1`                |
+| `identification_api_key` | API key for authenticating requests to the identification model. | `your_identification_api_key`  |
+| `identification_model`   | Name of the identification model to use (if applicable).  | `gpt-3.5-turbo`                            |
+| `temperature`           | Sampling temperature for model inference (0 = deterministic). | `0.0`                                      |
+
+
+
+
+
 ### \[VLLM\]
 If you want to run the model locally, all the parameters can be set in this section, for example `trust-remote-code = True`.
 See [this](https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html#cli-reference) documentation for reference.

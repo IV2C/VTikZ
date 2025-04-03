@@ -79,7 +79,7 @@ parser.add_argument(
     "-a",
     type=str,
     help="Name of the agent to use",
-    choices=["simpleLLM", "simpleLMM", "loopVLMLLM", "loopLMM", "FAR"],
+    choices=["simpleLLM", "simpleLMM", "loopVLMLLM", "loopLMM", "FAR", "VIF"],
     default="simpleLLM",
     required=True,
 )

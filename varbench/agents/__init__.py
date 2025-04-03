@@ -1,14 +1,16 @@
 from .agent import Agent
-from .code_Correct_Agent import CodeCorrectAgent
-from .LMM_loop_agent import LMMLoopAgent
-from .simple_LLM_agent import SimpleLLMAgent
-from .LMM_agent import LMMAgent
-from .VLLM_loop_agent import VLLMLoopAgent
-from .FAR_LLM_Agent import FARAgent
+from .internal.code_Correct_Agent import CodeCorrectAgent
+from .internal.LMM_loop_agent import LMMLoopAgent
+from .internal.simple_LLM_agent import SimpleLLMAgent
+from .internal.LMM_agent import LMMAgent
+from .internal.VLLM_loop_agent import VLLMLoopAgent
+from .internal.FAR_LLM_Agent import FARAgent
+
+from .external.VIF_agent import VIFAgent
 
 def instantiate_agent(
     agent_str: str,
-    api,
+    api=None,
     vlm_api=None,
     renderer=None,
     interaction_nb=3,
@@ -18,7 +20,8 @@ def instantiate_agent(
         "simpleLMM": LMMAgent,
         "loopVLMLLM": VLLMLoopAgent,
         "loopLMM": LMMLoopAgent,
-        "FAR": FARAgent
+        "FAR": FARAgent,
+        "VIF":VIFAgent
     }
 
     key_args = {}

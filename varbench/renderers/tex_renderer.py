@@ -8,7 +8,6 @@ from pdf2image.exceptions import PDFPageCountError
 from loguru import logger
 from .renderer import RendererException
 
-from tenacity import retry, stop_after_delay
 
 
 class TexRenderer(Renderer):

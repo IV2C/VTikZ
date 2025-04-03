@@ -6,8 +6,7 @@ from varbench.api.chat_api import ChatApi
 from PIL import Image
 
 class Agent:
-    def __init__(self, api: ChatApi, **kwargs) -> None:
-        self.api = api
+    def __init__(self, **kwargs) -> None:
         pass
 
     def compute(
