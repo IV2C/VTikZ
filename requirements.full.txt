@@ -232,7 +232,7 @@ urllib3==2.2.3
 uvicorn==0.32.0
 uvloop==0.21.0
 varbench==0.1.0
-vif_agent @ file:///home/creux/Documents/AI/VIFagent
+vif_agent==0.0.3
 virtualenv==20.29.1
 vllm==0.8.2
 watchfiles==0.24.0
