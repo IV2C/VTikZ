@@ -74,16 +74,15 @@
 - [X] MetricBench
 - [ ] If ever changing from only tikz to multiple languages, need to add a TED measure with another langauge parser
 - [X] Test LLM-only models then compare with Multimodal with image in input
-- [ ] test llm-vlm loop on the test dataset
-- [ ] add multimodal input to faragent
 
 
 Eventually
 - [X] Create a SimpleOpenAi API, in the case of an api compatible with openai, but that does not support anything but simple requests => done via VLMAPI
 
 - [ ] TODO in Pjs renderer
+- [ ] add multimodal input to faragent
 - [ ] hml-css renderer
-- [ ] Human evaluation tool with comments
+- [X] Human evaluation tool with comments
 - [ ] ascii art "renderer"
 - [X] github action
   - [X] Tests

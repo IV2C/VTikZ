@@ -14,6 +14,7 @@ def instantiate_agent(
     vlm_api=None,
     renderer=None,
     interaction_nb=3,
+    n=1
 ) -> Agent:
     agent_map = {
         "simpleLLM": SimpleLLMAgent,
@@ -29,5 +30,6 @@ def instantiate_agent(
     key_args["vlm_api"] = vlm_api
     key_args["renderer"] = renderer
     key_args["interaction_nb"] = interaction_nb
+    key_args["n"] = n
 
     return agent_map[agent_str](**key_args)

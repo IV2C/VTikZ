@@ -15,7 +15,7 @@ from varbench.agents import instantiate_agent
 from datasets import Dataset
 
 # Logging setup
-from varbench.utils.parsing import get_config
+from varbench.utils.parsing import get_config, get_config_name
 import sys
 from loguru import logger
 from tqdm import tqdm
@@ -70,7 +70,7 @@ parser.add_argument(
         "MSE",
         "Template",
         "ImageEquality",
-    ]
+    ],
 )
 
 
@@ -126,7 +126,6 @@ parser.add_argument(
     "--model",
     "-m",
     type=str,
-    required=True,
     help="Name of the model to evaluate",
 )
 
@@ -180,7 +179,10 @@ if not key_args["api_key"]:
     key_args["api_key"] = os.environ.get("OPENAI_API_KEY")
 
 # instantiating api
-api: ChatApi = ChatApi.from_url(**key_args)
+if args.agent != "VIF":  # internal agent
+    api: ChatApi = ChatApi.from_url(**key_args)
+else:
+    api = None
 
 # Instantiating vlm api(if provided)
 vlm_model: str = args.vlm
@@ -198,29 +200,10 @@ interaction_amount: int = args.interaction_amount
 # result path creation
 if not os.path.exists("./results"):
     os.mkdir("./results")
-split_used = "benchmark"
-#split_used = "test"
-full_config_name = (
-    args.agent
-    + "_"
-    + split_used
-    + "_"
-    + key_args["model_name"].replace("/", "_").replace("-", "").replace(":", "")
-    + "_pk_"
-    + str(key_args["n"])
-    + "_t_"
-    + str(key_args["temperature"])
-    + (
-        (
-            "_"
-            + vlm_model.replace("/", "_").replace("-", "").replace(":", "")
-            + "_t_"
-            + str(vlm_temperature)
-        )
-        if vlm_model
-        else ""
-    )
-)
+# split_used = "benchmark"
+split_used = "test"
+
+full_config_name = get_config_name(args, split_used)
 # result path handling
 result_path = os.path.join("./results", full_config_name)
 generation_result_path = os.path.join(result_path, "generation")
@@ -233,10 +216,17 @@ if not os.path.exists(generation_result_path):
 if not os.path.exists(evaluation_result_path):
     os.mkdir(evaluation_result_path)
 
+if args.agent != "VIF":  # internal agent
+    logger.info(
+        f"Varbench Evaluation : split = {split_used} | agent = {args.agent} | model = {key_args["model_name"]} | api = {key_args["api_url"]}"
+    )
+else:
+    vif_args = {**get_config("VIF")}
+    logger.info(
+        f"Varbench Evaluation : split = {split_used} | agent = {args.agent} | {vif_args}"
+    )
 
-logger.info(
-    f"Varbench Evaluation : split = {split_used} | agent = {args.agent} | model = {key_args["model_name"]} | api = {key_args["api_url"]}"
-)
+
 # generation
 for subset in subsets:
     subset_generation_result_path = os.path.join(generation_result_path, subset)
@@ -260,7 +250,9 @@ for subset in subsets:
             continue
 
     # instantiate the agent
-    agent = instantiate_agent(args.agent, api, vlm_api, renderer, interaction_amount)
+    agent = instantiate_agent(
+        args.agent, api, vlm_api, renderer, interaction_amount, key_args["n"]
+    )
 
     # generating and saving the dataset
     subset_processed: Dataset = generate(dataset, agent, renderer)
