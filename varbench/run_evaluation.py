@@ -200,8 +200,8 @@ interaction_amount: int = args.interaction_amount
 # result path creation
 if not os.path.exists("./results"):
     os.mkdir("./results")
-# split_used = "benchmark"
-split_used = "test"
+split_used = "benchmark"
+#split_used = "test"
 
 full_config_name = get_config_name(args, split_used)
 # result path handling

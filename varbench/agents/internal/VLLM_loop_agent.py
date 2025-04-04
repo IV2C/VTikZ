@@ -6,12 +6,13 @@ from loguru import logger
 from openai.types.chat import ChatCompletionMessageParam
 
 from varbench.agents import Agent
+from varbench.agents.internal.internal_agent import InternalAgent
 from varbench.api.chat_api import ChatApi
 from varbench.utils.prompts.simple_templates import IT_PROMPT, SYSTEM_PROMPT_GENERATION_VLM_LOOP, VLM_INSTRUCTION
 from varbench.renderers.renderer import Renderer, RendererException
 from varbench.utils.parsing import get_first_code_block
 
-class VLLMLoopAgent(Agent):
+class VLLMLoopAgent(InternalAgent):
     """A LLM and a VLM agent interacting until the VLM is satisfied"""
 
     def __init__(

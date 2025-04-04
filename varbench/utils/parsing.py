@@ -120,8 +120,12 @@ def get_config_name(args, split_used):
             + str(vif_args["temperature"])
             + "_search_"
             + _valid_model_name(vif_args["search_model"])
+            + "_t_"
+            + str(vif_args["search_model_temperature"])
             + "_identification_"
             + _valid_model_name(vif_args["identification_model"])
+            + "_t_"
+            + (str(vif_args["identification_model_temperature"]))
         )
     else:  # internal_agent
         full_config_name = (

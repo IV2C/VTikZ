@@ -1,11 +1,19 @@
-\begin{tabular}{lllrrrrrrrrrrrrrrrrrr}
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{llllrr}
 \toprule
-model & k & temp. & Chrf & PSNR & CrystalBleuPatch & ChrfPatch & BleuPatch & Bleu & valid & TERPatch & LPIPS & MSSSIM & MSE & CrystalBleu & FeatureMatch & Patch & Line & ClipImage & ClipText & TER \\
+model & k & temp. & CrystalBleuPatch & Line \\
 \midrule
-mixtral8x7b32768 & 1 & 0.7 & 95.2 & 42.2 & 16.4 & 36.4 & 17.0 & 89.1 & 89.0 & 54.8 & 78.9 & 71.6 & 97.6 & 87.6 & 51.6 & 2.0 & 26.1 & 96.7 & 26.6 & 88.5 \\
-llama3.18binstant & 1 & 0.7 & 96.0 & 41.8 & 16.8 & 36.1 & 17.4 & 89.4 & 82.0 & 56.6 & 76.5 & 67.8 & 97.4 & 88.3 & 47.1 & 1.0 & 23.8 & 95.7 & 26.1 & 88.4 \\
-llama370b8192 & 1 & 0.7 & 96.7 & 47.1 & 28.2 & 49.5 & 29.2 & 92.0 & 91.0 & 60.4 & 85.3 & 78.9 & 98.5 & 91.0 & 58.4 & 2.0 & 37.6 & 98.0 & 26.8 & 91.1 \\
-deepseekr1distillllama70b & 1 & 0.7 & 95.8 & 50.8 & 30.3 & 48.0 & 31.1 & 92.6 & 91.0 & 61.4 & 87.0 & 81.1 & 98.8 & 91.8 & 64.6 & 8.1 & 41.3 & 98.4 & 26.6 & 92.1 \\
-llama3.370bversatile & 1 & 0.7 & 97.3 & 47.2 & 35.8 & 55.2 & 36.6 & 93.8 & 92.0 & 63.7 & 86.1 & 79.0 & 98.6 & 93.0 & 60.8 & 5.0 & 49.2 & 98.2 & 27.0 & 93.3 \\
+Llama-3.1-8B & Text & 1 & 0.7 & 17.2 & 27.4 \\
+Mixtral-8x7B & Text & 1 & 0.7 & 17.4 & 30.7 \\
+Llama-3-70B & Text & 1 & 0.7 & 27.7 & 43.8 \\
+DeepSeek-R1-Distill-Llama-70B & Text & 1 & 0.7 & 32.9 & 45.7 \\
+Llama-3.3-70B & Text & 1 & 0.7 & 36.0 & 52.5 \\
+DeepSeek-R1-Distill-Llama-70B & Text & 5 & 0.7 & 36.2 & 56.0 \\
+Llama-3.3-70B & Text & 5 & 0.7 & 40.0 & 58.4 \\
+DeepSeek-R1-Distill-Llama-70B & Text & 5 & 1.5 & 36.9 & 57.8 \\
+GPT-4o-2024-08-06 & Text & 5 & 0.7 & 54.7 & 73.1 \\
+GPT-4o-2024-08-06 & Text+Image & 5 & 0.7 & 54.7 & 73.2 \\
 \bottomrule
 \end{tabular}
+
+}

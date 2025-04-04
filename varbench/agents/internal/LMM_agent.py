@@ -6,13 +6,14 @@ from loguru import logger
 from openai.types.chat import ChatCompletionMessageParam
 
 from varbench.agents import Agent
+from varbench.agents.internal.internal_agent import InternalAgent
 from varbench.api.chat_api import ChatApi
 from varbench.utils.prompts.simple_templates import IT_PROMPT, MULTIMODAL_SYSTEM_INSTRUCTION
 from varbench.renderers.renderer import Renderer, RendererException
 from varbench.utils.parsing import get_first_code_block
 
 
-class LMMAgent(Agent):
+class LMMAgent(InternalAgent):
     """LMM(Large Multimodal Model) agent that uses both the "reading" and "vision" capabilities of the models tested"""
 
     def compute(

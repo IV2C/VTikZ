@@ -6,12 +6,13 @@ from loguru import logger
 from openai.types.chat import ChatCompletionMessageParam
 
 from varbench.agents import Agent
+from varbench.agents.internal.internal_agent import InternalAgent
 from varbench.utils.prompts.simple_templates import IT_PROMPT
 from varbench.utils.prompts.FAR_template import FAR_SYSTEM_PROMPT
 from varbench.utils.parsing import apply_far_edit, get_first_code_block
 
 
-class FARAgent(Agent):
+class FARAgent(InternalAgent):
     """Simple LLM agent that uses only the "reading" capabilities of the models tested,
     instead of sending the full code back, this agent
     only returns a list of blocks to replace, replaced with a find-and-replace function

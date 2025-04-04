@@ -3,9 +3,10 @@ from PIL import Image
 from openai.types.chat import ChatCompletionMessageParam
 
 from varbench.agents import Agent
+from varbench.agents.internal.internal_agent import InternalAgent
 from varbench.utils.prompts.simple_templates import IT_PROMPT, SYSTEM_PROMPT_GENERATION
 
-class SimpleLLMAgent(Agent):
+class SimpleLLMAgent(InternalAgent):
     """Simple LLM agent that uses only the "reading" capabilities of the models tested"""
 
     def compute(
