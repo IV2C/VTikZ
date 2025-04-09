@@ -1,0 +1,13 @@
+config,TemplateMetric,ImageEqualityMetric,LineMetric,CrystalBleuPatchMetric,SuccessCustomizationMetric,LocationMetric
+VIF_llama3.370bversatile_t_0.0_search_gemini2.0flash_t_0.0_identification_gemini2.0flash_t_0.3,0.0,0.0,50.0,31.26579189300537,0.0,0.0
+simpleLLM_deepseekr1distillllama70b_pk_1_t_0.7,0.0,0.0,40.0,18.13905143737793,0.0,0.0
+simpleLLM_deepseekr1distillllama70b_pk_5_t_0.7,0.0,0.0,73.21428680419922,28.893463134765625,0.0,0.0
+simpleLLM_deepseekr1distillllama70b_pk_5_t_1.5,0.0,0.0,66.66666412353516,25.81548500061035,0.0,0.0
+simpleLLM_gpt4o20240806_pk_5_t_0.7,0.0,0.0,100.0,57.2806510925293,0.0,100.0
+simpleLLM_llama3.18binstant_pk_1_t_0.7,0.0,0.0,0.0,4.863325119018555,0.0,0.0
+simpleLLM_llama3.370bversatile_pk_1_t_0.7,0.0,0.0,50.0,28.519264221191406,0.0,0.0
+simpleLLM_llama3.370bversatile_pk_5_t_0.7,0.0,0.0,69.53781509399414,32.71330451965332,0.0,0.0
+simpleLLM_llama370b8192_pk_1_t_0.7,0.0,0.0,38.75,14.417992115020752,0.0,0.0
+simpleLLM_metallamallama4scout17b16einstruct_pk_5_t_0.7,0.0,0.0,76.1363639831543,11.492945671081543,0.0,0.0
+simpleLLM_mixtral8x7b32768_pk_1_t_0.7,0.0,0.0,0.0,4.566476345062256,0.0,0.0
+simpleLMM_gpt4o20240806_pk_5_t_0.7,0.0,0.0,100.0,55.06350517272949,0.0,100.0

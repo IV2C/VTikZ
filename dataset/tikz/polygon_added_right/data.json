@@ -1,5 +1,5 @@
 {
-  "instruction": "Add a second polygon with 5 sides on the right side of the first one.",
+  "instruction": "Add a second polygon with 5 sides on the right side of the first one, numbered from 1 to 5.",
   "result_description": "A square and a pentagon next to eachother.",
   "difficulty": "easy",
   "type": "scientific",

@@ -17,29 +17,29 @@
 
 % INCLINED ground
 \begin{tikzpicture}
-  \def\h{0.4}  % mass height
-  \def\w{0.5}  % mass width
-  \def\L{1.5}  % rod length
-  \def\t{0.15} % rod thickness
-  \def\W{2.8}  % inclined ground width
-  \def\ang{14} % inclined ground angle
-  \coordinate (R) at ({\W*cos(\ang)},0); % right corner inclined ground
+  \def\height{0.4}  % mass height
+  \def\width{0.5}  % mass width
+  \def\rLength{1.5}  % rod length
+  \def\rThickness{0.15} % rod thickness
+  \def\gWidth{2.8}  % inclined ground width
+  \def\gAng{14} % inclined ground angle
+  \coordinate (R) at ({\gWidth*cos(\gAng)},0); % right corner inclined ground
   \coordinate (L) at (0,0);              % left corner inclined ground
-  \coordinate (T) at (0,{\W*sin(\ang)}); % top inclined ground
-  \coordinate (P) at ({-\t/2+0.33*\w*sin(\ang)},{\W*sin(\ang)+\L+0.25*\w*cos(\ang)}); % rod pivot point
+  \coordinate (T) at (0,{\gWidth*sin(\gAng)}); % top inclined ground
+  \coordinate (P) at ({-\rThickness/2+0.33*\width*sin(\gAng)},{\gWidth*sin(\gAng)+\rLength+0.25*\width*cos(\gAng)}); % rod pivot point
   
   % ROD
-  \draw[fill=metalcol] (P) circle(0.9*\t);
-  \draw[rod,opacity=0.25] (P)++(\t/2,\t/2) rectangle++ (-\L,-\t);
-  \draw[rod] (P)++(-\t/2,\t/2) rectangle++ (\t,-\L)
+  \draw[fill=metalcol] (P) circle(0.9*\rThickness);
+  \draw[rod,opacity=0.25] (P)++(\rThickness/2,\rThickness/2) rectangle++ (-\rLength,-\rThickness);
+  \draw[rod] (P)++(-\rThickness/2,\rThickness/2) rectangle++ (\rThickness,-\rLength)
     node[midway,above=2,right=1] {$l$, $\rho$}; %\ell
   \draw[fill=metalcol,line width=0.3] (P) circle(0.03);
-  \draw[->] (P)++(195:0.7*\L) arc(170:280:0.4*\L);
+  \draw[->] (P)++(195:0.7*\rLength) arc(170:280:0.4*\rLength);
   
   % MASS ON INCLINED GROUND
-  \draw[line width=0.6,top color=blue!20!black!30,bottom color=white,shading angle=160-\ang]
+  \draw[line width=0.6,top color=blue!20!black!30,bottom color=white,shading angle=160-\gAng]
     (L) -- (T) -- (R) node[pos=0.55,above] {$\mu$} -- cycle;
-  \draw[mass,rotate=-\ang] (-0.03*\w,0)++(90+\ang:{\W*sin(\ang)}) rectangle++ (\w,\h) node[midway,rotate=-\ang] {$m$};
+  \draw[mass,rotate=-\gAng] (-0.03*\width,0)++(90+\gAng:{\gWidth*sin(\gAng)}) rectangle++ (\width,\height) node[midway,rotate=-\gAng] {$m$};
   \draw pic["$\theta$",draw=black,angle radius=22,angle eccentricity=1.3] {angle=T--R--L};
   
 \end{tikzpicture}

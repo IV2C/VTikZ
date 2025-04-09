@@ -103,7 +103,7 @@ def apply_far_edit(content: str, far_edit: str):
 
 
 def _valid_model_name(model_name):
-    return model_name.replace("/", "_").replace("-", "").replace(":", "")
+    return model_name.replace("/", "").replace("-", "").replace(":", "")
 
 
 def get_config_name(args, split_used):
