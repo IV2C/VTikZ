@@ -3,8 +3,11 @@
   "description": "",
   "features": {
     "difficulty_ast": {
-      "dtype": "float32",
-      "_type": "Value"
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
     "id": {
       "dtype": "string",
@@ -39,15 +42,31 @@
       "_type": "Value"
     },
     "patch": {
-      "dtype": "string",
-      "_type": "Value"
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "template_solution_code": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
     "code_solution": {
-      "dtype": "string",
-      "_type": "Value"
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
     },
     "image_solution": {
-      "_type": "Image"
+      "feature": {
+        "_type": "Image"
+      },
+      "_type": "Sequence"
     },
     "image_input": {
       "_type": "Image"

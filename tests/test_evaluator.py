@@ -1,12 +1,6 @@
 import unittest
-import os
-import timeout_decorator
-from varbench.api.chat_api import ChatApi, VLLMApi
 from varbench.evaluation.metrics import Metric, PatchMetric
-from varbench.renderers import Renderer, TexRenderer
 from varbench.evaluation.evaluator import evaluate, _extend_metric_computations
-from varbench.agents import Agent
-from unittest.mock import MagicMock
 from datasets import Dataset
 from PIL import Image
 import difflib

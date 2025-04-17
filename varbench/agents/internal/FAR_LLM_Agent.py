@@ -23,9 +23,10 @@ class FARAgent(InternalAgent):
     ) -> Iterable[str]:
         messages = self._create_message(instruction, code)
         all_edits = self.api.chat_request(messages)
-        parsed_all_edits = [get_first_code_block(edits) for edits in all_edits]
+        #parsed_all_edits = [get_first_code_block(edits) for edits in all_edits] what?
+        
         all_edited_codes = [
-            apply_far_edit(code, parsed_edits) for parsed_edits in parsed_all_edits
+            apply_far_edit(code, parsed_edits) for parsed_edits in all_edits
         ]
         return [
             edits.replace("`", "") + "```tikz\n" + edited_response + "\n```\n"

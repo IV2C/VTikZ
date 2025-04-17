@@ -95,9 +95,9 @@ def apply_far_edit(content: str, far_edit: str):
         if len(parts) == 2:
             before_change = parts[0].strip()
             after_change = parts[1].strip()
-
+            if before_change != "" and after_change != "":
             # Apply the find and replace to the original text
-            content = content.replace(before_change, after_change)
+                content = content.replace(before_change, after_change)
 
     return content
 
