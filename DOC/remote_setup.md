@@ -34,9 +34,9 @@ rmmod nouveau
 sh NVIDIA-Linux-x86_64-470.82.01.run -s --no-install-compat32-libs
 
 
-git clone git@github.com:VarBench-SE/VarBench.git
+git clone git@github.com:IV2C/VTikZ.git
 #Migh not work => to check
-cd VarBench
+cd VTikZ
 git checkout dev
 
 #conda installation
@@ -48,8 +48,8 @@ source ~/miniconda3/bin/activate
 conda init --all
 
 #repo setup
-conda create --name varbench python=3.12
-conda activate varbench
+conda create --name vtikz python=3.12
+conda activate 
 apt-get install -y texlive-latex-base
 apt-get install -y texlive-fonts-recommended
 apt-get install -y texlive-fonts-extra

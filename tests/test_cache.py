@@ -2,7 +2,7 @@ import hashlib
 from typing import Iterable
 import unittest
 import uuid
-from varbench.utils.caching import CachedRequest, instantiate_cache
+from vtikz.utils.caching import CachedRequest, instantiate_cache
 from openai.types.chat import ChatCompletionMessageParam
 
 

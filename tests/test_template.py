@@ -1,5 +1,5 @@
 import unittest
-from varbench.evaluation.template import (
+from vtikz.evaluation.template import (
     CHOICE_REG,
     RANGE_REG,
     RANGEI_REG,

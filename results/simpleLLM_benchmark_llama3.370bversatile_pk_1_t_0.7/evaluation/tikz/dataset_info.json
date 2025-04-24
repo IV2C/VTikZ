@@ -113,6 +113,16 @@
       },
       "_type": "Sequence"
     },
+    "LineMetric": {
+      "feature": {
+        "feature": {
+          "dtype": "float32",
+          "_type": "Value"
+        },
+        "_type": "Sequence"
+      },
+      "_type": "Sequence"
+    },
     "ImageEqualityMetric": {
       "feature": {
         "feature": {
@@ -124,16 +134,6 @@
       "_type": "Sequence"
     },
     "TemplateMetric": {
-      "feature": {
-        "feature": {
-          "dtype": "float32",
-          "_type": "Value"
-        },
-        "_type": "Sequence"
-      },
-      "_type": "Sequence"
-    },
-    "LineMetric": {
       "feature": {
         "feature": {
           "dtype": "float32",

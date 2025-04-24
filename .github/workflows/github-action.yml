@@ -34,7 +34,7 @@ jobs:
       - name: run tests
       #skipping coverage of these files because they are tested locally
         run: |
-            coverage run --omit=varbench/api/chat_api.py,tests/test_clip_comparer.py --source=varbench -m unittest discover tests
+            coverage run --omit=vtikz/api/chat_api.py,tests/test_clip_comparer.py --source=vtikz -m unittest discover tests
             coverage html
             coverage-badge -o coverage.svg
       - name: Upload coverage report

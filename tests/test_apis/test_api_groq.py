@@ -3,11 +3,11 @@ from openai.types.chat.chat_completion_message_param import ChatCompletionMessag
 import os
 
 from pydantic import BaseModel
-from varbench.api import ChatApi
+from vtikz.api import ChatApi
 from loguru import logger
-from varbench.api.chat_api import GroqApi, GroqApi, VLLMApi, ChatApi
+from vtikz.api.chat_api import GroqApi, GroqApi, VLLMApi, ChatApi
 
-from varbench.utils.model_launch import launch_model
+from vtikz.utils.model_launch import launch_model
 
 
 @unittest.skipIf(os.environ.get("CI"), "Api tests skipped for CI")

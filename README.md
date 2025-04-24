@@ -1,8 +1,8 @@
 <h1 align="center">
- VarBench
+ VTikZ
 </h1>
 
-<p align="center">  <a href="https://github.com/VarBench-SE/VarBench">🏠 Home Page</a> • <a href="https://huggingface.co/datasets/CharlyR/varbench">🤗 Dataset</a>   </p>
+<p align="center">  <a href="https://github.com/IV2C/VTikZ">🏠 Home Page</a> • <a href="https://huggingface.co/datasets/CharlyR/vtikz">🤗 Dataset</a>   </p>
 
 ![](DOC/images/coverage.svg)
 
@@ -12,7 +12,7 @@
 ## Installation
 
 ```sh
-conda create -n "varbench" python=3.12.7
+conda create -n "vtikz" python=3.12.7
 pip install -r requirements.txt
 ```
 
@@ -22,7 +22,7 @@ pip install -r requirements.txt
 To execute the evaluation for any subset, use the following script:
 
 ```sh
-python3 -m varbench.run_evaluation [-h] --subsets SUBSETS [SUBSETS ...] --metrics METRICS [METRICS ...] --agent AGENT --model MODEL [--vlm VLM] [--vlm_api_url VLM_API_URL] [--vlm_api_key VLM_API_KEY] [--vlm-temperature VLM_TEMPERATURE] [--interaction-amount INTERACTION_AMOUNT] [--run-model] [--api_url API_URL] [--api_key API_KEY] [--temperature TEMPERATURE] [--passk PASSK]
+python3 -m vtikz.run_evaluation [-h] --subsets SUBSETS [SUBSETS ...] --metrics METRICS [METRICS ...] --agent AGENT --model MODEL [--vlm VLM] [--vlm_api_url VLM_API_URL] [--vlm_api_key VLM_API_KEY] [--vlm-temperature VLM_TEMPERATURE] [--interaction-amount INTERACTION_AMOUNT] [--run-model] [--api_url API_URL] [--api_key API_KEY] [--temperature TEMPERATURE] [--passk PASSK]
 ```
 
 
@@ -58,8 +58,8 @@ python3 -m varbench.run_evaluation [-h] --subsets SUBSETS [SUBSETS ...] --metric
   - A `.json` file summarizing evaluation scores.
   - Evaluation datasets stored for further analysis or sharing.
 
-All results are published to https://huggingface.co/datasets/CharlyR/varbench-evaluation for now, access is needed to publish new results.
-The datasets are analysed using this [notebooks](/home/creux/Documents/AI/VariabilityBenchmark/notebooks/result_analysis.ipynb)
+All results are published to https://huggingface.co/datasets/CharlyR/vtikz-evaluation for now, access is needed to publish new results.
+The datasets are analysed using this [notebooks](./notebooks/result_analysis.ipynb)
 
 ## Additional Configuration
 
@@ -68,7 +68,7 @@ Each section is described below.
 
 ### External agents
 #### \[VIF\]
-Parameters for the VIF-Agent. See the documentation [here](https://github.com/VarBench-SE/VIFagent).
+Parameters for the VIF-Agent. See the documentation [here](https://github.com/IV2C/VIFagent).
 | Parameter                | Description                                                 | Example Value                              |
 |--------------------------|-------------------------------------------------------------|--------------------------------------------|
 | `api_url`               | Base URL for the main model API.                            | `https://api.openai.com/v1`                |
@@ -122,31 +122,31 @@ API configuration.
 
 - **With the OpenAI API**:
   ```sh
-  python3 -m varbench.run_evaluation --subsets tikz svg --model gpt-3.5-turbo --api_key YOUR_API_KEY --agent simpleLLM
+  python3 -m vtikz.run_evaluation --subsets tikz svg --model gpt-3.5-turbo --api_key YOUR_API_KEY --agent simpleLLM
   ```
 
 - **With Another OpenAI-Compatible API**:
   ```sh
-  python3 -m varbench.run_evaluation --subsets tikz --model llama-3.1-70b-versatile --api_url https://api.groq.com/openai/v1 --api_key $GROQ_API_KEY --temperature 0.7 --passk 5 --agent simpleLLM
+  python3 -m vtikz.run_evaluation --subsets tikz --model llama-3.1-70b-versatile --api_url https://api.groq.com/openai/v1 --api_key $GROQ_API_KEY --temperature 0.7 --passk 5 --agent simpleLLM
   ```
 
 ### Running Locally
 
 - **Using a Locally Launched Model**:
   ```sh
-  python3 -m varbench.run_evaluation --subsets tikz --model meta-llama/Llama-3.2-1B-Instruct --run-model --temperature 0.9 --passk 3 --agent simpleLLM
+  python3 -m vtikz.run_evaluation --subsets tikz --model meta-llama/Llama-3.2-1B-Instruct --run-model --temperature 0.9 --passk 3 --agent simpleLLM
   ```
 
 ### Using the `loopVLMLLM` Agent
 
 - **With a VLLM API at runpod**:
   ```sh
-  python3 -m varbench.run_evaluation --subsets svg --model meta-llama/Llama-3.2-1B-Instruct --api_url https://api.runpod.ai/YOURAPI/openai/v1 --api_key $RUNPOD_API_KEY --vlm llava-hf/llava-1.5-7b-hf --vlm_api_url https://api.runpod.ai/YOURAPI/openai/v1 --vlm_api_key $VLM_RUNPOD_API_KEY --interaction-amount 2 --agent loopVLMLLM
+  python3 -m vtikz.run_evaluation --subsets svg --model meta-llama/Llama-3.2-1B-Instruct --api_url https://api.runpod.ai/YOURAPI/openai/v1 --api_key $RUNPOD_API_KEY --vlm llava-hf/llava-1.5-7b-hf --vlm_api_url https://api.runpod.ai/YOURAPI/openai/v1 --vlm_api_key $VLM_RUNPOD_API_KEY --interaction-amount 2 --agent loopVLMLLM
   ```
   
 - **With a Groq api**:
   ```sh
-  python3 -m varbench.run_evaluation --subsets tikz --model llama-3.1-70b-versatile --api_url https://api.groq.com/openai/v1 --api_key $GROQ_API_KEY --vlm llava-v1.5-7b-4096-preview --vlm_api_url https://api.groq.com/openai/v1 --vlm_api_key $GROQ_API_KEY --interaction-amount 1 --agent loopVLMLLM --passk 1
+  python3 -m vtikz.run_evaluation --subsets tikz --model llama-3.1-70b-versatile --api_url https://api.groq.com/openai/v1 --api_key $GROQ_API_KEY --vlm llava-v1.5-7b-4096-preview --vlm_api_url https://api.groq.com/openai/v1 --vlm_api_key $GROQ_API_KEY --interaction-amount 1 --agent loopVLMLLM --passk 1
   ```
 
 ## Notes
@@ -156,7 +156,7 @@ API configuration.
 
 ## Dataset
 
-The dataset is created from the scripts situated in varbench/dataset_workflow
+The dataset is created from the scripts situated in vtikz/dataset_workflow
 
 - Each folder in the dataset is a subset.
 - Each subset contains a list of entries in the dataset in the form of a folder.
@@ -168,7 +168,7 @@ The dataset is created from the scripts situated in varbench/dataset_workflow
 You can run the following command:
 
 ```sh
-python3 -m varbench.dataset_workflow.create_dataset [-h] --dataset DATASET
+python3 -m vtikz.dataset_workflow.create_dataset [-h] --dataset DATASET
 ```
 
 The script will first compute the patches for each entry, then will add, commit, and push the changes to get a commit id and create the dataset with the instruction, the repo, the id of the commit, and the patch.

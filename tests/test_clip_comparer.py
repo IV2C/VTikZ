@@ -1,6 +1,6 @@
 import unittest
 
-from varbench.evaluation.clip_comparer import ClipComparer
+from vtikz.evaluation.clip_comparer import ClipComparer
 from PIL import Image
 import os
 

@@ -1,7 +1,7 @@
 import unittest
 import re
 import os
-from varbench.utils.parsing import apply_far_edit
+from vtikz.utils.parsing import apply_far_edit
 
 
 class TestPatchApply(unittest.TestCase):

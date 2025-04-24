@@ -2,8 +2,8 @@ import os
 import unittest
 from loguru import logger
 from pydantic import BaseModel, Field
-from varbench.api.chat_api import ChatApi, GroqApi, OpenAIApi, VLLMApi
-from varbench.utils.model_launch import launch_model
+from vtikz.api.chat_api import ChatApi, GroqApi, OpenAIApi, VLLMApi
+from vtikz.utils.model_launch import launch_model
 
 
 @unittest.skipIf(os.environ.get("CI"), "Api tests skipped for CI")

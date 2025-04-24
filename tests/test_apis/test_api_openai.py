@@ -2,9 +2,9 @@ import unittest
 from openai.types.chat.chat_completion_message_param import ChatCompletionMessageParam
 
 from pydantic import BaseModel
-from varbench.api import ChatApi
+from vtikz.api import ChatApi
 from loguru import logger
-from varbench.api.chat_api import OpenAIApi, ChatApi
+from vtikz.api.chat_api import OpenAIApi, ChatApi
 import os
 
 @unittest.skipIf(os.environ.get("CI"), "Api tests skipped for CI")

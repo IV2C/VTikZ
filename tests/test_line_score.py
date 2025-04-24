@@ -1,5 +1,5 @@
 import unittest
-from varbench.evaluation.line_patch_scorer import compute_line_score
+from vtikz.evaluation.line_patch_scorer import compute_line_score
 
 
 class TestLineScore(unittest.TestCase):

@@ -10,7 +10,7 @@ class TestRenderers(unittest.TestCase):
 
     @timeout_decorator.timeout(600)
     def test_tex(self):
-        from varbench.renderers import TexRenderer, RendererException
+        from vtikz.renderers import TexRenderer, RendererException
 
         compiler = TexRenderer()
         tikzfile = os.path.join("tests/resources/tikz", "dog.tex")
@@ -23,7 +23,7 @@ class TestRenderers(unittest.TestCase):
 
     @timeout_decorator.timeout(600)
     def test_svg(self):
-        from varbench.renderers import SvgRenderer
+        from vtikz.renderers import SvgRenderer
 
         compiler = SvgRenderer()
         svgFile = os.path.join("tests/resources/svg", "dog.svg")
@@ -33,7 +33,7 @@ class TestRenderers(unittest.TestCase):
 
     @timeout_decorator.timeout(600)
     def test_tex_from_string(self):
-        from varbench.renderers import TexRenderer
+        from vtikz.renderers import TexRenderer
 
         compiler = TexRenderer()
         tikzfile = os.path.join("tests/resources/tikz", "dog.tex")
@@ -45,7 +45,7 @@ class TestRenderers(unittest.TestCase):
 
     @timeout_decorator.timeout(600)
     def test_svg_from_string(self):
-        from varbench.renderers import SvgRenderer
+        from vtikz.renderers import SvgRenderer
 
         compiler = SvgRenderer()
         svgFile = os.path.join("tests/resources/svg", "dog.svg")
@@ -57,7 +57,7 @@ class TestRenderers(unittest.TestCase):
 
     @timeout_decorator.timeout(600)
     def test_tex_from_string_exception(self):
-        from varbench.renderers import TexRenderer, RendererException
+        from vtikz.renderers import TexRenderer, RendererException
 
         compiler = TexRenderer()
         tikzfile = os.path.join("tests/resources/tikz", "malformed.tex")
@@ -78,7 +78,7 @@ l.60 \\pic {squid}
 
     @timeout_decorator.timeout(600)
     def test_svg_from_string_exception(self):
-        from varbench.renderers import SvgRenderer, RendererException
+        from vtikz.renderers import SvgRenderer, RendererException
 
         compiler = SvgRenderer()
         svgFile = os.path.join("tests/resources/svg", "malformed.svg")
@@ -99,7 +99,7 @@ l.60 \\pic {squid}
     @timeout_decorator.timeout(600)
     @unittest.skipIf(os.environ.get("CI"), "P5 tests skipped for P5js, browser too big for CI")
     def test_p5js_from_string(self):
-        from varbench.renderers import P5JSRenderer
+        from vtikz.renderers import P5JSRenderer
 
         compiler = P5JSRenderer()
         p5js_file = os.path.join("tests/resources/p5js", "kirby.js")
@@ -113,7 +113,7 @@ l.60 \\pic {squid}
     @timeout_decorator.timeout(600)
     @unittest.skipIf(os.environ.get("CI"), "P5 tests skipped for P5js, browser too big for CI")
     def test_P5js_from_string_exception(self):
-        from varbench.renderers import P5JSRenderer, RendererException
+        from vtikz.renderers import P5JSRenderer, RendererException
 
         compiler = P5JSRenderer()
         p5js_file = os.path.join("tests/resources/p5js", "malformed.js")

@@ -1,6 +1,6 @@
 import unittest
 
-from varbench.evaluation.metrics import (
+from vtikz.evaluation.metrics import (
     BleuMetric,
     BleuPatchMetric,
     ChrfMetric,
