@@ -17,7 +17,7 @@ def _stop_process(process: subprocess.Popen):
 
 
 def launch_model(model_name: str, **kwargs) -> tuple[str,subprocess.Popen[str]]:
-    """Launches the provided model with the parameters in config-varbench
+    """Launches the provided model with the parameters in config-vtikz
 
     Args:
         model_name (str): Name of the launched model

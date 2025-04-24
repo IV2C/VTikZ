@@ -29,7 +29,7 @@ python3 -m varbench.run_evaluation [-h] --subsets SUBSETS [SUBSETS ...] --metric
 ### Arguments
 
 > [!IMPORTANT]  
-> Agents are separated into two categories, internal and external, external agents can only be configured using the `config-varbench.cfg` file. see the [External Agent](#external-agents) section.
+> Agents are separated into two categories, internal and external, external agents can only be configured using the `config-vtikz.cfg` file. see the [External Agent](#external-agents) section.
 
 
 #### Core Arguments
@@ -63,7 +63,7 @@ The datasets are analysed using this [notebooks](/home/creux/Documents/AI/Variab
 
 ## Additional Configuration
 
-Some additional configurations can be set up by adding a file `config-varbench.cfg` at the root of the project(An example of a configuration is provided [here](./config-varbench.dev.cfg)).
+Some additional configurations can be set up by adding a file `config-vtikz.cfg` at the root of the project(An example of a configuration is provided [here](./config-vtikz.dev.cfg)).
 Each section is described below.
 
 ### External agents

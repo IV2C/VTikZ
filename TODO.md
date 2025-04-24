@@ -63,8 +63,7 @@
 - [X] create a multimodal vision loop agent that is similar to the LLM+VLM but that has a more complex vision instruction(see the prompt templates)
 - [X] IoU metric
 - [X] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches) => works via cachedrequests
-
-
+- [X] Create a SimpleOpenAi API, in the case of an api compatible with openai, but that does not support anything but simple requests => done via VLMAPI
 - [X] Re-run for each model:
   - [X] distillama
   - [X] llama3.18b instant
@@ -72,19 +71,16 @@
   - [X] llama370b
   - [X] mixtral 8x7b
 - [X] MetricBench
-- [ ] If ever changing from only tikz to multiple languages, need to add a TED measure with another langauge parser
+- [X] github action
+  - [X] Tests
 - [X] Test LLM-only models then compare with Multimodal with image in input
+- [ ] If ever changing from only tikz to multiple languages, need to add a TED measure with another langauge parser
 
 
 Eventually
-- [X] Create a SimpleOpenAi API, in the case of an api compatible with openai, but that does not support anything but simple requests => done via VLMAPI
 
 - [ ] TODO in Pjs renderer
-- [ ] add multimodal input to faragent
 - [ ] hml-css renderer
 - [X] Human evaluation tool with comments
 - [ ] ascii art "renderer"
-- [X] github action
-  - [X] Tests
-  - [ ] creates and publishes the dataset
 

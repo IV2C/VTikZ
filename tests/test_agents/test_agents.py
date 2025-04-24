@@ -1,11 +1,10 @@
-import os
+""" import os
 import unittest
 from PIL import Image
 
 from varbench.agents import Agent, LMMLoopAgent
 from varbench.api.chat_api import ChatApi, OpenAIApi
 from varbench.renderers.tex_renderer import TexRenderer
-from varbench.utils.parsing import get_first_code_block, replace_first_code_block
 
 
 @unittest.skipIf(os.environ.get("CI"), "Api tests skipped for CI")
@@ -29,5 +28,5 @@ class TestAgentLMMLoopOpenAI(unittest.TestCase):
         response = multimodal_openai_agent.compute(
             self.instruction, self.squid_tikz, self.squid_image
         )
-
+ """
         

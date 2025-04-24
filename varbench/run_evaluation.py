@@ -237,7 +237,7 @@ for subset in subsets:
         continue
 
     logger.info(f"Starting generation on subset {str(subset)}")
-    dataset = load_dataset("CharlyR/varbench", subset, split=split_used)
+    dataset = load_dataset("CharlyR/vtikz", subset, split=split_used)
 
     # creating compiler
     match subset:
@@ -286,7 +286,7 @@ for subset in subsets:
 
     score_dataset.save_to_disk(subset_evaluation_result_path, storage_options={})
     score_dataset.push_to_hub(
-        "CharlyR/varbench-evaluation",
+        "CharlyR/vtikz-evaluation",
         config_name=full_config_name,
         split=subset,
     )

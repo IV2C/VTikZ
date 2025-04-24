@@ -75,7 +75,7 @@ def make_numerical(string_value: str) -> float | int | str | bool:
 
 def get_config(config_name: str):
     config = configparser.ConfigParser()
-    config.read("config-varbench.cfg")
+    config.read("config-vtikz.cfg")
     config_k = {
         key: make_numerical(value) for key, value in config[config_name].items()
     }

@@ -140,9 +140,9 @@ for subset in dataset_dict:
     dataset = Dataset.from_dict(pd.DataFrame(current_subset), features=features)
     #dataset = dataset.filter(lambda row: row["id"] == "bee_three_wings" or row["id"] == "bee_red_stripes")#temporary for test
     dataset.push_to_hub(
-        "CharlyR/varbench", config_name=subset, split="benchmark")
+        "CharlyR/vtikz", config_name=subset, split="benchmark")
 
     dataset_test = dataset.filter(lambda row: row["difficulty"] == "medium").select(
        [6, 7]
     )
-    dataset_test.push_to_hub("CharlyR/varbench", config_name=subset, split="test")
+    dataset_test.push_to_hub("CharlyR/vtikz", config_name=subset, split="test")

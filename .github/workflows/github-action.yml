@@ -30,7 +30,7 @@ jobs:
             pip install coverage coverage-badge
       - name: add config
         run: |
-            mv config-varbench.dev.cfg config-varbench.cfg
+            mv config-vtikz.dev.cfg config-vtikz.cfg
       - name: run tests
       #skipping coverage of these files because they are tested locally
         run: |
