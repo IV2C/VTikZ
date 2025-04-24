@@ -23,5 +23,4 @@ torchvision==0.21.0
 tqdm==4.66.6
 zss==1.2.0
 timeout-decorator==0.5.0
---extra-index-url https://test.pypi.org/simple/ 
-vif_agent==0.0.3
+vif_agent @ git+https://github.com/IV2C/VIFagent.git

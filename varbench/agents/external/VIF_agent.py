@@ -1,10 +1,7 @@
-import atexit
+
 import hashlib
-import os
-import pickle
 
 from loguru import logger
-from varbench.agents.agent import Agent
 from typing import Iterable
 from PIL import Image
 from vif_agent.agent import VifAgent
