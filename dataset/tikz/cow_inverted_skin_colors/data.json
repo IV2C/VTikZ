@@ -1,0 +1,7 @@
+{
+  "instruction": "Invert the colors of the cow's skin, so that the middle of its face is gray and the outer side is white.",
+  "result_description": "A white cow, with a gray mark on the middle of its face",
+  "difficulty": "easy",
+  "type": "animal",
+  "modif_type": "update"
+}

@@ -1,0 +1,7 @@
+{
+  "instruction": "Remove from the graph the two nodes that are not in a zone. Remove their links to the other nodes as well.",
+  "result_description": "A graph, with all the nodes contained in colored areas.",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "remove"
+}

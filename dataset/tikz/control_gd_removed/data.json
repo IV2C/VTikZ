@@ -1,0 +1,7 @@
+{
+  "instruction": "Remove the distubance input and link the system directly to the branch.",
+  "result_description": "A flowchart displaying three ndoes Gr, Gs, and Gm",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "remove"
+}

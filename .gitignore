@@ -4,5 +4,7 @@ temp/
 eval/
 varbench_metric/
 .tmp/
-htmlcov/
 .coverage
+.log/
+.cache/
+config-vtikz.cfg

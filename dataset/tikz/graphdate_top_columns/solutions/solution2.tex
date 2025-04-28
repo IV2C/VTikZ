@@ -1,0 +1,62 @@
+\documentclass[tikz,border=5]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+\begin{document}
+    \begin{tikzpicture}[%
+        helpGrid/.style = {thin, gray!40},
+        ] % End tikzpicture options
+
+        
+        %- X - Axis (Months). Separation of two coordinates between months.
+        % Months 2020
+        \node[align=center] (Jan20) at (0,§range(10,12,11)) {Jan \\ 2020}; 
+        \node[] (Apr20)  at (2,§range(10,12,11)) {Apr};
+        \node[] (Jul20)   at (4,§range(10,12,11)) {Jul};
+        \node[] (Oct20) at (6,§range(10,12,11)) {Oct};
+        % Months 2021
+        \node[align=center] (Jan21) at (8,§range(10,12,11)) {Jan \\ 2021}; 
+        \draw[-latex] (9.5,§range(11.25,12.25,11.25)) -- ++(1,0) node[midway,below] () {Apr};
+        
+        %- Corresponding other nodes
+        % Column 1 (Jan 2020)
+        \node[] (a1) at (0,10) {A};
+        \node[] (b1) at (0,9) {B};
+        \node[] (c1) at (0,8) {C};
+        
+        % Column 2 (Apr (2020)
+        \node[] (d2) at (2,10)  {D};
+        \node[] (a2) at (2,9)  {A};
+        % Arrows connecting column 1 and 2
+        \draw[-latex] (a1) to [out = 0, in = 180] (a2);
+        
+        % Column 3 (Jul 2020)
+        \node[] (e3) at (4,6) {E};
+        \node[] (b3) at (4,5) {B};
+        \node[] (c3) at (4,4) {C};
+        \node[] (f3) at (4,3) {F};
+        
+        % Arrows connecting column 2 and 3
+        \draw[-latex] (b1) to [out = 0, in = 180] (b3);
+        \draw[-latex] (c1) to [out = 0, in = 180] (c3);
+        
+        %- Column 4 (Oct)
+        % Nothing
+        
+        % Column 5 (Jan 2021)
+        \node[] (g5) at (8,9) {G};
+        \node[] (a5) at (8,7) {A};
+        \node[] (e5) at (8,6) {E};
+        \node[] (b5) at (8,5) {B};
+        \node[] (c5) at (8,2) {C};
+        \node[] (f5) at (8,1) {F};
+        
+        % Arrows connecting columns 3 and 5
+        \draw[-latex] (a2) to [out = 0, in = 180] (a5);
+        \draw[-latex] (e3) -- (e5);
+        \draw[-latex] (b3) -- (b5);
+        \draw[-latex] (c3) to [out = 0, in = 180] (c5);
+        \draw[-latex] (f3) to [out = 0, in = 180] (f5);
+        
+    \end{tikzpicture}
+\end{document}

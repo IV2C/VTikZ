@@ -1,0 +1,104 @@
+.paper-page {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0 auto;
+  line-height: 1.6;
+  text-align: center; /* Center text */
+  border: 1px dashed #ccc;
+  margin: 0;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.paper-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.paper-header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.authors, .affiliations {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.badges {
+  margin-top: 1rem;
+}
+
+.badge {
+  display: inline-block;
+  margin: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  background-color: #383838;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  color: white;
+}
+
+.badge:hover {
+  background-color: #5e5e5e;
+  cursor: pointer;
+}
+
+
+.image-context {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0;
+}
+.image-context img {
+  max-width: 100%;
+}
+
+.abstract{
+  background-color: #f5f5f5;
+  min-width: 100%;
+}
+
+
+.abstract, .bibtex {
+  padding-bottom: 2rem;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-width: 100%;
+}
+
+.text-sections{
+  margin: 0;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-width: 100%;
+}
+
+
+.abstract h2,
+.key-points h2,
+.bibtex h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.abstract p {
+  text-align: justify;
+  max-width: 800px;
+  padding: 0 15px 0 15px;
+}
+
+.bibtex pre {
+  background-color: #f0f0f0;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  border-radius: 5px;
+  text-align: left;
+  text-wrap: initial;
+}

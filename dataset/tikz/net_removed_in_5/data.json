@@ -1,0 +1,7 @@
+{
+  "instruction": "Remove the input node 5, and the corresponding links to the hidden layer.",
+  "result_description": "A neural network, with 4 inputs.",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "remove"
+}

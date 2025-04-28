@@ -1,0 +1,59 @@
+\documentclass[tikz,border=5]{standalone}
+\usepackage[prefix=]{xcolor-material}
+
+\tikzset{
+  half clip/.code={
+    \clip (0, -256) rectangle (256, 256);
+  },
+  color/.code=\colorlet{fill color}{#1},
+  color alias/.code args={#1 as #2}{\colorlet{#1}{#2}},
+  on left/.style={.. on left/.style={#1}},
+  on right/.style={.. on right/.style={#1}},
+  split/.style args={#1 and #2}{
+    on left ={color alias=fill color as #1},
+    on right={color alias=fill color as #2, half clip}
+  }
+}
+\newcommand\reflect[2][]{
+\begin{scope}[#1]\foreach \side in {-1, 1}{\begin{scope}
+\ifnum\side=-1 \tikzset{.. on left/.try}\else\tikzset{.. on right/.try}\fi
+\begin{scope}[xscale=\side]#2\end{scope}
+\end{scope}}\end{scope}}
+
+\tikzset{
+monkey/.pic={%
+\begin{scope}[x=3cm/448,y=3cm/448]
+\useasboundingbox (-256, -256) (256, 256);
+\reflect[
+  on left ={ color alias/.list={skin as Brown700, ears as Pink100}},
+  on right={ color alias/.list={skin as Brown900, ears as Pink200}, half clip }
+]{
+  \fill [skin] (140, 80) circle  [radius=56];
+  \fill [ears] (140, 80) circle  [radius=32];
+  \fill [skin] (  0, 72) ellipse [x radius=140, y radius=112];
+  \fill [skin] (  0,-64) ellipse [x radius=172, y radius=112];
+}
+\reflect[
+  on left ={color alias/.list={face as Pink100}},
+  on right={color alias/.list={face as Pink200}, half clip}
+  ]{
+  \fill [face] (0,-64) ellipse [x radius=140, y radius=88];
+  \fill [face] (40,64) ellipse [radius=64];
+}
+\reflect{
+  \fill [BlueGrey900] (40, 64) circle [radius=24];
+\fill [BlueGrey900, rotate=§rangei(-60,10)]
+  (§rangei(30,10),§rangei(40,10)) arc (§rangei(90,10):§rangei(270,10):§rangei(27,2) and §rangei(25,2)) arc (§rangei(270,10):§rangei(90,10):§rangei(20,2) and §rangei(25,2));
+}
+\fill [Pink300]
+  (-96,-72) arc (180:360:96 and 32) arc (360:180:96 and 56);
+
+\end{scope}
+}
+}
+\begin{document}
+\begin{tikzpicture}
+\fill [fill=LightBlue300] circle [radius=2];
+\pic {monkey};
+\end{tikzpicture}
+\end{document}

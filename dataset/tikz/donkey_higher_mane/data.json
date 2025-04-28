@@ -1,0 +1,7 @@
+{
+  "instruction": "Make the mane of the donkey go upward a little more",
+  "result_description": "A donkey with a high mane over its head",
+  "difficulty": "hard",
+  "type": "animal",
+  "modif_type": "update"
+}

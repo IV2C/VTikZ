@@ -1,0 +1,7 @@
+{
+  "instruction": "Delete the Blocks 6, 7 and 8. update the size and positions of the boxes and arrows accordingly.",
+  "result_description": "Diagram of the execution of a openCL program, containing 5 blocks",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "remove"
+}

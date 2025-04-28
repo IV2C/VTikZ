@@ -1,0 +1,7 @@
+{
+  "instruction": "Remove the black tail of the duck",
+  "result_description": "A duck without a tail",
+  "difficulty": "easy",
+  "type": "animal",
+  "modif_type": "remove"
+}

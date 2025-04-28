@@ -1,0 +1,7 @@
+{
+  "instruction": "Move the donkey's eyes closer together.",
+  "result_description": "A donkey with its eyes centered",
+  "difficulty": "easy",
+  "type": "animal",
+  "modif_type": "update"
+}

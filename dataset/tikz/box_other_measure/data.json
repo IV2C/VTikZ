@@ -1,0 +1,7 @@
+{
+  "instruction": "Add another interval L2, going from the end of b1 to the end of b3.",
+  "result_description": "colored Boxes placed on a t axis, with a L2 measure on the top right.",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "add"
+}

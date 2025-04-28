@@ -1,40 +1,86 @@
 # TODO
 
-- [X] either make a script to add an entry in the dataset or just doucemnt the command to do it.
-- [X] diff computation
+- [X] either make a script to add an entry in the dataset or just document the command to do it.
+- [X] patch computation
 - [X] Make the dataset with a python script
 - [X] refactor dataset creation
-- [X] change diff computation
+- [X] change patch computation
 - [X] refactor run-evaluation
   - [X] Use vllm and openai inference via a wrapper for evaluation(get inspired by https://github.com/HumanEval-V/HumanEval-V-Benchmark/blob/main/models/vllm_model.py)
 - [X] Finish implementing openai batch api
 - [X] Add an api option for run evaluation
 - [X] Make a score object and change the evaluator to return it (change the tests as well)
-- [X] Remake latex-Compiler
+- [X] Remake latex-renderer
 - [X] Make some first simple data
 - [X] text squid, find other possible solutions for dataset
 - [X] implement pass@k
 - [X] test pass@k
 - [X] complex oracle
   - [X] vlm or computer-vision("Are the eyes red")
-  - [X] Image comparison(image diff)
-  - [X] line diff(need to think, either same as before with only one column diff, or a new one with only the lines)
-- [X] Test compilers when image not compilable
+  - [X] Image comparison(image patch)
+  - [X] line patch(need to think, either same as before with only one column patch, or a new one with only the lines)
+- [X] Test renderer when image not compilable
 - [X] Fix evaluator tests
-- [X] fix line diff
+- [X] fix line patch
 - [X] Add vision input possibility in model class (both vllm and openai->https://platform.openai.com/docs/guides/vision)
 - [X] fix workflow
 - [X] Add a config file containing vllm config 
-- [ ] Add backup at each step for synthetic data generation
-- [ ] Create synthetic data and then verify
-- [ ] Make another submodel called multimodal that can take images, and allow for parametrization in the command line
-- [ ] Make another submodel called multimodal-loop that can take images and loops until a satifying image is created, and allow for parametrization in the command line.
-- [ ] Assessment of vlm on checking 
-- [ ] Test LLM-only models then compare with Multimodal with image in input
-- [ ] Implement LLM+something solution and test it
-- [ ] Explore which other things can be tested(tikz, svg, ascii, what else?)
+- [X] switch from vllm launch in python to openai compaptible server
+- [X] Add local tests for each api types (class chat_api)
+  - [X] launch all the test manually and then add a skip for all of them  
+  - [X] add single request tests
+  - [X] parameterize tests to test VLLMApi and GroqApi
+  - [X] Add Parameter in VLMApi to start or not the api(get it from the config)
+  - [X] change 30 to something bigger in sleep at line 201 in chat_api.py 
+- [X] Finish testing the batch requests with openai
+- [X] Change Model class by agent, remove VLM/OPENAI parameter in run_generation and run_evaluation, instantiate api depending on the api_url provided, add in documentation that the api used depends on the url(and that VLLM is launched in the case of a VLLM api)(maybe add a parameter to prevent vllm from being launched or maybe the opposite)
+- [X] Add level of difficulty in the datasets
+- [X] Explore which other things can be tested(tikz, svg, ascii, what else?)
+- [X] Add sacrebleu metrics(bleu, chrf, TER)
+- [X] Add feature matching metrics(brut and randsac)
+- [X] refactor evaluator(list of parametrable computed metrics) 
+- [X] add lpips, msssim, and psnr
+- [X] Add tqdm
+- [X] Make another submodel called multimodal that can take images, 
+- [X] Make another submodel called multimodal-loop that can take images and loops until a satisfying image is created
+- [X] allow for parametrization of the agent in the command line
+- [X] Implement LLM+something solution and test it
+- [X] test llama3.1 8B on the full dataset
+- [X] In the notebook, do a flatmap on the values in each array instead of taking only the "best_metric"
+- [X] Metrics Bleu, chrf, TER on patch only
+- [X] Add a cache mechanism(based on a hash of "model",prompt,temperature), only for testing purposes(unless temperature 0?)
+- [X] Metrics strict image equality
+- [X] Fix LMM loop
+- [X] Relaunch llama3.1 8B with the other metrics done
+- [X] Svg renderer error parsing
+- [X] Implement crystal-bleu => https://dl.acm.org/doi/pdf/10.1145/3551349.3556903 | https://github.com/sola-st/crystalbleu
+- [X] Implement EED => https://aclanthology.org/W19-5359/ and https://github.com/rwth-i6/ExtendedEditDistance/blob/master/EED.py
+- [X] P5js renderer
+- [X] remove imagediff(useless => MSE and IoU better)
+- [X] Assessment of vlm on checking 
+- [X] Add a default seed to the apis? 
+- [X] create a multimodal loop model(give the model the image he generated and iterate)
+- [X] create a multimodal vision loop agent that is similar to the LLM+VLM but that has a more complex vision instruction(see the prompt templates)
+- [X] IoU metric
+- [X] Add backup at each step for api completions(need to think about how to implement it in the different types of apis, especially for openai batches) => works via cachedrequests
+- [X] Create a SimpleOpenAi API, in the case of an api compatible with openai, but that does not support anything but simple requests => done via VLMAPI
+- [X] Re-run for each model:
+  - [X] distillama
+  - [X] llama3.18b instant
+  - [X] llama3.370b versatile
+  - [X] llama370b
+  - [X] mixtral 8x7b
+- [X] MetricBench
+- [X] github action
+  - [X] Tests
+- [X] Test LLM-only models then compare with Multimodal with image in input
+- [ ] If ever changing from only tikz to multiple languages, need to add a TED measure with another langauge parser
+
+
 Eventually
-- [ ] ascii art "compiler"
-- [ ] github action
-  - [ ] creates and publishes the dataset
+
+- [ ] TODO in Pjs renderer
+- [ ] hml-css renderer
+- [X] Human evaluation tool with comments
+- [ ] ascii art "renderer"
 

@@ -1,0 +1,7 @@
+{
+  "instruction": "Mirror the cylinder on the other side of the z axis. Mirror only the cylinder and nothing else, and adapt the length of the coordinate axe(s).",
+  "result_description": "Technical diagram with two identical cylinders, on each side of a z axis",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "add"
+}

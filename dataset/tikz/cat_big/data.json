@@ -1,0 +1,7 @@
+{
+  "instruction": "Make the cat wider",
+  "result_description": "A very wide cat",
+  "difficulty": "medium",
+  "type": "animal",
+  "modif_type": "update"
+}

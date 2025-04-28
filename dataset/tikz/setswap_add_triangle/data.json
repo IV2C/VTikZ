@@ -1,0 +1,7 @@
+{
+  "instruction": "Add a last yellow triangle, without any arrow pointing from it.",
+  "result_description": "A technical diagram, with as much triangle as squares.",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "add"
+}

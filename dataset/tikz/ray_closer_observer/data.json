@@ -1,0 +1,7 @@
+{
+  "instruction": "Move the Diopter and the observer much closer to the barrier, as close as it can be without interfering with other existing drawings.",
+  "result_description": "A ray going through a barrier, with an obsever close to the barrier.",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "update"
+}

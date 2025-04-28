@@ -1,0 +1,7 @@
+{
+  "instruction": "Remove the first slave/replication instance, keep the other names the same.",
+  "result_description": "Architecture diagram of a master-slave system, with two slaves",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "remove"
+}

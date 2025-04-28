@@ -1,0 +1,7 @@
+{
+  "instruction": "Color the vertices within E_5 in blue(filled). ",
+  "result_description": "A graph with two blue nodes contained in a area E_5",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "update"
+}

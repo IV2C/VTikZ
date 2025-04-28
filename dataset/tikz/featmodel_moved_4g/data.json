@@ -1,0 +1,7 @@
+{
+  "instruction": "Move the 4g feature in place of the NFC feature. Adapt the connections accordingly.",
+  "result_description": "A feature model, with a 4g feature implying a Snapdragon feature.",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "update"
+}

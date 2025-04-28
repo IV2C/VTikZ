@@ -1,0 +1,7 @@
+{
+  "instruction": "Move the inner circle to the left so that its center is at the quarter of the diameter of the outer circle.",
+  "result_description": "A closed ladder, with the inner circle shifted to the right",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "update"
+}

@@ -1,0 +1,7 @@
+{
+  "instruction": "Make the laser green.",
+  "result_description": "A green ray going through a barrier.",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "update"
+}

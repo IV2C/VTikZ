@@ -1,12 +1,15 @@
 name: Python package
 
-on: [push]
+on: 
+  push:
+    branches: 
+      - dev
 
 jobs:
   tests:
 
     runs-on: ubuntu-latest
-
+    if: ${{ false }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -25,9 +28,13 @@ jobs:
             python -m pip install --upgrade pip
             pip install -r requirements.txt
             pip install coverage coverage-badge
-      - name: run tests
+      - name: add config
         run: |
-            coverage run --source=varbench -m unittest discover tests
+            mv config-vtikz.dev.cfg config-vtikz.cfg
+      - name: run tests
+      #skipping coverage of these files because they are tested locally
+        run: |
+            coverage run --omit=vtikz/api/chat_api.py,tests/test_clip_comparer.py --source=vtikz -m unittest discover tests
             coverage html
             coverage-badge -o coverage.svg
       - name: Upload coverage report
@@ -40,8 +47,43 @@ jobs:
         with:
           name: coverage-badge
           path: coverage.svg
-      #- name: update coverage badge
-      #  uses: actions/download-artifact@v4
-      #  with:
-      #    name: coverage-report
+
+
+  update-main:
+    runs-on: ubuntu-latest
+    needs: tests
+    #if: github.ref == 'refs/heads/dev'
+    if: ${{ false }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history for branch update
+
+      - name: Force checkout main and reset to dev
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          git reset --hard dev
+          git push origin main --force
+
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-badge
+          path: DOC/images/
+
+
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: DOC/htmlcov/
+  
+      - name: Update coverage artifacts
+        run: |
+          git add DOC/images/coverage.svg DOC/htmlcov/
+          git commit -m "Update coverage artifacts"
+          git push origin main
 

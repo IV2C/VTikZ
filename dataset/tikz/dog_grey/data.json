@@ -1,0 +1,7 @@
+{
+  "instruction": "Change the color of the dog to gray",
+  "result_description": "A gray dog",
+  "difficulty": "easy",
+  "type": "animal",
+  "modif_type": "update"
+}

@@ -1,0 +1,7 @@
+{
+  "instruction": "Change the color of the shark to blue",
+  "result_description": "A blue shark",
+  "difficulty": "easy",
+  "type": "animal",
+  "modif_type": "update"
+}

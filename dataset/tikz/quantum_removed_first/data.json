@@ -1,0 +1,7 @@
+{
+  "instruction": "Remove the first row, i.e. all the boxes and connections at the top of the image. Remove the lines that were connected to this row as well.",
+  "result_description": "A technical diagram, with the box Rz(theta6) on the top line",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "remove"
+}

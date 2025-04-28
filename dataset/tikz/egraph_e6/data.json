@@ -1,0 +1,7 @@
+{
+  "instruction": "Add a E_6 box, that contains the two bottom-left vertices (connected by ab). The box should be angled slightly so that it aligns with the ab arrow.",
+  "result_description": "A graph with nodes contained in areas number E1 to E6",
+  "difficulty": "hard",
+  "type": "scientific",
+  "modif_type": "add"
+}

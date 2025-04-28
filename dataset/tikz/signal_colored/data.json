@@ -1,0 +1,7 @@
+{
+  "instruction": "Color the red rectangle on the left with the colors of the A rectangles on the right. The color of the red rectangle should align with the color of the closest A rectangle, for instance the height of A1 should fully be colored on the red rectangle, but not A2 because it is partly behind A1(same for A2 and A3).",
+  "result_description": "four rectangles, with the left one colored with the colors of the right ones.",
+  "difficulty": "hard",
+  "type": "scientific",
+  "modif_type": "update"
+}

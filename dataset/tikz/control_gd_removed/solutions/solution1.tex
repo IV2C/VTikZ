@@ -1,0 +1,69 @@
+\documentclass[tikz,border=5]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{
+                arrows.meta,
+                bending,
+                positioning
+               }
+\tikzset{
+         > = Latex,
+         arrows = {[bend]},
+         signal/.style = coordinate,
+         sum/.style = {
+                       draw,
+                       circle,
+                       minimum size = 2mm
+                      },
+         block/.style = {
+                         draw,
+                         rectangle,
+                         minimum height = 2em,
+                         minimum width = 4em
+                        },
+         branch/.style = {
+                          sum,
+                          minimum size = 1mm,
+                          fill = black
+                         }
+        }
+
+\begin{document}
+
+  \begin{tikzpicture}[auto]
+
+    %placing the nodes
+    \node[signal] (input) {};
+    \node[sum, right = of input] (left sum) {};
+    \node[block, right = of left sum] (controller) {$G_R$};
+    \node[block, right = of controller] (system) {$G_S$};
+    %connecting the controller and system to get the coordinates of u, its needed for the placement of the measurement block
+    \draw
+      [->] (controller) -- node[name = u] {$U$} (system);
+    \node[branch, right = of system] (branch) {};
+    \node[signal, right = of branch] (output) {};
+    \node[sum, below = of branch] (lower sum) {};
+    \node[signal, right = of lower sum] (measurement noise) {};
+    \node[block] (measurement) at (u |- lower sum) {$G_M$};
+    %connecting the nodes
+    \draw
+      [->] (input) -- node {$W$} (left sum);
+    \draw
+      [->] (left sum) -- node {$E$} (controller);
+    \draw
+      [->] (system) -- (branch);
+    \draw
+      [->] (branch) -- node {$Y$} (output);
+    \draw
+      [->] (branch) -- (lower sum);
+    \draw
+      [->] (measurement noise) -- node[above] {$M$} (lower sum);
+    \draw
+      [->] (lower sum) -- (measurement);
+    \draw
+      [->] (measurement) -| node[pos = .95] {$-$} (left sum);
+
+  \end{tikzpicture}
+
+
+
+\end{document}

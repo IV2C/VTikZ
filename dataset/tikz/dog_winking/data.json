@@ -1,0 +1,7 @@
+{
+  "instruction": "Make the dog wink",
+  "result_description": "A dog winking",
+  "difficulty": "medium",
+  "type": "animal",
+  "modif_type": "add"
+}

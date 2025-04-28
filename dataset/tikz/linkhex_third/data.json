@@ -1,0 +1,7 @@
+{
+  "instruction": "Add a third hexagon after the second one, following the pattern of the two existing ones.",
+  "result_description": "Four hexagonal shapes, with the first three ones sharing a vertex.",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "add"
+}

@@ -1,0 +1,7 @@
+{
+  "instruction": "Change the colors of the dog's eyes to red",
+  "result_description": "A dog with red eyes",
+  "difficulty": "easy",
+  "type": "animal",
+  "modif_type": "update"
+}

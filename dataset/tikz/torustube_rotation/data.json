@@ -1,0 +1,7 @@
+{
+  "instruction": "Rotate the torus 90° clockwise.",
+  "result_description": "A diagram witha torus rotated 90 degrees on the right.",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "update"
+}

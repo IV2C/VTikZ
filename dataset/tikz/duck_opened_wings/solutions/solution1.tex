@@ -1,0 +1,98 @@
+\documentclass[tikz,border=5]{standalone}
+\usepackage[prefix=]{xcolor-material}
+
+\tikzset{
+  half clip/.code={
+    \clip (0, -256) rectangle (256, 256);
+  },
+  color/.code=\colorlet{fill color}{#1},
+  color alias/.code args={#1 as #2}{\colorlet{#1}{#2}},
+  on left/.style={.. on left/.style={#1}},
+  on right/.style={.. on right/.style={#1}},
+  split/.style args={#1 and #2}{
+    on left ={color alias=fill color as #1},
+    on right={color alias=fill color as #2, half clip}
+  }
+}
+\newcommand\reflect[2][]{
+\begin{scope}[#1]\foreach \side in {-1, 1}{\begin{scope}
+\ifnum\side=-1 \tikzset{.. on left/.try}\else\tikzset{.. on right/.try}\fi
+\begin{scope}[xscale=\side]#2\end{scope}
+\end{scope}}\end{scope}}
+
+\tikzset{
+duck/.pic={
+\tikzset{x=3cm/100,y=3cm/100, shift={(-50,-50)}}
+\fill [Amber800] (58,28)
+  .. controls (56,28) and (55,27) .. (55,26)
+  .. controls (55,25) and (56,16) .. (55,15)
+  .. controls (54,14) and (54,12) .. (55,11)
+  .. controls (56,10) and (66, 7) .. (68, 7)
+  .. controls (70, 7) and (75,15) .. (73,15)
+  .. controls (71,15) and (62,13) .. (60,15)
+  .. controls (58,17) and (60,25) .. (60,26)
+  .. controls (60,27) and (59,28) .. (58,28)
+  -- cycle;
+\fill [BlueGrey900] (1,57)
+  .. controls ( 0,51) and ( 4,44) .. (10,42)
+  .. controls (16,40) and (23,40) .. (24,47)
+  -- cycle;
+\begin{scope}
+\clip [preaction={fill=LightGreen}] (74,96)
+  .. controls (66,96) and (62,92) .. (60,88)
+  .. controls (58,84) and (58,76) .. (61,68)
+  -- (76,68)
+  .. controls (72,72) and (74,74) .. (75,75)
+  .. controls (82,75) and (88,76) .. (88,84)
+  .. controls (88,92) and (82,96) .. (74,96)
+  -- cycle;
+\fill [Grey100] (57,68) rectangle +(20,4);
+\end{scope}
+\fill [BlueGrey50]
+  (§rangei(30,5),§rangei(60,5))
+  .. controls (§rangei(-15,5),§rangei(40,10)) and (32,21) .. (53,21)
+  .. controls (55,21) and (57,21) .. (61,22)
+  .. controls (81,27) and (92,36) .. (92,48)
+  -- cycle;
+\fill [Brown500] (61,68)
+  .. controls (65,52) and (68,40) .. (61,22)
+  .. controls (84,26) and (92,36) .. (92,48)
+  .. controls (92,60) and (82,65) .. (76,68)
+  -- cycle;
+\fill [BlueGrey400 , rotate=§rangei(-40,5), shift={(§rangei(-50,4),§rangei(25,5))}] (56,64)
+  .. controls (45,64) and (40,60) .. (32,56)
+  .. controls (24,52) and ( 8,52) .. ( 8,48)
+  .. controls (8, 44) and (24,36) .. (40,36)
+  .. controls (56,36) and (68,44) .. (72,48)
+  .. controls (76,52) and (72,56) .. (68,60)
+  .. controls (64,64) and (60,64) .. (56,64)
+  -- cycle;
+\fill [Amber500] (88,84)
+  .. controls (86,84) and ( 87,82) .. (86,81)
+  .. controls (85,80) and ( 80,79) .. (83,76)
+  .. controls (86,73) and ( 95,71) .. (97,71)
+  .. controls (99,71) and (100,72) .. (99,73)
+  .. controls (98,74) and ( 92,77) .. (91,80)
+  .. controls (90,83) and ( 90,84) .. (88,84)
+  -- cycle;
+\fill (78,87)
+  .. controls (77,85) and (80,82) .. (83,84)
+  .. controls (83,87) and (80,88) .. (78,87)
+  -- cycle;
+\fill [Amber700] (50,25)
+  .. controls (48,25) and (47,24) .. (47,23)
+  .. controls (47,22) and (48,13) .. (47,12)
+  .. controls (46,11) and (46, 9) .. (47, 8)
+  .. controls (48, 7) and (58, 4) .. (60, 4)
+  .. controls (62, 4) and (67,12) .. (65,12)
+  .. controls (63,12) and (54,10) .. (52,12)
+  .. controls (50,14) and (52,22) .. (52,23)
+  .. controls (52,24) and (51,25) .. (50,25)
+  -- cycle;}
+}
+\begin{document}
+\begin{tikzpicture}
+\fill [fill=LightBlue300] circle [radius=2];
+\pic {duck};
+\end{tikzpicture}
+\end{document}

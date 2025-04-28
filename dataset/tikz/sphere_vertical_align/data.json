@@ -1,0 +1,7 @@
+{
+  "instruction": "Align the two spheres on the left of the arrow vertically, and do the same for the ones on the right, adjust the arrow.  ",
+  "result_description": "four spheres, two aligned vertically on each side of an arrow.",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "update"
+}

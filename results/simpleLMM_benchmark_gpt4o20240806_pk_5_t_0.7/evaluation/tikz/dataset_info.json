@@ -1,0 +1,159 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "difficulty_ast": {
+      "feature": {
+        "dtype": "float32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "id": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "code": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "commented_code": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "instruction": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "result_description": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "difficulty": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "modification_type": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "type": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "patch": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "template_solution_code": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "code_solution": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "image_solution": {
+      "feature": {
+        "_type": "Image"
+      },
+      "_type": "Sequence"
+    },
+    "image_input": {
+      "_type": "Image"
+    },
+    "original_predictions": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "predictions": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "image_result_indexes": {
+      "feature": {
+        "dtype": "int32",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "images_result": {
+      "feature": {
+        "_type": "Image"
+      },
+      "_type": "Sequence"
+    },
+    "parsing_score": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "compiling_score": {
+      "dtype": "float64",
+      "_type": "Value"
+    },
+    "predictions_patches": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "ImageEqualityMetric": {
+      "feature": {
+        "feature": {
+          "dtype": "float32",
+          "_type": "Value"
+        },
+        "_type": "Sequence"
+      },
+      "_type": "Sequence"
+    },
+    "TemplateMetric": {
+      "feature": {
+        "feature": {
+          "dtype": "float32",
+          "_type": "Value"
+        },
+        "_type": "Sequence"
+      },
+      "_type": "Sequence"
+    },
+    "LineMetric": {
+      "feature": {
+        "feature": {
+          "dtype": "float32",
+          "_type": "Value"
+        },
+        "_type": "Sequence"
+      },
+      "_type": "Sequence"
+    },
+    "CrystalBleuPatchMetric": {
+      "feature": {
+        "feature": {
+          "dtype": "float32",
+          "_type": "Value"
+        },
+        "_type": "Sequence"
+      },
+      "_type": "Sequence"
+    }
+  },
+  "homepage": "",
+  "license": ""
+}

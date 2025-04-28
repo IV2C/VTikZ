@@ -1,0 +1,54 @@
+\documentclass[tikz,border=5]{standalone}
+\usepackage[prefix=]{xcolor-material}
+
+\tikzset{
+shark/.pic={
+\tikzset{x=3cm/22,y=3cm/22,shift={(-8,-11)}}
+\fill [BlueGrey200]
+  (2,16.75) -- ++(0.5,-1) -- ++(0.5,1) -- cycle
+  (3,16.25) -- ++(0.5,-1) -- ++(0.5,1) -- cycle
+  (1,17)    -- ++(0.5,-1) -- ++(0.5,1) -- cycle
+  (2,15.5)  -- ++(-.5,-1) -- ++(1,0) -- cycle
+  (3,15)    -- ++(-.5,-1) -- ++(1,0) -- cycle;
+\fill [Blue§range(300,900,900)] (6,12)
+  .. controls (5,11) and (5,8)  .. (6,7)
+  .. controls (7,8)  and (7,9)  .. (8,10)
+  .. controls (8,11) and (7,12) .. (6,12)-- cycle;
+\fill [Blue§range(300,900,800)] (0,20)
+  .. controls (0,19)  and (0,18)  .. (1,17)
+  .. controls (3,16)  and (4,16)  .. (4,15)
+  .. controls (4,14)  and (2,15)  .. (1,15)
+  .. controls (2,13)  and (3,12)  .. (5,10)
+  .. controls (7,8)   and (11,6)  .. (14,5)
+  .. controls (14,3)  and (14,1)  .. (15,0)
+  .. controls (15,2)  and (15,3)  .. (16,4)
+  .. controls (17,5)  and (18,6)  .. (20,6)
+  .. controls (19,7)  and (16,7)  .. (15,6)
+  .. controls (14,10) and (11,15) .. (9,17)
+  .. controls (7,19)  and (3,20)  .. (0,20) -- cycle;
+\fill [BlueGrey100] (0,20)
+  .. controls (0,19) and (0,18) .. (1,17)
+  .. controls (3,16) and (4,16) .. (4,15)
+  .. controls (4,14) and (2,15) .. (1,15)
+  .. controls (2,13) and (3,12) .. (5,10)
+  .. controls (7,8)  and (11,6) .. (14,5)
+  .. controls (13,8) and (7,8)  .. (6,12)
+  .. controls (5,16) and (2,19) .. (0,20) -- cycle;
+\fill [Blue§range(300,900,800)] (3,13)
+  .. controls (2,12) and (2,9)  .. (3,8)
+  .. controls (4,9)  and (4,10) .. (5,11)
+  .. controls (5,12) and (4,13) .. (3,13) -- cycle;
+\fill [Blue§range(300,900,800)] (9,18)
+  .. controls (8,18)  and (7.5,17.5) .. (7,17)
+  .. controls (7,16)  and (9,14)     .. (10,14)
+  .. controls (10,15) and (11,17)    .. (12,17)
+  .. controls (11,18) and (10,18)    .. (9,18) -- cycle;
+\fill [BlueGrey800] (6,17.5) circle [radius=0.5];
+}
+}
+\begin{document}
+\begin{tikzpicture}
+\fill [fill=LightBlue300] circle [radius=2];
+\pic {shark};
+\end{tikzpicture}
+\end{document}

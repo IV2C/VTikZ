@@ -1,0 +1,7 @@
+{
+  "instruction": "Put the months at the top of the graph instead of the bottom.",
+  "result_description": "A diagram displaying a graph and months of the years at the top.",
+  "difficulty": "medium",
+  "type": "scientific",
+  "modif_type": "update"
+}
