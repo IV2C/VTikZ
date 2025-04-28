@@ -35,3 +35,9 @@ jobs:
         uses: bitovi/github-actions-react-to-github-pages@v1.2.4
         with:
           path: site/VTikZ/dist # change to your build folder
+          install_command: |
+            cd site/VTikZ
+            npm ci
+          build_command: |
+            cd site/VTikZ
+            npm run build
