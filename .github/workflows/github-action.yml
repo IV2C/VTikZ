@@ -8,9 +8,6 @@ on:
 jobs:
   tests:
 
-    #skipping
-    if: ${{ false }}  
-    
     runs-on: ubuntu-latest
 
     steps:
@@ -54,7 +51,7 @@ jobs:
 
   update-main:
     runs-on: ubuntu-latest
-    #needs: tests
+    needs: tests
     if: github.ref == 'refs/heads/dev'
 
     steps:
@@ -71,18 +68,18 @@ jobs:
           git reset --hard dev
           git push origin main --force
 
-      #- name: Download coverage artifacts
-      #  uses: actions/download-artifact@v4
-      #  with:
-      #    name: coverage-badge
-      #    path: DOC/images/
-#
-#
-      #- name: Download coverage artifacts
-      #  uses: actions/download-artifact@v4
-      #  with:
-      #    name: coverage-report
-      #    path: DOC/htmlcov/
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-badge
+          path: DOC/images/
+
+
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: DOC/htmlcov/
   
       - name: Update coverage artifacts
         run: |
