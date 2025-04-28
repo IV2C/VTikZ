@@ -36,8 +36,8 @@ jobs:
         with:
           path: site/VTikZ/dist # change to your build folder
           install_command: |
-            cd site/VTikZ
+            ls
             npm ci
           build_command: |
-            cd site/VTikZ
+            ls
             npm run build
