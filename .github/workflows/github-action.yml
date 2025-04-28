@@ -71,18 +71,18 @@ jobs:
           git reset --hard dev
           git push origin main --force
 
-      - name: Download coverage artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-badge
-          path: DOC/images/
-
-
-      - name: Download coverage artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-report
-          path: DOC/htmlcov/
+      #- name: Download coverage artifacts
+      #  uses: actions/download-artifact@v4
+      #  with:
+      #    name: coverage-badge
+      #    path: DOC/images/
+#
+#
+      #- name: Download coverage artifacts
+      #  uses: actions/download-artifact@v4
+      #  with:
+      #    name: coverage-report
+      #    path: DOC/htmlcov/
   
       - name: Update coverage artifacts
         run: |
