@@ -34,10 +34,8 @@ jobs:
       - name: build-publish
         uses: bitovi/github-actions-react-to-github-pages@v1.2.4
         with:
-          path: site/VTikZ/dist # change to your build folder
+          path: dist # change to your build folder
           install_command: |
-            ls
-            npm ci
+            npm --prefix site/VTikZ ci
           build_command: |
-            ls
-            npm run build
+            npm --prefix site/VTikZ run build
