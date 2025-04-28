@@ -143,4 +143,4 @@ classed_dataset = (
 )
 
 
-classed_dataset.to_json("site/VTikZ/src/assets/leaderboard.json")
+classed_dataset.to_json("leaderboard.json")

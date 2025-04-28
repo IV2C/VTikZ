@@ -8,3 +8,4 @@ varbench_metric/
 .log/
 .cache/
 config-vtikz.cfg
+site/VTikZ/src/assets/leaderboard.json
