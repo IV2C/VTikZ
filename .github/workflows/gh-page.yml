@@ -23,6 +23,9 @@ concurrency:
 jobs:
   # Single deploy job since we're just deploying
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,11 +34,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: build-publish
-        uses: bitovi/github-actions-react-to-github-pages@v1.2.4
+      #node setup and deploy
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          path: site/VTikZ/dist # change to your build folder
-          install_command: |
-            npm --prefix site/VTikZ ci
-          build_command: |
-            npm --prefix site/VTikZ run build
+          node-version: lts/*
+          cache: 'npm'
+          cache-dependency-path: 'site/VTikZ/package-lock.json'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Setup Pages
+        
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload dist folder
+          path: 'site/VTikZ/dist'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

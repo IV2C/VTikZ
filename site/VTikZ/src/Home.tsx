@@ -1,4 +1,5 @@
 import './Home.css'
+import context from "./assets/context.jpg"
 
 function Home() {
   return (
@@ -31,7 +32,7 @@ function Home() {
       </header>
 
       <section className="image-context">
-        <img src='/context.jpg'></img>
+        <img src={context}></img>
       </section>
 
       <div className='text-sections'>
