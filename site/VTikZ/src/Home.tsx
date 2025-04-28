@@ -1,5 +1,6 @@
 import './Home.css'
 import context from "./assets/context.jpg"
+import { Link } from 'react-router';
 
 function Home() {
   return (
@@ -19,9 +20,9 @@ function Home() {
           <a href="https://arxiv.com" target="_blank" >
             <span className="badge">📄 Paper</span>
           </a>
-          <a href="/VTikZ/leaderboard">
+          <link href="/VTikZ/leaderboard">
             <span className="badge">📊 LeaderBoard</span>
-          </a>
+          </link>
           <a href="https://huggingface.co/datasets/CharlyR/vtikz" target="_blank">
             <span className="badge">🤗 Dataset</span>
           </a>
