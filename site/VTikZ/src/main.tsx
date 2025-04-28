@@ -7,10 +7,10 @@ import ReactDOM from "react-dom/client";
 const root = document.getElementById("root")!;
 
 ReactDOM.createRoot(root).render(
-  <HashRouter basename="/VTikZ">
+  <HashRouter>
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="leaderboard" element={<LeaderBoard />} />
+      <Route path="/leaderboard" element={<LeaderBoard />} />
     </Routes>
   </HashRouter>
 );
