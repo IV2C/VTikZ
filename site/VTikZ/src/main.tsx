@@ -1,31 +1,16 @@
-import './index.css'
-import Home from './Home.tsx'
-import LeaderBoard from './LeaderBoard.tsx'
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router";
-
+import './index.css';
+import Home from './Home.tsx';
+import LeaderBoard from './LeaderBoard.tsx';
+import { HashRouter, Routes, Route } from "react-router";
 import ReactDOM from "react-dom/client";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    Component: Home,
-  }, {
-    path: "/leaderboard",
-    Component: LeaderBoard,
-  },
-
-]
-  , {
-    basename: "/VTikZ"
-  });
 
 const root = document.getElementById("root")!;
 
 ReactDOM.createRoot(root).render(
-  <RouterProvider router={router} />
+  <HashRouter basename="/VTikZ">
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="leaderboard" element={<LeaderBoard />} />
+    </Routes>
+  </HashRouter>
 );
-
-
