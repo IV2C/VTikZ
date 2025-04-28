@@ -8,20 +8,19 @@ import {
 
 import ReactDOM from "react-dom/client";
 
-const router = createBrowserRouter(
-  [
-    {
-      path: "/",
-      children: [
-        { path: "", element: <Home /> },
-        { path: "leaderboard", element: <LeaderBoard /> },
-      ],
-    },
-  ],
+const router = createBrowserRouter([
   {
-    basename: "/VTikZ",
-  }
-);
+    path: "/",
+    Component: Home,
+  }, {
+    path: "/leaderboard",
+    Component: LeaderBoard,
+  },
+
+]
+  , {
+    basename: "/VTikZ"
+  });
 
 const root = document.getElementById("root")!;
 

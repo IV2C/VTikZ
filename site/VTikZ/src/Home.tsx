@@ -20,7 +20,7 @@ function Home() {
           <a href="https://arxiv.com" target="_blank" >
             <span className="badge">📄 Paper</span>
           </a>
-          <Link to="/VTikZ/leaderboard">
+          <Link to="/leaderboard">
             <span className="badge">📊 LeaderBoard</span>
           </Link>
           <a href="https://huggingface.co/datasets/CharlyR/vtikz" target="_blank">
