@@ -12,12 +12,15 @@ const router = createBrowserRouter([
   {
     path: "/",
     Component: Home,
-  },{
+  }, {
     path: "/leaderboard",
     Component: LeaderBoard,
   },
-  
-]);
+
+]
+  , {
+    basename: "/VTikZ"
+  });
 
 const root = document.getElementById("root")!;
 
