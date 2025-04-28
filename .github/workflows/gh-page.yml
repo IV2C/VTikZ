@@ -48,6 +48,7 @@ jobs:
 
 
   deploy:
+    needs: leaderboard-compute
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -59,7 +60,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download coverage artifacts
+      - name: Download leaderboard artifacts
         uses: actions/download-artifact@v4
         with:
           name: leaderboard
