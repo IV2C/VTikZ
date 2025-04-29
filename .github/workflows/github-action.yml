@@ -80,8 +80,6 @@ jobs:
           path: DOC/htmlcov/
   
       - name: Update coverage artifacts
-        env:
-          GH_TOKEN: ${{ secrets.VTIKZ_CI_TOKEN }}
         run: |
           git add DOC/images/coverage.svg DOC/htmlcov/
           git commit -m "Update coverage artifacts"
