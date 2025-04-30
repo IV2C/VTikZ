@@ -17,7 +17,7 @@ function Home() {
 
         </span>
         <div className="badges">
-          <a href="https://arxiv.com" target="_blank" >
+          <a href="https://hal.science/hal-05049250" target="_blank" >
             <span className="badge">📄 Paper</span>
           </a>
           <Link to="/leaderboard">
@@ -45,10 +45,10 @@ function Home() {
         <section className="bibtex">
           <h2>BibTeX</h2>
           <pre>
-            {`@inproceedings{yourBibtexKey,
-  author    = {Author Name(s)},
+            {`@inproceedings{reux_llmvisualcutomization_2025,
+author = {Reux, Charly and Acher, Mathieu and Khelladi, Djamel Eddine and Barais, Olivier and Quinton, Cl{\'e}ment},
   title     = {LLM Code Customization with Visual Results: A Benchmark on TikZ},
-  booktitle = {Conference Name},
+	booktitle = {Proceedings of {The} 29th {International} {Conference} on {Evaluation} and {Assessment} in {Software} {Engineering} ({EASE} 2025).},
   year      = {2025},
 }`}
           </pre>
