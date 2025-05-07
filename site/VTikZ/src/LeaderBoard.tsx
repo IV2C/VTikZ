@@ -1,7 +1,7 @@
 import './LeaderBoard.css'
 import { BarChart } from '@mui/x-charts/BarChart';
 import leaderboard from "./assets/leaderboard.json"
-import { Button, Card, CardActions, CardContent, FormControl, InputLabel, Link, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
+import { Button, Card, CardActions, CardContent, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 
