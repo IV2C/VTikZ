@@ -20,6 +20,7 @@ jobs:
       - name: Install dependencies
       #sudo apt install texlive-full texlive-latex-recommended
         run: |
+            sudo apt-get update
             sudo apt-get install texlive-latex-base
             sudo apt-get install texlive-fonts-recommended
             sudo apt-get install texlive-fonts-extra
