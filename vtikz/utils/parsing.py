@@ -106,7 +106,7 @@ def _valid_model_name(model_name):
     return model_name.replace("/", "").replace("-", "").replace(":", "")
 
 
-def get_config_name(args, split_used):
+def get_config_name(args, split_used,last_tag):
 
     if args.agent == "VIF":  # External agent
         vif_args = {**get_config("VIF")}
@@ -126,6 +126,8 @@ def get_config_name(args, split_used):
             + _valid_model_name(vif_args["identification_model"])
             + "_t_"
             + (str(vif_args["identification_model_temperature"]))
+            + "_"
+            + str(last_tag)
         )
     else:  # internal_agent
         full_config_name = (
@@ -148,6 +150,8 @@ def get_config_name(args, split_used):
                 if args.vlm
                 else ""
             )
+            + "_"
+            + str(last_tag)
         )
 
     return full_config_name

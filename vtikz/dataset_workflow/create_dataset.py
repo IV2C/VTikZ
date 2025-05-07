@@ -25,6 +25,16 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", type=str, required=True, help="path to the dataset")
 args = parser.parse_args()
 
+
+#list the tags
+from huggingface_hub import HfApi
+api = HfApi(token=os.environ.get("HF_TOKEN"))
+ds_inf = api.list_repo_refs("CharlyR/VTikz",repo_type="dataset")
+print("Existing tags:")
+print(" | ".join([tag.name for tag in ds_inf.tags]))
+### ask the tag to the user
+new_tag = input("New dataset tag: ")
+
 ### dataset creation code
 dataset_dict = {}
 
@@ -142,6 +152,8 @@ for subset in dataset_dict:
     dataset.push_to_hub(
         "CharlyR/vtikz", config_name=subset, split="benchmark")
 
+    api.create_tag("CharlyR/vtikz",tag=new_tag)
+    
     dataset_test = dataset.filter(lambda row: row["difficulty"] == "medium").select(
        [6, 7]
     )

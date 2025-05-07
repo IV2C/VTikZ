@@ -106,6 +106,7 @@ def compute_class(row):
     row["Modality"] = name_map[row["config"].split("_")[0].removeprefix("simple")]
     row["N"] = row["config"].split("_")[3]
     row["temp."] = row["config"].split("_")[5]
+    row["version"] = row["config"].split("_")[-1]
     return row
 
 
@@ -121,6 +122,7 @@ classed_dataset = filtered_df[
         "Modality",
         "N",
         "temp.",
+        "version",
         "model",
         "total",
         "Compile",
@@ -135,12 +137,22 @@ classed_dataset = (
             "Modality",
             "N",
             "temp.",
+            "version"
         ]
     )
     .sum()
     .reset_index()
     .sort_values("SuccessCustomization")
 )
+grouped = classed_dataset.groupby("version")
 
+# Convert to dictionary with version as keys and corresponding records as list of dicts
+import json
+data_by_version = {
+    version: group.to_dict()
+    for version, group in grouped
+}
 
-classed_dataset.to_json("leaderboard.json")
+# Write to JSON
+with open("leaderboard.json", "w") as f:
+    json.dump(data_by_version, f, indent=2)

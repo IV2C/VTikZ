@@ -1,6 +1,7 @@
 from datasets import load_dataset
 import os
 import argparse
+from huggingface_hub import HfApi
 
 from vtikz.api.chat_api import ChatApi
 from vtikz.evaluation.metrics import (
@@ -200,10 +201,18 @@ interaction_amount: int = args.interaction_amount
 # result path creation
 if not os.path.exists("./results"):
     os.mkdir("./results")
-split_used = "benchmark"
-#split_used = "test"
+#split_used = "benchmark"
+split_used = "test"
 
-full_config_name = get_config_name(args, split_used)
+#getting benchmark last version tag, given the tags are well ordered(latest tag name = latest tag date)
+hfapi = HfApi(token=os.environ.get("HF_TOKEN"))
+ds_inf = hfapi.list_repo_refs("CharlyR/VTikz",repo_type="dataset")
+last_tag = sorted([(tag,float(tag.name[1:].replace(".",""))) for tag in ds_inf.tags],key=lambda x:x[1])[-1][0].name
+
+
+
+
+full_config_name = get_config_name(args, split_used,last_tag)
 # result path handling
 result_path = os.path.join("./results", full_config_name)
 generation_result_path = os.path.join(result_path, "generation")
@@ -290,3 +299,4 @@ for subset in subsets:
         config_name=full_config_name,
         split=subset,
     )
+    
