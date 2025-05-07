@@ -16,3 +16,12 @@
   min-width: 100%;
   margin-right: 10%;
 }
+
+.doc {
+  font-size: large;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  place-items: start;
+  text-align: start;
+}
