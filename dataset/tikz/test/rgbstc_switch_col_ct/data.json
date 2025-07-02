@@ -1,0 +1,7 @@
+{
+  "instruction": "Switch the color of the circle and the triangle",
+  "result_description": "A diagram with a blue square on top, a red triangle on the bottom left, and a green circle on the bottom right",
+  "difficulty": "easy",
+  "type": "scientific",
+  "modif_type": "update"
+}
