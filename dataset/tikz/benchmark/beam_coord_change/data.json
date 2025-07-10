@@ -1,5 +1,5 @@
 {
-  "instruction": "Move the coordinate system between EA and F.",
+  "instruction": "Move the coordinate system between the top EA and F.",
   "result_description": "Diagram of a mechanical system, with a coordinate system close to the point B",
   "difficulty": "easy",
   "type": "scientific",

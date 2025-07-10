@@ -158,11 +158,14 @@ features = Features(
     }
 )
 
+import pickle
+with open("dataset/.cache/ds_pickle","wb") as dsp:
+    pickle.dump(dataset_dict,dsp)
+
 for config_name in dataset_dict:
     for split_name, subset in dataset_dict[config_name].items():
         ds = Dataset.from_dict(subset, features=features)
         ds.save_to_disk(f"dataset/.cache/{config_name}{split_name}")  # debug
         ds.push_to_hub("CharlyR/vtikz", config_name=subset, split=split_name)
-
 
 api.create_tag("CharlyR/vtikz", tag=new_tag)
