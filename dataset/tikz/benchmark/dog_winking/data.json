@@ -1,5 +1,5 @@
 {
-  "instruction": "Make the dog wink",
+  "instruction": "Make the dog wink with its right eye.",
   "result_description": "A dog winking",
   "difficulty": "medium",
   "type": "animal",

@@ -1,5 +1,5 @@
 {
-  "instruction": "Mirror the bee vertically",
+  "instruction": "Mirror the bee horizontally",
   "result_description": "A bee, flying towards the left",
   "difficulty": "easy",
   "type": "animal",
