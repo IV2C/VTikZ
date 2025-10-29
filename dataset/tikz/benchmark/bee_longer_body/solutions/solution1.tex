@@ -41,7 +41,7 @@ bee/.pic={
       .. controls ++( 90:64) and ++(225:64) .. (  0, 128)
       .. controls ++(315:64) and ++( 90:64) .. ( 88, -16)
       .. controls ++(270:64) and ++( 60:64) .. cycle;
-    \foreach \i in {0,...,§range(2,3,2)}
+    \foreach \i in {0,...,§choice([2,3],2)}
       \fill [stripes] (-256, §range(-80,-210,-160) + \i*80) rectangle ++(512, 40);
   \end{scope}
   \foreach \s [count=\i from -1] in {lower wing, upper wing}
