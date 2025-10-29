@@ -3,7 +3,8 @@ name: Python package
 on: 
   push:
     branches: 
-      - dev
+      - main
+      #temporary github action changes
 
 jobs:
   tests:
