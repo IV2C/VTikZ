@@ -24,7 +24,7 @@
     \node[dot] (f) at (0.8,-3) {};
 
     % boxes
-    \node[squarednode]        (motion)       [below=of motor§choice([1,2],2)] {Robot \\ controller};
+    \node[squarednode]        (motion)       [below=of §choice(["motor1","motor2"],motor2)] {Robot \\ controller};
     \node (box) [draw=orange,rounded corners,fit = (realworld) (DNN)  (motion) (e) (f)] {};
     \node (box) [draw=blue,rounded corners,fit = (user) (vr)] {};
     \node (box) [draw=green,rounded corners,fit = (sensors) (motor1) (motor2)] {};
