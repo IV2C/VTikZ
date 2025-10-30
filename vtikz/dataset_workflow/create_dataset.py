@@ -35,7 +35,7 @@ ds_inf = api.list_repo_refs("CharlyR/VTikz", repo_type="dataset")
 print("Existing tags:")
 print(" | ".join([tag.name for tag in ds_inf.tags]))
 ### ask the tag to the user
-new_tag = input("New dataset tag: ")
+#new_tag = input("New dataset tag: ")
 
 ### dataset creation code
 dataset_dict: dict[str, dict] = {}
@@ -162,7 +162,7 @@ import pickle
 with open("dataset/.cache/ds_pickle","wb") as dsp:
     pickle.dump(dataset_dict,dsp)
 
-api.create_tag("CharlyR/vtikz", tag=new_tag,repo_type="dataset")
+#api.create_tag("CharlyR/vtikz", tag=new_tag,repo_type="dataset")
 
 for config_name in dataset_dict:
     for split_name, subset in dataset_dict[config_name].items():
