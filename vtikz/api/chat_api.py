@@ -386,7 +386,7 @@ class VLLMApi(OpenAIApi):
         ]
 
 
-
+import json
 class OpenAICompaptibleApi(OpenAIApi):
     
     def batch_chat_request(
@@ -418,7 +418,7 @@ class OpenAICompaptibleApi(OpenAIApi):
     def chat_request(
         self, messages: Iterable[ChatCompletionMessageParam]
     ) -> Iterable[str]:
-        return [
+        res = [
             self.client.chat.completions.create(
                 messages=messages,
                 model=self.model_name,
@@ -430,6 +430,11 @@ class OpenAICompaptibleApi(OpenAIApi):
             .message.content
             for _ in range(self.n)
         ]
+        with open("res.tex","w") as d:
+            d.write(res[0])
+        with open("prompt.tex","w") as d:
+            d.write(str([json.dumps(message) for message in messages]))           
+        return res
     
     
     @CachedRequest(cache, key_function, cache_enabled)
