@@ -201,8 +201,8 @@ interaction_amount: int = args.interaction_amount
 # result path creation
 if not os.path.exists("./results"):
     os.mkdir("./results")
-#split_used = "benchmark"
-split_used = "test"
+split_used = "benchmark"
+#split_used = "test"
 
 #getting benchmark last version tag, given the tags are well ordered(latest tag name = latest tag date)
 hfapi = HfApi(token=os.environ.get("HF_TOKEN"))

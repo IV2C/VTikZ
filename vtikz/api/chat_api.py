@@ -55,19 +55,23 @@ class ChatApi(ABC):
         *args,
         **kwargs,
     ) -> Self:
-        if "groq" in api_url:
-            logger.info("groq api setup")
-            return GroqApi(temperature, n, model_name, api_url, api_key)
-        elif "openai" in api_url:
-            logger.info("openai api setup")
-            return OpenAIApi(temperature, n, model_name, api_url, api_key)
-        elif "localhost" in api_url or "runpod" in api_url:
-            logger.info("vllm api setup")
-            return VLLMApi(temperature, n, model_name, api_url, api_key)
-        else:
+        try:
+            if "groq" in api_url:
+                logger.info("groq api setup")
+                return GroqApi(temperature, n, model_name, api_url, api_key)
+            elif "openai" in api_url:
+                logger.info("openai api setup")
+                return OpenAIApi(temperature, n, model_name, api_url, api_key)
+            elif "localhost" in api_url or "runpod" in api_url:
+                logger.info("vllm api setup")
+                return VLLMApi(temperature, n, model_name, api_url, api_key)
+            else:
+                logger.warning("seting up api as an openai compaptible one")
+                return OpenAICompaptibleApi(temperature, n, model_name, api_url, api_key)
+        except:
             raise AttributeError(
-                api_url, "Unsupported api, supported ones are vllm, groq, and openai"
-            )  # TODO add "simple" openai chat api for compatible ones
+                api_url, "error while instantiating api"
+            )
 
     @abstractmethod
     def chat_request(
@@ -366,6 +370,68 @@ class VLLMApi(OpenAIApi):
             for _ in range(self.n)
         ]
 
+    @CachedRequest(cache, key_function, cache_enabled)
+    def structured_request(
+        self, messages: Iterable[ChatCompletionMessageParam], response_format: BaseModel
+    ) -> Iterable[BaseModel]:
+        return [
+            self.structured_client.chat.completions.create(
+                model=self.model_name,
+                response_model=response_format,
+                messages=messages,
+                temperature=self.temperature,
+                seed=self.seed,
+            )
+            for _ in range(self.n)
+        ]
+
+
+
+class OpenAICompaptibleApi(OpenAIApi):
+    
+    def batch_chat_request(
+        self,
+        messages: Iterable[Iterable[ChatCompletionMessageParam]],
+        ids: Iterable[str],
+        **kwargs,
+    ) -> Iterable[Iterable[str]]:
+        return [
+            self.chat_request(message)
+            for message in tqdm(messages, desc="Request batch with custom api")
+        ]
+
+    def batch_structured_request(
+        self,
+        messages: Iterable[Iterable[ChatCompletionMessageParam]],
+        ids: Iterable[str],
+        response_format: BaseModel,
+        **kwargs,
+    ) -> Iterable[Iterable[BaseModel]]:
+        return [
+            self.structured_request(message, response_format)
+            for message in tqdm(
+                messages, desc="Structured request batch with custom api"
+            )
+        ]
+
+    @CachedRequest(cache, key_function, cache_enabled)
+    def chat_request(
+        self, messages: Iterable[ChatCompletionMessageParam]
+    ) -> Iterable[str]:
+        return [
+            self.client.chat.completions.create(
+                messages=messages,
+                model=self.model_name,
+                temperature=self.temperature,
+                n=1,
+                seed=self.seed,
+            )
+            .choices[-1]
+            .message.content
+            for _ in range(self.n)
+        ]
+    
+    
     @CachedRequest(cache, key_function, cache_enabled)
     def structured_request(
         self, messages: Iterable[ChatCompletionMessageParam], response_format: BaseModel

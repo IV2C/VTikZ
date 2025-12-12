@@ -9,3 +9,4 @@ varbench_metric/
 .cache/
 config-vtikz.cfg
 site/VTikZ/src/assets/leaderboard.json
+results/**

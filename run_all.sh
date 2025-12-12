@@ -17,3 +17,9 @@ python3 -m vtikz.run_evaluation --model gpt-4o-2024-08-06 --api_url https://api.
 
 python -m vtikz.run_evaluation --agent VIF
 python3 -m vtikz.run_evaluation --model llama-3.3-70b-versatile --api_url https://api.groq.com/openai/v1 --api_key $GROQ_API_KEY --temperature 0.7 --passk 5 --agent FAR
+
+
+
+#TODO
+python3 -m vtikz.run_evaluation --api_key $OPENROUTER_API_KEY --model openai/gpt-5.2 --api_url https://openrouter.ai/api/v1 --temperature 0.7 --passk 1 --agent simpleLMM
+python3 -m vtikz.run_evaluation --api_key $OPENROUTER_API_KEY --model google/gemini-3-pro-preview --api_url https://openrouter.ai/api/v1 --temperature 0.7 --passk 1 --agent simpleLMM
