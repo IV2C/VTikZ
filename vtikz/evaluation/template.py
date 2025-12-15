@@ -40,7 +40,7 @@ math_pattern = r"([+-]?\d*\.?\d+(?:[+\-\/*^]\d*\.?\d+)*)"
 def evaluate_match(match):
     expr = match.group(1)
     try:
-        result = round(eval(expr), 2)
+        result = round(eval(expr), 4)
         return str(int(result)) if result.is_integer() else str(result)
     except:
         return match.group(0)

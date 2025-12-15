@@ -27,10 +27,10 @@ chimpanzee/.pic={
   \fill [Pink200, xscale= 1] (1/2,   0) ellipse [x radius=3/5, y radius=2/3];
 }
 \foreach \i in {-1,1}{
-  \fill [White, xscale=\i] (1/2,0) ellipse [radius=§rangei(0.25,0.05)];
+  \fill [§choice(["White","white"],White), xscale=\i] (1/2,0) ellipse [radius=§rangei(0.25,0.05)];
   }
 \foreach \i in {-1,1}{
-  \fill [Black, xscale=\i] (1/3,0) ellipse [radius=§rangei(0.08,0.05)];
+  \fill [§choice(["Black","black"],Black), xscale=\i] (1/3,0) ellipse [radius=§rangei(0.08,0.05)];
 }
   \fill [Pink300]
   (-1/7,-2/3) ellipse [radius=1/9]

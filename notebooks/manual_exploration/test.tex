@@ -1,0 +1,42 @@
+\documentclass[tikz,border=5]{standalone}
+\usepackage[prefix=]{xcolor-material}
+\tikzset{
+chimpanzee/.pic={
+\tikzset{x=3cm/3.5,y=3cm/3.5, shift={(0,0.25)}}
+\fill [BlueGrey700] (165:1.25 and 1) ellipse [radius=0.5];
+\fill [Pink100] (165:1.25 and 1) ellipse [radius=0.3333];
+\fill [BlueGrey700]
+(0,-0.5) ellipse [x radius=1, y radius=1.3333]
+(0, 0) ellipse [x radius=1.3333, y radius=1];
+\scoped{
+\clip(0,-2) rectangle(1.8,1);
+\fill [BlueGrey900] (15:1.25 and 1) ellipse [radius=0.5];
+\fill [Pink200] (15:1.25 and 1) ellipse [radius=0.3333];
+\fill [BlueGrey900]
+(0,-0.5) ellipse [x radius=1, y radius=1.3333]
+(0, 0) ellipse [x radius=1.3333, y radius=1];
+}
+\fill [Pink100] ( 0,-0.6667) ellipse [x radius=0.8333, y radius= 1];
+\fill [Pink100, xscale=-1] (0.5, 0) ellipse [x radius=0.6, y radius=0.6667];
+\fill [Pink100, xscale= 1] (0.5, 0) ellipse [x radius=0.6, y radius=0.6667];
+\scoped{
+\clip(0,-2) rectangle(1.8,1);
+\fill [Pink200] ( 0,-0.6667) ellipse [x radius=0.8333, y radius= 1];
+\fill [Pink200, xscale=-1] (0.5, 0) ellipse [x radius=0.6, y radius=0.6667];
+\fill [Pink200, xscale= 1] (0.5, 0) ellipse [x radius=0.6, y radius=0.6667];
+}
+\foreach \i in {-1,1}
+\fill [BlueGrey900, xscale=\i] (0.5,0) ellipse [x radius=0.3333, y radius=0.2];
+\fill [Pink300]
+(-0.1429,-0.6667) ellipse [radius=0.1111]
+( 0.1429,-0.6667) ellipse [radius=0.1111];
+\fill [Pink300]
+(-0.5,-1) arc (180:360:0.5 and 0.125) arc (360:180:0.5 and 0.25);
+}
+}
+\begin{document}
+\begin{tikzpicture}
+\fill [fill=LightBlue300] circle [radius=2];
+\pic {chimpanzee};
+\end{tikzpicture}
+\end{document}
