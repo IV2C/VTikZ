@@ -27,7 +27,7 @@
         \node[coordinate] at (-2,-1)(5){5};
         \node[coordinate] at (-2,0)(6){6};
         \node[coordinate] at (-1,-1)(7){7};
-        \node[] at (0,0.2)(S){\tiny SOUTH};
+        \node[text=blue] at (0,0.2)(S){\tiny SOUTH};
         
         % cube 2
         \node[coordinate] at (2,2)(8){1};
@@ -37,7 +37,7 @@
         \node[coordinate] at (5,1)(12){5};
         \node[coordinate] at (5,2)(13){6};
         \node[coordinate] at (4,3)(14){7};
-        \node[] at (3,1.75)(N){\tiny NORTH};
+        \node[text=red] at (3,1.75)(N){\tiny NORTH};
         
          %draw cube 1
         \draw[thick]  (1) to (2);
@@ -50,7 +50,7 @@
         \draw[thick]  (6) to (1);
         \draw[thick]  (7) to (2);
         
-        \fill [blue, opacity=.5] (1.center) -- (2.center) -- (3.center) -- (4.center) -- (5.center) -- (6.center) --  cycle;
+        \fill [opacity=.5, blue] (1.center) -- (2.center) -- (3.center) -- (4.center) -- (5.center) -- (6.center) --  cycle;
         
         %draw cube 2
         \draw[thick]  (8) to (9);
@@ -63,7 +63,7 @@
         \draw[thick]  (9) to (13);
         \draw[thick]  (8) to (14);
         
-        \fill [red, opacity=.5] (14.center) -- (13.center) -- (12.center) -- (10.center) -- (11.center) -- (8.center) --  cycle;
+        \fill [opacity=.5, red] (14.center) -- (13.center) -- (12.center) -- (10.center) -- (11.center) -- (8.center) --  cycle;
     \end{pgfonlayer}
 
     \begin{pgfonlayer}{background}

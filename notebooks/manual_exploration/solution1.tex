@@ -1,44 +1,26 @@
-\documentclass[tikz,border=5]{standalone}
-\usepackage[prefix=]{xcolor-material}
-\tikzset{
-chimpanzee/.pic={
-\tikzset{x=3cm/3.5,y=3cm/3.5, shift={(0,1/4)}}
-\fill [BlueGrey700] (165:5/4 and 1) ellipse [radius=1/2];
-\fill [Pink100] (165:5/4 and 1) ellipse [radius=1/3];
-\fill [BlueGrey700]
-(0,-1/2) ellipse [x radius=1, y radius=4/3]
-(0, 0) ellipse [x radius=4/3, y radius=1];
-\scoped{
-\clip(0,-2) rectangle(9/5,1);
-\fill [BlueGrey900] (15:5/4 and 1) ellipse [radius=1/2];
-\fill [Pink200] (15:5/4 and 1) ellipse [radius=1/3];
-\fill [BlueGrey900]
-(0,-1/2) ellipse [x radius=1, y radius=4/3]
-(0, 0) ellipse [x radius=4/3, y radius=1];
-}
-\fill [Pink100] ( 0,-2/3) ellipse [x radius=5/6, y radius= 1];
-\fill [Pink100, xscale=-1] (1/2, 0) ellipse [x radius=3/5, y radius=2/3];
-\fill [Pink100, xscale= 1] (1/2, 0) ellipse [x radius=3/5, y radius=2/3];
-\scoped{
-\clip(0,-2) rectangle(9/5,1);
-\fill [Pink200] ( 0,-2/3) ellipse [x radius=5/6, y radius= 1];
-\fill [Pink200, xscale=-1] (1/2, 0) ellipse [x radius=3/5, y radius=2/3];
-\fill [Pink200, xscale= 1] (1/2, 0) ellipse [x radius=3/5, y radius=2/3];
-}
-\foreach \i in {-1,1}{
-\fill [White, xscale=\i] (1/2,0) ellipse [radius=§rangei(0.25,0.05)];
-\fill [Black, xscale=\i] (3/7,0) ellipse [radius=§rangei(0.08,0.05)];
-}
-\fill [Pink300]
-(-1/7,-2/3) ellipse [radius=1/9]
-( 1/7,-2/3) ellipse [radius=1/9];
-\fill [Pink300]
-(-1/2,-1) arc (180:360:1/2 and 1/8) arc (360:180:1/2 and 1/4);
-}
-}
+\documentclass[border=2pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{angles, quotes, decorations.markings}
+\tikzset{midarrow1/.style = {postaction=decorate, decoration={markings,mark=at position .8 with \arrow{stealth}}}}
+\tikzset{midarrow2/.style = {postaction=decorate, decoration={markings,mark=at position .4 with \arrow{stealth}}}}
+\tikzset{midarrow/.style={midarrow1, midarrow2}}
+\definecolor{§def(lust)}{rgb}{§range(0,0.6,0.13), §rangei(0.9,0.1), §range(0,0.6,0.13)}
+\definecolor{richelectricblue}{rgb}{0.03, 0.57, 0.82}
 \begin{document}
 \begin{tikzpicture}
-\fill [fill=LightBlue300] circle [radius=2];
-\pic {chimpanzee};
+\draw[line width = 2, color = richelectricblue] (4,7.5) -- ++(0,1);
+\draw[color = lust, line width = 0.7, midarrow1] (-1,8) -- (4,8);
+\draw[color = lust, line width = 0.7, midarrow2] (4,8) -- +(3,-5) coordinate (C);
+\path[fill = richelectricblue!40] (2,8.25) ..controls +(0.1,0) and +(0.1,0).. ++(0,-0.5) ;
+\draw[line width = 0.5] (0, 8.1) -- (0,8.25) -- ++(2,0) ..controls +(0.1,0) and +(0.1,0).. ++(0,-0.5) -- ++(-2,0) -- +(0, 0.15);
+\path[fill = richelectricblue!40, rotate = 121] (0.96,-7.3) ..controls +(0.1,0) and +(0.1,0).. ++(0,-0.5) ;
+\draw[line width = 0.5, rotate = 121] (-1.04,-7.3) -- ++(2,0) ..controls +(0.1,0) and +(0.1,0).. ++(0,-0.5) -- ++(-2,0) -- +(0,0.508);
+\draw [fill = lust, draw = lust] (-1,8) circle [radius=0.1];
+\draw[dashed, line width = 0.5] (4,8)coordinate(A) -- ++(3,0)coordinate(B);
+\pic[draw , "\small$\theta$", line width = 0.5, angle radius=0.5cm, angle eccentricity = 1.5] {angle=C--A--B};
+\node[above] at (-1,8.2) {\scriptsize Source};
+\node[above] at (1,8.5) {\scriptsize Guide};
+\node at (4,9) {\scriptsize Barrier};
+\node[rotate=32] at (7.15,2.7) {\scriptsize Observer};
 \end{tikzpicture}
 \end{document}

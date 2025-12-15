@@ -1,44 +1,49 @@
-\documentclass[tikz,border=5]{standalone}
-\usepackage[prefix=]{xcolor-material}
-\tikzset{
-chimpanzee/.pic={
-\tikzset{x=3cm/3.5,y=3cm/3.5, shift={(0,1/4)}}
-\fill [BlueGrey700] (165:5/4 and 1) ellipse [radius=1/2];
-\fill [Pink100] (165:5/4 and 1) ellipse [radius=1/3];
-\fill [BlueGrey700]
-(0,-1/2) ellipse [x radius=1, y radius=4/3]
-(0, 0) ellipse [x radius=4/3, y radius=1];
-\scoped{
-\clip(0,-2) rectangle(9/5,1);
-\fill [BlueGrey900] (15:5/4 and 1) ellipse [radius=1/2];
-\fill [Pink200] (15:5/4 and 1) ellipse [radius=1/3];
-\fill [BlueGrey900]
-(0,-1/2) ellipse [x radius=1, y radius=4/3]
-(0, 0) ellipse [x radius=4/3, y radius=1];
-}
-\fill [Pink100] ( 0,-2/3) ellipse [x radius=5/6, y radius= 1];
-\fill [Pink100, xscale=-1] (1/2, 0) ellipse [x radius=3/5, y radius=2/3];
-\fill [Pink100, xscale= 1] (1/2, 0) ellipse [x radius=3/5, y radius=2/3];
-\scoped{
-\clip(0,-2) rectangle(9/5,1);
-\fill [Pink200] ( 0,-2/3) ellipse [x radius=5/6, y radius= 1];
-\fill [Pink200, xscale=-1] (1/2, 0) ellipse [x radius=3/5, y radius=2/3];
-\fill [Pink200, xscale= 1] (1/2, 0) ellipse [x radius=3/5, y radius=2/3];
-}
-\foreach \i in {-1,1}{
-\fill [white, xscale=\i] (1/2,0) ellipse [radius=1/4];
-\fill [black, xscale=\i] ({1/2-1/10},0) circle [radius=1/12];
-}
-\fill [Pink300]
-(-1/7,-2/3) ellipse [radius=1/9]
-( 1/7,-2/3) ellipse [radius=1/9];
-\fill [Pink300]
-(-1/2,-1) arc (180:360:1/2 and 1/8) arc (360:180:1/2 and 1/4);
-}
-}
+\documentclass[tikz,border=5pt]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{/pgf/number format/use comma,compat=1.16}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{stanli}
+\usetikzlibrary{calc,intersections,patterns}
 \begin{document}
-\begin{tikzpicture}
-\fill [fill=LightBlue300] circle [radius=2];
-\pic {chimpanzee};
+\begin{tikzpicture}[scale=1]
+\draw (-2,5) node[below] {O};
+\draw[<->] (-1,5) node[right] {$x$}-|(-2,6) node[left]{$y$};
+\point{A}{2}{9};
+\point{B}{3}{4};
+\point{B'}{5}{5};
+\point{C}{0}{0};
+\point{D}{8}{1};
+\beam{2}{A}{B}[0][0];
+\beam{2}{B}{C}[0][0];
+\beam{2}{B}{D}[0][0];
+\beam{3}{A}{B'};
+\beam{3}{B'}{C};
+\beam{3}{B'}{D};
+\notation{4}{A}{B}[1];
+\notation{4}{C}{B}[2][0.6];
+\notation{4}{D}{B}[3];
+\support{3}{A}[180];
+\support{3}{C}[-45];
+\support{3}{D}[45];
+\hinge{1}{A}
+\hinge{1}{B}
+\hinge{1}{C}
+\hinge{1}{D}
+\hinge{1}{B'}
+\begin{scope}[color=red]
+\load{1}{B}[205][1.5];
+\notation{1}{1.3,3.5}{F}[centered];
+\end{scope}
+\dimensioning{1}{B}{B'}{0.5}[$u_\mathrm{B}$];
+\dimensioning{2}{B}{B'}{7}[$v_\mathrm{B}$];
+\notation{1}{A}{A}[below left];
+\notation{1}{B}{B}[above right];
+\notation{1}{B'}{B'}[above right];
+\notation{1}{C}{C}[right=1mm];
+\notation{1}{D}{D}[left=1mm];
+\draw (0.5,2.5) node[left]{$EA$} to [out=0,in=180] (1.5,2);
+\draw (1.75,6.5) node[left]{$EA$} to [out=0,in=150] (2.6,6);
+\draw (5.25,1.75) node[left]{$EA$} to [out=0,in=225] (6,2.2);
 \end{tikzpicture}
 \end{document}

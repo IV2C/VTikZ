@@ -30,7 +30,7 @@ donkey/.pic={
 ]{
   \foreach \s [count=\j from 0] in {outer ear, inner ear}
   \fill [style=\s]
-  [shift={(88,120)}, rotate=75, scale=9/10-\j/3, xscale=3/2]
+  [shift={(88,120)}, rotate=75, scale={§rangei(0.8,0.1)*(9/10-\j/3)}, xscale=§rangei(1.4,0.25)]
   (-72,0)
   .. controls ++( 90: 8) and ++(180:16) .. ( 0, 48)
   .. controls ++(  0:16) and ++( 90:12) .. (88,  0)
@@ -55,8 +55,8 @@ donkey/.pic={
   \fill [BlueGrey900] (36, -128) ellipse [x radius=12, y radius=24];
 }
 \fill [BlueGrey900]
-  (§range(-56,-23,-42), 40) ellipse [radius=20]
-  (§range(23,56,42), 40) ellipse [radius=20]
+  (-72, 40) ellipse [radius=20]
+  ( 72, 40) ellipse [radius=20]
   (-8,160)
   to [bend left]  ++( 16, 32) to [bend right] ++( 16,-48)
   to [bend left]  ++( 16, 32) to [bend right] ++( 16,-48)
