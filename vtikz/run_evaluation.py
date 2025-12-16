@@ -207,7 +207,7 @@ split_used = "benchmark"
 #getting benchmark last version tag, given the tags are well ordered(latest tag name = latest tag date)
 hfapi = HfApi(token=os.environ.get("HF_TOKEN"))
 ds_inf = hfapi.list_repo_refs("CharlyR/VTikz",repo_type="dataset")
-last_tag = sorted([(tag,float(tag.name[1:].replace(".",""))) for tag in ds_inf.tags],key=lambda x:x[1])[-1][0].name
+last_tag = sorted([(tag,float(tag.name[1:])) for tag in ds_inf.tags],key=lambda x:x[1])[-1][0].name
 
 
 
@@ -227,7 +227,7 @@ if not os.path.exists(evaluation_result_path):
 
 if args.agent != "VIF":  # internal agent
     logger.info(
-        f"VTikZ Evaluation : split = {split_used} | agent = {args.agent} | model = {key_args["model_name"]} | api = {key_args["api_url"]}"
+        f"VTikZ Evaluation : split = {split_used} | agent = {args.agent} | model = {key_args["model_name"]} | api = {key_args["api_url"]} | dataset_tag = {last_tag}"
     )
 else:
     vif_args = {**get_config("VIF")}

@@ -47,7 +47,7 @@
 
 % blocks2
 \begin{scope}[shift={(2,1.25)}]
-\draw[thick,black](-1,§range(0,-1,0)) rectangle (5.5,2.75);
+\draw[thick,black](-1,§rangei(0,1)) rectangle (5.5,2.75);
 \block(A, 0.0, 2, Block 0)
 \block(B, 1.5, 2, Block 1)
 \block(C, 3.0, 2, Block 2)
@@ -57,7 +57,7 @@
 \end{scope}
 
 %arrows
-\draw[->,black,thick,out=0,in=90] (4.25,9) to node [midway,above,black,anchor=west] {\bf{Compile}} (6,6.5) ;
+\draw[->,black,thick,out=0,in=90] (4.25,§rangei(9,1)) to node [midway,above,black,anchor=west] {\bf{Compile}} (6,6.5) ;
 \draw[->,black,thick] (0.5,5) to node [midway,above,black,anchor=east] {\bf{Execute}} (0.5,§range(0.5,1.5,1.5)) ;
 
 \end{tikzpicture}

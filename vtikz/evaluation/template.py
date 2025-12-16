@@ -5,9 +5,9 @@ from vtikz.dataset_workflow.utils import create_default
 FLOAT_REG = r"(-?\d*\.?\d+)"
 INTEGER_REG = r"(-?\d+)"
 NON_RESERVED_LATEX_REG = r"([^#$%&_{}~^, \\\[\]\(\)]+)"
-DEF_LATEX_REG = r"([^#$%&_{}~^,\\\[\]\(\)]+)"
+DEF_LATEX_REG = r"([^#$%&_{}~^,\/\\\[\]\(\)]+)"
 DEF_REG = (
-    r"\§def\(" + NON_RESERVED_LATEX_REG + r"\)"
+    r"\§def\(" + DEF_LATEX_REG + r"\)"
 )  # Captures single parameter inside §def()
 EQUAL_REG = (
     r"\§equal\(" + FLOAT_REG + r"\)"
@@ -183,7 +183,7 @@ def template_valid(template_code: str, prediction: str) -> bool:
             start = match.start()
             groups = match.groups()
             end = match.end()
-            if key in  "def":
+            if key ==  "def":
                 matches.append((start, end, key, [groups[0]]))  # Single captured value
             elif key == "range":
                 matches.append(
