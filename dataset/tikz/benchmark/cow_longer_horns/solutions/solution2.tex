@@ -25,8 +25,7 @@ cow/.pic={
 \begin{scope}[x=3cm/480,y=3cm/480]
 \reflect[]{
 \tikzset{shift={(32,140)}, rotate=-45}
-  \fill [BlueGrey100] (0,0) arc (0:90:32 and 96) arc (90:0:96);
-  \fill [BlueGrey200] (32,0) arc (0:90:64 and 96) arc (90:0:96);
+  \fill [BlueGrey100] (0,0) arc (0:90:32 and §rangei(125,20)) arc (90:0:96 and §range(100,150,144));
 }
 \foreach \i in {-1, 1}\foreach \j in {0, 1}
 \fill \ifnum\j=0 \ifnum \i=-1 [BlueGrey700] \else [BlueGrey800] \fi\else [BlueGrey900] \fi
@@ -50,9 +49,9 @@ cow/.pic={
     .. controls ++(270: 64) and ++(105:144) .. ( 64,-160) -- cycle;
 }
 \reflect[split=Pink100 and Pink200]{
-  \fill [fill color] (0,§rangei(-180,20)) ellipse [x radius=64, y radius=§rangei(90,25)];
+  \fill [fill color] (0,-160) ellipse [x radius=64, y radius=56];
 }
-\fill [Pink300] (0, §rangei(-180,20)) ellipse [x radius=48, y radius=§rangei(70,30)];
+\fill [Pink300] (0, -160) ellipse [x radius=48, y radius=40];
 \reflect[split=Pink100 and Pink200]{
   \fill [fill color] (0,-128) ellipse [x radius=80, y radius=56];
 }

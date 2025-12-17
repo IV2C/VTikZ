@@ -28,24 +28,24 @@ monkey/.pic={%
   on left ={ color alias/.list={skin as Brown700, ears as Pink100}},
   on right={ color alias/.list={skin as Brown900, ears as Pink200}, half clip }
 ]{
-  \fill [skin] (§rangei(120,20), 80) circle  [radius=56];
-  \fill [ears] (§rangei(120,20), 80) circle  [radius=32];
-  \fill [skin] (  0, 72) ellipse [x radius=§rangei(120,15), y radius=112];
-  \fill [skin] (  0,-64) ellipse [x radius=§rangei(150,15), y radius=112];
+  \fill [skin] (140, 80) circle  [radius=56];
+  \fill [ears] (140, 80) circle  [radius=32];
+  \fill [skin] (  0, 72) ellipse [x radius=140, y radius=112];
+  \fill [skin] (  0,-64) ellipse [x radius=172, y radius=112];
 }
 \reflect[
   on left ={color alias/.list={face as Pink100}},
   on right={color alias/.list={face as Pink200}, half clip}
   ]{
-  \fill [face] (0,-64) ellipse [x radius=§rangei(110,15), y radius=88];
+  \fill [face] (0,-64) ellipse [x radius=140, y radius=88];
   \fill [face] (40,64) ellipse [radius=64];
 }
 \reflect{
   \fill [BlueGrey900] (40, 64) circle [radius=24];
-  \fill [Pink300]     (24,-16) circle [radius=16];
+\draw [Pink300, line width=3, line cap=round] (10,-20) arc (150:30:16);
 }
 \fill [Pink300]
-  (§range(-80,96,96),-72) arc (180:360:§range(-80,96,96) and 32) arc (360:180:§range(-80,96,96) and 56);
+  (-96,-72) arc (180:360:96 and 32) arc (360:180:96 and 56);
 
 \end{scope}
 }

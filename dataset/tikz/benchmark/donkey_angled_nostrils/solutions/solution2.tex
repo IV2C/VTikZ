@@ -51,19 +51,19 @@ donkey/.pic={
 }
 \reflect[split=Grey500 and Grey600]{%
   \fill [fill color] (0,-144) ellipse [x radius=64, y radius=48];
-  \fill [fill color]  (36, -128) ellipse [x radius=24, y radius=40];
-  \fill [BlueGrey900] (36, -128) ellipse [x radius=12, y radius=24];
+  \fill [fill color] (36, -128) ellipse [x radius=24, y radius=40, rotate=§range(15,25,20)];
+  \fill [BlueGrey900] (36, -128) ellipse [x radius=12, y radius=24, rotate=§range(15,25,20)];
 }
 \fill [BlueGrey900]
   (-72, 40) ellipse [radius=20]
   ( 72, 40) ellipse [radius=20]
   (-8,160)
-  to [bend left]  ++( 16, §rangei(70,22)) to [bend right] ++( 16,§range(-48,-100,-75))
-  to [bend left]  ++( 16, §rangei(70,22)) to [bend right] ++( 16,§range(-48,-100,-70))
+  to [bend left]  ++( 16, 32) to [bend right] ++( 16,-48)
+  to [bend left]  ++( 16, 32) to [bend right] ++( 16,-48)
   to [bend right] ++(-32,-48) to [bend left]  ++(-16, 32)
   to [bend right] ++(-32,-32) to [bend left]  ++(  0, 32)
   to [bend right] ++(-32,-16) to [bend left]  ++( 16, 40)
-  to [bend right] ++(§rangei(-28,16), §range(32,62,32)) to [bend left]  cycle;
+  to [bend right] ++(-16, 32) to [bend left]  cycle;
 \end{scope}}
 }
 \begin{document}

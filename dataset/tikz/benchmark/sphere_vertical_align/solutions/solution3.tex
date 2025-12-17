@@ -1,0 +1,54 @@
+\documentclass[tikz,border=5]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\begin{document}
+\begin{tikzpicture}[scale=.5]
+\shade[yshift=1.5cm, ball color = gray!40, opacity = 0.5] (1,2) circle (1cm);
+\draw[yshift=1.5cm] (1,2) circle (1cm);
+\draw[yshift=1.5cm] (0,2) arc (180:360: 1 and 0.3);
+\draw[yshift=1.5cm, dashed] (2,2) arc (0:180:1 and 0.3);
+\fill[yshift=1.5cm, fill=black] (1,2) circle (1pt);
+\draw[yshift=1.5cm, ->,thick] (1,3) -- node[above]{$r$} (1.2,3);
+\draw[yshift=1.5cm] (0.8,3) -- (0.8,1);
+\draw[yshift=1.5cm] (1.2,3) -- (1.2,1);
+\draw[yshift=1.5cm] (1,3) ellipse (0.2 and 0.05);
+\draw[yshift=1.5cm] (0.8,1) arc (180:360:0.2 and 0.05);
+\draw[yshift=1.5cm, dashed] (0.8,1) arc (180:360: 0.2 and -0.05);
+\shade [yshift=-1.5cm][ball color = gray!40, opacity = 0.5] (1,2) circle (1cm);
+\draw [yshift=-1.5cm](1,2) circle (1cm);
+\draw [yshift=-1.5cm](0,2) arc (180:360: 1 and 0.3);
+\draw[yshift=-1.5cm][dashed] (2,2) arc (0:180:1 and 0.3);
+\fill[yshift=-1.5cm][fill=black] (1,2) circle (1pt);
+\draw [yshift=-1.5cm] [->,thick] (1,3) -- node[above]{$r$} (1.2,3);
+\draw [yshift=-1.5cm](0.8,3) -- (0.8,1);
+\draw [yshift=-1.5cm](1.2,3) -- (1.2,1);
+\draw [yshift=-1.5cm](1,3) ellipse (0.2 and 0.05);
+\draw [yshift=-1.5cm](0.8,1) arc (180:360:0.2 and 0.05);
+\draw [yshift=-1.5cm][dashed] (0.8,1) arc (180:360: 0.2 and -0.05);
+\draw[->, thick] (2.5,2) -- (4.5,2);
+\shade [xshift=5cm, yshift=1.5cm][ball color = gray!40, opacity = 0.5] (1,2) circle (1cm);
+\draw [xshift=5cm, yshift=1.5cm](1,2) circle (1cm);
+\draw [xshift=5cm, yshift=1.5cm] (0,2) arc (180:360: 1 and 0.3);
+\draw [xshift=5cm, yshift=1.5cm] [dashed] (2,2) arc (0:180:1 and 0.3);
+\fill [xshift=5cm, yshift=1.5cm] [fill=black] (1,2) circle (1pt);
+\draw [xshift=5cm, yshift=1.5cm] [->,thick] (1,3) -- node[above right]{$\lambda r$} (1.4,3);
+\draw [xshift=5cm, yshift=1.5cm](0.6,3) -- (0.6,1);
+\draw [xshift=5cm, yshift=1.5cm](1.4,3) -- (1.4,1);
+\draw [xshift=5cm, yshift=1.5cm](1,3) ellipse (0.4 and 0.1);
+\draw [xshift=5cm, yshift=1.5cm](0.6,1) arc (180:360:0.4 and 0.1);
+\draw [xshift=5cm, yshift=1.5cm][dashed] (0.6,1) arc (180:360: 0.4 and -0.1);
+\shade [xshift=5cm, yshift=-1.5cm][ball color = gray!40, opacity = 0.5] (1,2) circle (1cm);
+\draw [xshift=5cm, yshift=-1.5cm](1,2) circle (1cm);
+\draw [xshift=5cm, yshift=-1.5cm](0,2) arc (180:360: 1 and 0.3);
+\draw [xshift=5cm, yshift=-1.5cm][dashed] (2,2) arc (0:180:1 and 0.3);
+\fill [xshift=5cm, yshift=-1.5cm][fill=black] (1,2) circle (1pt);
+\draw [xshift=5cm, yshift=-1.5cm] [->,thick] (1,3) -- node[above right]{$\lambda r$} (1.4,3);
+\draw [xshift=5cm, yshift=-1.5cm](0.6,3) -- (0.6,1);
+\draw [xshift=5cm, yshift=-1.5cm](1.4,3) -- (1.4,1);
+\draw [xshift=5cm, yshift=-1.5cm](1,3) ellipse (0.4 and 0.1);
+\draw [xshift=5cm, yshift=-1.5cm](0.6,1) arc (180:360:0.4 and 0.1);
+\draw [xshift=5cm, yshift=-1.5cm][dashed] (0.6,1) arc (180:360: 0.4 and -0.1);
+\end{tikzpicture}
+\end{document}

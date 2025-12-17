@@ -95,7 +95,11 @@ def handle_range(
     if not match:
         return None, None, False
     match_value = float(match.group(1))
-    if float(args[0]) <= match_value and float(args[1]) >= match_value:
+    
+    lower = min(float(args[0]),float(args[1]))
+    upper = max(float(args[0]),float(args[1]))
+    
+    if lower <= match_value and upper >= match_value:
         prediction = (
             prediction[:start] + replace_id + prediction_def_start[match.end() :]
         )
@@ -134,7 +138,10 @@ def handle_def(
         return None, None, False
     var_name_prediction = match.group(1)
     all_matches = update_matches(all_matches, end - start - len(replace_id), start)
-    prediction = prediction[:start] + replace_id + prediction_def_start[match.end() :].replace(var_name_prediction,replace_id)
+    prediction = prediction[:start] + replace_id + prediction_def_start[match.end() :]
+    df_reg_adapt = rf"(?<![A-Za-z]){re.escape(var_name_prediction)}(?![A-Za-z])"
+    prediction = re.sub(df_reg_adapt,replace_id,prediction)
+    
 
     return prediction, all_matches, True
 
