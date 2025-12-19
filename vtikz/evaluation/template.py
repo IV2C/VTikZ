@@ -4,7 +4,8 @@ from vtikz.dataset_workflow.utils import create_default
 
 FLOAT_REG = r"(-?\d*\.?\d+)"
 INTEGER_REG = r"(-?\d+)"
-NON_RESERVED_LATEX_REG = r"([^#$%&_{}~^, \\\[\]\(\)]+)"
+NON_RESERVED_LATEX_REG = r"([^#$%&_{}~^, \\\[\]\(\)0-9]+)"
+NUMBER_REG = "([0-9]+)"
 DEF_LATEX_REG = r"([^#$%&_{}~^,\/\\\[\]\(\)]+)"
 DEF_REG = (
     r"\§def\(" + DEF_LATEX_REG + r"\)"
@@ -67,11 +68,16 @@ def handle_choice(
     replace_id = args[1]
     choices = [str(val) for val in ast.literal_eval(args[0])]
     prediction_def_start = prediction[start:]
-    match = re.search(
+    match1 = re.search(
         r"^"+NON_RESERVED_LATEX_REG, prediction_def_start
     )  # matching the first non-latex expresssion in the prediction code
-    if not match:
+    match2 = re.search(
+        r"^"+NUMBER_REG, prediction_def_start
+    )  # matching the first non-latex expresssion in the prediction code
+    if not match1 and not match2:
         return None, None, False
+    else:
+        match = match1 if match1 else match2
     match_value = match.group(1)
     if match_value in choices:
         prediction = (

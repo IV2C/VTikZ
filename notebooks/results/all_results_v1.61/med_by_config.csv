@@ -1,0 +1,3 @@
+config,TemplateMetric,ImageEqualityMetric,LineMetric,CrystalBleuPatchMetric,SuccessCustomizationMetric,LocationMetric
+simpleLLM_googlegemini3propreview_pk_1_t_0.7_v1.61,0.0,0.0,100.0,77.84168243408203,0.0,100.0
+simpleLLM_openaigpt5.2_pk_1_t_0.7_v1.61,0.0,0.0,100.0,73.27291107177734,0.0,100.0

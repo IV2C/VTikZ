@@ -1,1 +1,1 @@
-{"model":{"0":"Gemini3-pro-preview\nText N=1 Temp. 0.7","1":"gpt5.2\nText N=1 Temp. 0.7"},"total":{"0":100,"1":100},"Compile":{"0":99,"1":99},"Location":{"0":67,"1":71},"SuccessCustomization":{"0":40,"1":44}}
+{"model":{"1":"gpt5.2\nText N=1 Temp. 0.7","0":"Gemini3-pro-preview\nText N=1 Temp. 0.7"},"total":{"1":100,"0":100},"Compile":{"1":99,"0":99},"Location":{"1":74,"0":75},"SuccessCustomization":{"1":52,"0":66}}
